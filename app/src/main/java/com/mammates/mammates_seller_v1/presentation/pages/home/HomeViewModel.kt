@@ -1,4 +1,4 @@
-package com.mammates.mammates_seller_v1.presentation.home
+package com.mammates.mammates_seller_v1.presentation.pages.home
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -9,12 +9,12 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
 
-)  : ViewModel() {
+) : ViewModel() {
 
     private val _state = MutableStateFlow(HomeState())
     val state = _state.asStateFlow()
 
-    fun onEvent(event: HomeEvent){
+    fun onEvent(event: HomeEvent) {
 
     }
 }

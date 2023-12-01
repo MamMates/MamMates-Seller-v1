@@ -4,22 +4,22 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.mammates.mammates_seller_v1.presentation.home.HomeScreen
-import com.mammates.mammates_seller_v1.presentation.home.HomeViewModel
+import com.mammates.mammates_seller_v1.presentation.component.bottom_navigation.BottomNavigation
+import com.mammates.mammates_seller_v1.presentation.component.bottom_navigation.bottomNavigationItem
 import com.mammates.mammates_seller_v1.presentation.theme.MamMatesSellerv1Theme
-import com.mammates.mammates_seller_v1.presentation.util.Screen
+import com.mammates.mammates_seller_v1.presentation.util.NavigationGraph
 import dagger.hilt.android.AndroidEntryPoint
 
+@OptIn(ExperimentalMaterial3Api::class)
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,26 +31,28 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+
                     val navController = rememberNavController()
+                    val navBackStackEntry by navController.currentBackStackEntryAsState()
+                    val currentRoute = navBackStackEntry?.destination?.route
 
-                    NavHost(
-                        navController = navController,
-                        startDestination = Screen.HomeScreen.route
-                    ) {
-                        composable(route = Screen.HomeScreen.route){
-                            val viewModel = hiltViewModel<HomeViewModel>()
-                            val state by viewModel.state.collectAsState()
-                            HomeScreen(
-                                navController = navController,
-                                state = state,
-                                onEvent = viewModel::onEvent
-                            )
+                    Scaffold(
+                        bottomBar = {
+                            if (bottomNavigationItem.firstOrNull { it.route == currentRoute } != null) {
+                                BottomNavigation(
+                                    navController = navController,
+                                    items = bottomNavigationItem
+                                )
+                            }
                         }
+                    ) { innerPadding ->
+                        NavigationGraph(
+                            modifier = Modifier.padding(innerPadding),
+                            navController = navController,
+                        )
                     }
-
                 }
             }
         }
     }
 }
-
