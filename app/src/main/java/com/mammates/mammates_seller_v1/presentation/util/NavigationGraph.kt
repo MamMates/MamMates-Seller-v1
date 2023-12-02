@@ -10,6 +10,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.mammates.mammates_seller_v1.presentation.pages.account.AccountScreen
 import com.mammates.mammates_seller_v1.presentation.pages.account.AccountViewModel
+import com.mammates.mammates_seller_v1.presentation.pages.add.AddScreen
+import com.mammates.mammates_seller_v1.presentation.pages.add.AddViewModel
 import com.mammates.mammates_seller_v1.presentation.pages.home.HomeScreen
 import com.mammates.mammates_seller_v1.presentation.pages.home.HomeViewModel
 import com.mammates.mammates_seller_v1.presentation.pages.mam_rates.MamRatesScreen
@@ -69,6 +71,15 @@ fun NavigationGraph(
             val viewModel = hiltViewModel<AccountViewModel>()
             val state by viewModel.state.collectAsState()
             AccountScreen(
+                navController = navController,
+                state = state,
+                onEvent = viewModel::onEvent
+            )
+        }
+        composable(route = Screen.AddScreen.route) {
+            val viewModel = hiltViewModel<AddViewModel>()
+            val state by viewModel.state.collectAsState()
+            AddScreen(
                 navController = navController,
                 state = state,
                 onEvent = viewModel::onEvent

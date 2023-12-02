@@ -1,14 +1,11 @@
-package com.mammates.mammates_seller_v1.presentation.pages.store
+package com.mammates.mammates_seller_v1.presentation.pages.add
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,27 +14,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.mammates.mammates_seller_v1.presentation.util.Screen
+import com.mammates.mammates_seller_v1.presentation.component.top_navigation.TopBackNavigation
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StoreScreen(
+fun AddScreen(
     navController: NavController,
-    state: StoreState,
-    onEvent: (StoreEvent) -> Unit
+    state: AddState,
+    onEvent : (AddEvent) -> Unit
 ) {
     Scaffold (
-        floatingActionButton = {
-            FloatingActionButton(onClick = {
-                navController.navigate(Screen.AddScreen.route)
-            }) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = "Adding food"
-                )
-            }
+        topBar = {
+            TopBackNavigation(
+                title = "Add Food",
+                navController= navController
+            )
         }
-    ) {innerPadding ->
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -50,12 +43,12 @@ fun StoreScreen(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
-fun StoreScreenPreview() {
-    StoreScreen(
+fun AddScreenPreview() {
+    AddScreen(
         navController = rememberNavController(),
-        state = StoreState(),
+        state = AddState(),
         onEvent = {}
     )
 }

@@ -11,10 +11,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.mammates.mammates_seller_v1.presentation.component.bottom_navigation.BottomNavigation
 import com.mammates.mammates_seller_v1.presentation.component.bottom_navigation.bottomNavigationItem
+import com.mammates.mammates_seller_v1.presentation.component.top_navigation.TopBackNavigation
+import com.mammates.mammates_seller_v1.presentation.component.top_navigation.TopNavigation
 import com.mammates.mammates_seller_v1.presentation.theme.MamMatesSellerv1Theme
 import com.mammates.mammates_seller_v1.presentation.util.NavigationGraph
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,6 +27,9 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        installSplashScreen()
+
         setContent {
             MamMatesSellerv1Theme {
                 // A surface container using the 'background' color from the theme
@@ -43,6 +49,12 @@ class MainActivity : ComponentActivity() {
                                     navController = navController,
                                     items = bottomNavigationItem
                                 )
+                            }
+                        },
+
+                        topBar = {
+                            if (bottomNavigationItem.firstOrNull { it.route == currentRoute } != null) {
+                                TopNavigation()
                             }
                         }
                     ) { innerPadding ->
