@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
                             if (bottomNavigationItem.firstOrNull { it.route == currentRoute } != null) {
                                 BottomNavigation(
                                     navController = navController,
-                                    items = bottomNavigationItem
+                                    items = bottomNavigationItem,
                                 )
                             }
                         },

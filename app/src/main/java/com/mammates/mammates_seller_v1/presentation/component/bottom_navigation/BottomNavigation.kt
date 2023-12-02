@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 
 @Composable
@@ -25,21 +26,21 @@ fun BottomNavigation(
     items: List<BottomNavigationItem>
 ) {
 
-    var selectedItemIndex by rememberSaveable {
-        mutableIntStateOf(0)
-    }
+
     NavigationBar(
         modifier = modifier,
         containerColor = MaterialTheme.colorScheme.background,
     ) {
-        items.forEachIndexed { index, items ->
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentRoute = navBackStackEntry?.destination?.route
+
+        items.forEach { items ->
             NavigationBarItem(
                 colors = NavigationBarItemDefaults.colors(
                     indicatorColor = MaterialTheme.colorScheme.primaryContainer
                 ),
-                selected = selectedItemIndex == index,
+                selected = currentRoute == items.route,
                 onClick = {
-                    selectedItemIndex = index
                     navController.navigate(items.route) {
                         popUpTo(navController.graph.findStartDestination().id) {
                             saveState = true
