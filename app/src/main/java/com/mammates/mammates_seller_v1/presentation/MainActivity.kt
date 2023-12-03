@@ -55,6 +55,8 @@ class MainActivity : ComponentActivity() {
                         topBar = {
                             if (bottomNavigationItem.firstOrNull { it.route == currentRoute } != null) {
                                 TopNavigation()
+                            }else{
+                                TopBackNavigation(navController = navController)
                             }
                         }
                     ) { innerPadding ->

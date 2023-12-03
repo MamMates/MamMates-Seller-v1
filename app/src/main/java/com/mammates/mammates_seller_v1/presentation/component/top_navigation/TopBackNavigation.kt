@@ -23,16 +23,13 @@ import androidx.navigation.compose.rememberNavController
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBackNavigation(
-    title: String,
     navController: NavController
 ) {
     TopAppBar(
         colors = TopAppBarDefaults.smallTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.background
         ),
-        title = {
-            Text(text = title)
-        },
+        title = {},
         navigationIcon = {
             IconButton(onClick = {
                 navController.popBackStack()
@@ -51,7 +48,6 @@ fun TopBackNavigation(
 @Composable
 fun TopBackNavigationPreview() {
     TopBackNavigation(
-        title = "Order Detail",
         navController = rememberNavController()
     )
 }
