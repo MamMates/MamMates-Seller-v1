@@ -26,7 +26,7 @@ fun StoreScreen(
     state: StoreState,
     onEvent: (StoreEvent) -> Unit
 ) {
-    Scaffold (
+    Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = {
                 navController.navigate(NavigationRoutes.Main.Add.route)
@@ -37,7 +37,7 @@ fun StoreScreen(
                 )
             }
         }
-    ) {innerPadding ->
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()

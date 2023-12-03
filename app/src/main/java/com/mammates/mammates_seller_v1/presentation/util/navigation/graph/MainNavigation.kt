@@ -21,11 +21,11 @@ import com.mammates.mammates_seller_v1.presentation.pages.store.StoreScreen
 import com.mammates.mammates_seller_v1.presentation.pages.store.StoreViewModel
 import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
 
-fun NavGraphBuilder.mainGraph (navController: NavController){
+fun NavGraphBuilder.mainGraph(navController: NavController) {
     navigation(
-        route= NavigationRoutes.Main.route,
+        route = NavigationRoutes.Main.route,
         startDestination = NavigationRoutes.Main.Home.route,
-    ){
+    ) {
         composable(route = NavigationRoutes.Main.Home.route) {
             val viewModel = hiltViewModel<HomeViewModel>()
             val state by viewModel.state.collectAsState()

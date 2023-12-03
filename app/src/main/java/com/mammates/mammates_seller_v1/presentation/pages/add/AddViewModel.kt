@@ -9,12 +9,12 @@ import javax.inject.Inject
 @HiltViewModel
 class AddViewModel @Inject constructor(
 
-) : ViewModel(){
+) : ViewModel() {
 
     private val _state = MutableStateFlow(AddState())
     val state = _state.asStateFlow()
 
-    fun onEvent (event: AddEvent){
+    fun onEvent(event: AddEvent) {
 
     }
 

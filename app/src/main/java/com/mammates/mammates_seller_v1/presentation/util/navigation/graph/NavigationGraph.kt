@@ -20,7 +20,9 @@ fun NavigationGraph(
     ) {
 
         composable(route = NavigationRoutes.Introduction.route) {
-            OnBoardingScreen()
+            OnBoardingScreen(
+                navController = navController
+            )
         }
         mainGraph(navController)
         authGraph(navController)

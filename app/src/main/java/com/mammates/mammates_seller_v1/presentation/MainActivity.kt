@@ -22,7 +22,7 @@ import com.mammates.mammates_seller_v1.presentation.component.bottom_navigation.
 import com.mammates.mammates_seller_v1.presentation.component.bottom_navigation.bottomNavigationItem
 import com.mammates.mammates_seller_v1.presentation.component.top_navigation.TopBackNavigation
 import com.mammates.mammates_seller_v1.presentation.component.top_navigation.TopNavigation
-import com.mammates.mammates_seller_v1.presentation.theme.MamMatesSellerv1Theme
+import com.mammates.mammates_seller_v1.presentation.ui.theme.MamMatesSellerv1Theme
 import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
 import com.mammates.mammates_seller_v1.presentation.util.navigation.graph.NavigationGraph
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         installSplashScreen().apply {
-            setOnExitAnimationListener{screen ->
+            setOnExitAnimationListener { screen ->
                 val zoomX = ObjectAnimator.ofFloat(
                     screen.iconView,
                     View.SCALE_X,
@@ -86,11 +86,11 @@ class MainActivity : ComponentActivity() {
                         topBar = {
                             if (bottomNavigationItem.firstOrNull { it.route == currentRoute } != null) {
                                 TopNavigation()
-                            }else if (
+                            } else if (
                                 currentRoute != NavigationRoutes.Auth.Login.route &&
                                 currentRoute != NavigationRoutes.Auth.Register.route &&
                                 currentRoute != NavigationRoutes.Introduction.route
-                            ){
+                            ) {
                                 TopBackNavigation(navController = navController)
                             }
                         }

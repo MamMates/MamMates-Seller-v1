@@ -1,4 +1,4 @@
-package com.mammates.mammates_seller_v1.presentation.theme
+package com.mammates.mammates_seller_v1.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

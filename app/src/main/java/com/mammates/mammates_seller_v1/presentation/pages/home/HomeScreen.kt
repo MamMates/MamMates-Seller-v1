@@ -3,7 +3,6 @@ package com.mammates.mammates_seller_v1.presentation.pages.home
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -14,7 +13,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     navController: NavController,
@@ -22,23 +20,23 @@ fun HomeScreen(
     onEvent: (HomeEvent) -> Unit,
 ) {
 
-    if (!state.isOnBoarding && !state.isAuth){
-        LaunchedEffect(key1 = true ){
+    if (!state.isOnBoarding && !state.isAuth) {
+        LaunchedEffect(key1 = true) {
             navController.navigate(route = NavigationRoutes.Introduction.route) {
                 popUpTo(route = NavigationRoutes.Main.route) {
                     inclusive = true
                 }
             }
         }
-    }else if (!state.isAuth){
-        LaunchedEffect(key1 = true ){
+    } else if (!state.isAuth) {
+        LaunchedEffect(key1 = true) {
             navController.navigate(route = NavigationRoutes.Auth.route) {
                 popUpTo(route = NavigationRoutes.Main.route) {
                     inclusive = true
                 }
             }
         }
-    }else{
+    } else {
         Column(
             modifier = Modifier
                 .fillMaxSize(),
