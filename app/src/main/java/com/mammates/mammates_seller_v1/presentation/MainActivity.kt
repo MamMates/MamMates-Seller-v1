@@ -23,7 +23,8 @@ import com.mammates.mammates_seller_v1.presentation.component.bottom_navigation.
 import com.mammates.mammates_seller_v1.presentation.component.top_navigation.TopBackNavigation
 import com.mammates.mammates_seller_v1.presentation.component.top_navigation.TopNavigation
 import com.mammates.mammates_seller_v1.presentation.theme.MamMatesSellerv1Theme
-import com.mammates.mammates_seller_v1.presentation.util.NavigationGraph
+import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
+import com.mammates.mammates_seller_v1.presentation.util.navigation.graph.NavigationGraph
 import dagger.hilt.android.AndroidEntryPoint
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -85,7 +86,11 @@ class MainActivity : ComponentActivity() {
                         topBar = {
                             if (bottomNavigationItem.firstOrNull { it.route == currentRoute } != null) {
                                 TopNavigation()
-                            }else{
+                            }else if (
+                                currentRoute != NavigationRoutes.Auth.Login.route &&
+                                currentRoute != NavigationRoutes.Auth.Register.route &&
+                                currentRoute != NavigationRoutes.Introduction.route
+                            ){
                                 TopBackNavigation(navController = navController)
                             }
                         }

@@ -7,7 +7,7 @@ import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material.icons.outlined.StarRate
 import androidx.compose.material.icons.outlined.Store
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.mammates.mammates_seller_v1.presentation.util.Screen
+import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
 
 data class BottomNavigationItem(
     val icon: ImageVector,
@@ -19,26 +19,26 @@ val bottomNavigationItem = listOf(
     BottomNavigationItem(
         icon = Icons.Outlined.Home,
         label = "Home",
-        route = Screen.HomeScreen.route
+        route = NavigationRoutes.Main.Home.route
     ),
     BottomNavigationItem(
         icon = Icons.Outlined.ShoppingCart,
         label = "Order",
-        route = Screen.OrderScreen.route
+        route = NavigationRoutes.Main.Order.route
     ),
     BottomNavigationItem(
         icon = Icons.Outlined.Store,
         label = "Store",
-        route = Screen.StoreScreen.route
+        route = NavigationRoutes.Main.Store.route
     ),
     BottomNavigationItem(
         icon = Icons.Outlined.StarRate,
         label = "MamRates",
-        route = Screen.MamRatesScreen.route
+        route = NavigationRoutes.Main.MamRates.route
     ),
     BottomNavigationItem(
         icon = Icons.Outlined.People,
         label = "Account",
-        route = Screen.AccountScreen.route
+        route = NavigationRoutes.Main.Account.route
     ),
 )

@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.mammates.mammates_seller_v1.presentation.util.Screen
+import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,7 +29,7 @@ fun StoreScreen(
     Scaffold (
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                navController.navigate(Screen.AddScreen.route)
+                navController.navigate(NavigationRoutes.Main.Add.route)
             }) {
                 Icon(
                     imageVector = Icons.Filled.Add,

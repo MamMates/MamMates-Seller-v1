@@ -6,11 +6,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -19,13 +21,32 @@ fun HomeScreen(
     state: HomeState,
     onEvent: (HomeEvent) -> Unit,
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text(text = state.exampleState)
+
+    if (!state.isOnBoarding && !state.isAuth){
+        LaunchedEffect(key1 = true ){
+            navController.navigate(route = NavigationRoutes.Introduction.route) {
+                popUpTo(route = NavigationRoutes.Main.route) {
+                    inclusive = true
+                }
+            }
+        }
+    }else if (!state.isAuth){
+        LaunchedEffect(key1 = true ){
+            navController.navigate(route = NavigationRoutes.Auth.route) {
+                popUpTo(route = NavigationRoutes.Main.route) {
+                    inclusive = true
+                }
+            }
+        }
+    }else{
+        Column(
+            modifier = Modifier
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text(text = state.exampleState)
+        }
     }
 }
 
