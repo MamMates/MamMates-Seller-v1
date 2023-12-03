@@ -25,7 +25,6 @@ import com.mammates.mammates_seller_v1.presentation.component.top_navigation.Top
 import com.mammates.mammates_seller_v1.presentation.theme.MamMatesSellerv1Theme
 import com.mammates.mammates_seller_v1.presentation.util.NavigationGraph
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @AndroidEntryPoint
