@@ -2,7 +2,7 @@
 <resources>
     <style name="Theme.MamMatesSellerv1.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">#FFFFFF</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/inset_logo</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/animated_logo</item>
         <item name="postSplashScreenTheme">@style/Theme.MamMatesSellerv1</item>
     </style>
 </resources>
