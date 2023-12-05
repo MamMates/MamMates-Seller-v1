@@ -7,18 +7,18 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.mammates.mammates_seller_v1.presentation.pages.account.AccountScreen
-import com.mammates.mammates_seller_v1.presentation.pages.account.AccountViewModel
-import com.mammates.mammates_seller_v1.presentation.pages.add.AddScreen
-import com.mammates.mammates_seller_v1.presentation.pages.add.AddViewModel
-import com.mammates.mammates_seller_v1.presentation.pages.home.HomeScreen
-import com.mammates.mammates_seller_v1.presentation.pages.home.HomeViewModel
-import com.mammates.mammates_seller_v1.presentation.pages.mam_rates.MamRatesScreen
-import com.mammates.mammates_seller_v1.presentation.pages.mam_rates.MamRatesViewModel
-import com.mammates.mammates_seller_v1.presentation.pages.order.OrderScreen
-import com.mammates.mammates_seller_v1.presentation.pages.order.OrderViewModel
-import com.mammates.mammates_seller_v1.presentation.pages.store.StoreScreen
-import com.mammates.mammates_seller_v1.presentation.pages.store.StoreViewModel
+import com.mammates.mammates_seller_v1.presentation.pages.main.account.AccountScreen
+import com.mammates.mammates_seller_v1.presentation.pages.main.account.AccountViewModel
+import com.mammates.mammates_seller_v1.presentation.pages.main.add.AddScreen
+import com.mammates.mammates_seller_v1.presentation.pages.main.add.AddViewModel
+import com.mammates.mammates_seller_v1.presentation.pages.main.home.HomeScreen
+import com.mammates.mammates_seller_v1.presentation.pages.main.home.HomeViewModel
+import com.mammates.mammates_seller_v1.presentation.pages.main.mam_rates.MamRatesScreen
+import com.mammates.mammates_seller_v1.presentation.pages.main.mam_rates.MamRatesViewModel
+import com.mammates.mammates_seller_v1.presentation.pages.main.order.OrderScreen
+import com.mammates.mammates_seller_v1.presentation.pages.main.order.OrderViewModel
+import com.mammates.mammates_seller_v1.presentation.pages.main.store.StoreScreen
+import com.mammates.mammates_seller_v1.presentation.pages.main.store.StoreViewModel
 import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
 
 fun NavGraphBuilder.mainGraph(navController: NavController) {

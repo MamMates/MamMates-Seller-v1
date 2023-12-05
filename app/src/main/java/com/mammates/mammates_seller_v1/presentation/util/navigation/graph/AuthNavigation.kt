@@ -1,10 +1,17 @@
 package com.mammates.mammates_seller_v1.presentation.util.navigation.graph
 
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.mammates.mammates_seller_v1.presentation.pages.login.LoginScreen
+import com.mammates.mammates_seller_v1.presentation.pages.auth.login.LoginScreen
+import com.mammates.mammates_seller_v1.presentation.pages.auth.login.LoginViewModel
+import com.mammates.mammates_seller_v1.presentation.pages.auth.register.RegisterScreen
+import com.mammates.mammates_seller_v1.presentation.pages.auth.register_form.RegisterFormScreen
+import com.mammates.mammates_seller_v1.presentation.pages.auth.register_form.RegisterFormViewModel
 import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
 
 fun NavGraphBuilder.authGraph(navController: NavController) {
@@ -13,10 +20,27 @@ fun NavGraphBuilder.authGraph(navController: NavController) {
         startDestination = NavigationRoutes.Auth.Login.route
     ) {
         composable(route = NavigationRoutes.Auth.Login.route) {
-            LoginScreen()
+            val viewModel = hiltViewModel<LoginViewModel>()
+            val state by viewModel.state.collectAsState()
+
+            LoginScreen(
+                navController = navController,
+                state = state,
+                onEvent = viewModel::onEvent
+            )
         }
         composable(route = NavigationRoutes.Auth.Register.route) {
+            RegisterScreen(navController = navController)
+        }
+        composable(route = NavigationRoutes.Auth.RegisterForm.route) {
+            val viewModel = hiltViewModel<RegisterFormViewModel>()
+            val state by viewModel.state.collectAsState()
 
+            RegisterFormScreen(
+                navController = navController,
+                state = state ,
+                onEvent = viewModel::onEvent
+            )
         }
     }
 }

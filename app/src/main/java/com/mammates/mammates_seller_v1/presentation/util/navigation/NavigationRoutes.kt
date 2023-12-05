@@ -7,6 +7,8 @@ sealed class NavigationRoutes(val route: String) {
     data object Auth : NavigationRoutes("auth") {
         data object Login : NavigationRoutes("login")
         data object Register : NavigationRoutes("register")
+        data object RegisterForm : NavigationRoutes("register_form")
+        data object  ResetPassword : NavigationRoutes("reset_password")
     }
 
     data object Main : NavigationRoutes("main") {
