@@ -33,8 +33,8 @@ fun RegisterFormScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 35.dp)
-            .verticalScroll(scrollState),
+            .verticalScroll(scrollState)
+            .padding(horizontal = 35.dp),
 
         ) {
         Text(

@@ -24,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.rememberNavController
 import com.mammates.mammates_seller_v1.R
 import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
@@ -62,7 +63,13 @@ fun CardNavigation(
                     minHeight = 10.dp
                 ),
                 onClick = {
-                    navController.navigate(route)
+                    navController.navigate(route) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        restoreState = true
+                        launchSingleTop = true
+                    }
                 },
                 contentPadding = PaddingValues(0.dp)
             ) {
