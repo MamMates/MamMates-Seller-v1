@@ -1,4 +1,4 @@
-package com.mammates.mammates_seller_v1.presentation.pages.on_boarding.component
+package com.mammates.mammates_seller_v1.presentation.component.pager
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun OnBoardingPagerIndicator(
+fun PagerIndicator(
     modifier: Modifier = Modifier,
     pagerState: PagerState,
 ) {

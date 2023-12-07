@@ -38,7 +38,7 @@ fun NavGraphBuilder.authGraph(navController: NavController) {
 
             RegisterFormScreen(
                 navController = navController,
-                state = state ,
+                state = state,
                 onEvent = viewModel::onEvent
             )
         }

@@ -114,12 +114,10 @@ fun RegisterFormScreen(
         Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
-
-                // TODO : create good navigation
-                navController.popBackStack()
-                navController.popBackStack()
-                navController.popBackStack()
-                navController.navigate(NavigationRoutes.Auth.Login.route)
+                navController.popBackStack(
+                    route = NavigationRoutes.Auth.Login.route,
+                    inclusive = false
+                )
             }) {
             Text(text = "Register")
         }

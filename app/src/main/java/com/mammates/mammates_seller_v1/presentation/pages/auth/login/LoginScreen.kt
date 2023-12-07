@@ -90,6 +90,11 @@ fun LoginScreen(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
                 // TODO Submit Button Login
+                navController.navigate(NavigationRoutes.Main.route) {
+                    popUpTo(NavigationRoutes.Auth.route) {
+                        inclusive = true
+                    }
+                }
             }
         ) {
             Text(

@@ -2,7 +2,7 @@ package com.mammates.mammates_seller_v1.presentation.util.validation
 
 import android.util.Patterns
 
-fun emptyValidation (value : String, label :String ) : String?{
+fun emptyValidation(value: String, label: String): String? {
     return if (value.isEmpty()) "$label can't empty" else null
 }
 

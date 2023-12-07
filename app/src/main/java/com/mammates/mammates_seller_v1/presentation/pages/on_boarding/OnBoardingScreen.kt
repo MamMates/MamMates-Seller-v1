@@ -21,8 +21,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.mammates.mammates_seller_v1.presentation.component.pager.PagerIndicator
 import com.mammates.mammates_seller_v1.presentation.pages.on_boarding.component.OnBoardingPager
-import com.mammates.mammates_seller_v1.presentation.pages.on_boarding.component.OnBoardingPagerIndicator
 import com.mammates.mammates_seller_v1.presentation.pages.on_boarding.component.onBoardingPagerItem
 import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
 import kotlinx.coroutines.launch
@@ -59,7 +59,7 @@ fun OnBoardingScreen(
         }
         Spacer(modifier = Modifier.height(40.dp))
 
-        OnBoardingPagerIndicator(pagerState = pagerState)
+        PagerIndicator(pagerState = pagerState)
 
         Spacer(modifier = Modifier.height(40.dp))
 
