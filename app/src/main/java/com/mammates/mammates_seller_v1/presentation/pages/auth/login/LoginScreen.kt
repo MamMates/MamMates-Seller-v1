@@ -76,7 +76,9 @@ fun LoginScreen(
         ) {
             TextButton(
                 contentPadding = PaddingValues(0.dp),
-                onClick = { /*TODO*/ },
+                onClick = {
+                    navController.navigate(NavigationRoutes.Auth.ResetPassword.route)
+                },
             ) {
                 Text(
                     text = "Forgot password ?",
@@ -84,6 +86,7 @@ fun LoginScreen(
                 )
             }
         }
+
 
         Spacer(modifier = Modifier.height(30.dp))
         Button(

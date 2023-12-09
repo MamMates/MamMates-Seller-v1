@@ -14,6 +14,12 @@ class OrderViewModel @Inject constructor(
     val state = _state.asStateFlow()
 
     fun onEvent(event: OrderEvent) {
-
+        when (event) {
+            is OrderEvent.OnChangeTab -> {
+                _state.value = _state.value.copy(
+                    tabIndex = event.index
+                )
+            }
+        }
     }
 }
