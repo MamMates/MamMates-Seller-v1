@@ -17,12 +17,11 @@ import com.mammates.mammates_seller_v1.presentation.util.navigation.graph.mainGr
 fun NavigationGraph(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    startDestination: String
 ) {
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = startDestination
+        startDestination = NavigationRoutes.Main.route
     ) {
 
         composable(route = NavigationRoutes.Introduction.route) {

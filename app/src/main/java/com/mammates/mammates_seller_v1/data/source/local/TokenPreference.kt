@@ -2,28 +2,34 @@ package com.mammates.mammates_seller_v1.data.source.local
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-
-class IntroPreference @Inject constructor(
+class TokenPreference @Inject constructor(
     private val dataStore: DataStore<Preferences>
 ) {
 
-    private val INTRO_IS_DONE = booleanPreferencesKey("intro_is_done")
+    private val TOKEN = stringPreferencesKey("token")
 
-    suspend fun setIntroIsDone(isDone: Boolean) {
+    suspend fun setToken(token: String) {
         dataStore.edit { preferences ->
-            preferences[INTRO_IS_DONE] = isDone
+            preferences[TOKEN] = token
         }
     }
 
-    fun getIntroIsDone(): Flow<Boolean> {
+    fun getToken(): Flow<String> {
         return dataStore.data.map { preferences ->
-            preferences[INTRO_IS_DONE] ?: false
+            preferences[TOKEN] ?: ""
         }
     }
+
+    suspend fun clearToken() {
+        dataStore.edit { preferences ->
+            preferences.clear()
+        }
+    }
+
 }

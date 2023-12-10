@@ -1,16 +1,21 @@
 package com.mammates.mammates_seller_v1.presentation.pages.auth.login
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.mammates.mammates_seller_v1.domain.use_case.auth.AuthUseCases
+import com.mammates.mammates_seller_v1.domain.use_case.token.TokenUseCases
 import com.mammates.mammates_seller_v1.presentation.util.validation.emailValidation
 import com.mammates.mammates_seller_v1.presentation.util.validation.passwordValidation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-
+    private val tokenUseCases: TokenUseCases,
+    private val authUseCases: AuthUseCases
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(LoginState())
@@ -36,6 +41,12 @@ class LoginViewModel @Inject constructor(
                 _state.value = _state.value.copy(
                     isPasswordVisible = !_state.value.isPasswordVisible
                 )
+            }
+
+            LoginEvent.OnLogin -> {
+                viewModelScope.launch {
+                    tokenUseCases.setTokenUseCase("blablabla")
+                }
             }
         }
     }

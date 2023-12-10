@@ -16,5 +16,5 @@ interface AuthRepository {
         email: String,
         password: String,
         passwordConfirm: String
-    )
+    ): ResMamMates<String>
 }

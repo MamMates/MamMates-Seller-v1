@@ -29,6 +29,7 @@ fun NavGraphBuilder.mainGraph(navController: NavController) {
         composable(route = NavigationRoutes.Main.Home.route) {
             val viewModel = hiltViewModel<HomeViewModel>()
             val state by viewModel.state.collectAsState()
+
             HomeScreen(
                 navController = navController,
                 state = state,

@@ -1,5 +1,5 @@
 package com.mammates.mammates_seller_v1.common
 
 object Constants {
-    const val BASE_URL = ""
+    const val BASE_URL = "https://mocki.io/v1/d4867d8b-b5d5-4a48-a4ab-79131b5809b8/"
 }

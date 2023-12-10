@@ -15,9 +15,11 @@ import com.mammates.mammates_seller_v1.domain.model.Orders
 import com.mammates.mammates_seller_v1.domain.model.OrdersRecent
 import com.mammates.mammates_seller_v1.domain.model.Store
 import okhttp3.MultipartBody
+import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
@@ -31,7 +33,7 @@ interface MamMatesApi {
     @POST("auth/login")
     suspend fun authLogin(
         @Body reqLogin: ReqLogin
-    ): ResMamMates<String>
+    ): Call<ResMamMates<String>>
 
     @POST("auth/register/seller")
     suspend fun authRegister(
@@ -39,30 +41,38 @@ interface MamMatesApi {
     ): ResMamMates<String>
 
     @GET("orders/recent")
-    suspend fun getOrderRecent(): ResMamMates<OrdersRecent>
+    suspend fun getOrderRecent(
+        @Header("Authentication") token: String
+    ): ResMamMates<OrdersRecent>
 
     @GET("orders")
     suspend fun getOrders(
+        @Header("Authentication") token: String,
         @Query("status") status: Int
     ): ResMamMates<Orders>
 
     @GET("orders/{id}")
     suspend fun getOrderDetail(
+        @Header("Authentication") token: String,
         @Path("id") id: Int
     ): ResMamMates<OrderDetail>
 
     @PUT("orders/{id}")
     suspend fun changeOrderStatus(
+        @Header("Authentication") token: String,
         @Path("id") id: Int,
         @Body reqStatusChange: ReqStatusChange
     ): ResMamMates<String>
 
     @GET("foods")
-    suspend fun getAllFoods(): ResMamMates<Foods>
+    suspend fun getAllFoods(
+        @Header("Authentication") token: String,
+    ): ResMamMates<Foods>
 
     @Multipart
     @POST("foods")
     suspend fun addFood(
+        @Header("Authentication") token: String,
         @Part("image") image: MultipartBody.Part,
         @Part("name") name: String,
         @Part("price") price: Int,
@@ -73,12 +83,14 @@ interface MamMatesApi {
 
     @GET("foods/{id}")
     suspend fun getFoodDetails(
+        @Header("Authentication") token: String,
         @Path("id") id: Int
     ): ResMamMates<FoodDetail>
 
     @Multipart
     @PUT("foods/{id}")
     suspend fun updateFood(
+        @Header("Authentication") token: String,
         @Path("id") id: Int,
         @Part("image") image: MultipartBody.Part,
         @Part("name") name: String,
@@ -90,17 +102,23 @@ interface MamMatesApi {
 
     @DELETE("foods/{id}")
     suspend fun deleteFood(
+        @Header("Authentication") token: String,
         @Path("id") id: Int,
     ): ResMamMates<String>
 
     @GET("accounts/store")
-    suspend fun getStore(): ResMamMates<Store>
+    suspend fun getStore(
+        @Header("Authentication") token: String,
+    ): ResMamMates<Store>
 
     @GET("accounts/seller")
-    suspend fun getAccount(): ResMamMates<AccountSeller>
+    suspend fun getAccount(
+        @Header("Authentication") token: String,
+    ): ResMamMates<AccountSeller>
 
     @PUT("accounts/seller")
     suspend fun updateAccount(
+        @Header("Authentication") token: String,
         @Body reqAccountSeller: ReqAccountSeller
     ): ResMamMates<String>
 
@@ -108,22 +126,26 @@ interface MamMatesApi {
     @Multipart
     @PATCH("accounts/seller")
     suspend fun updateProfilePicture(
+        @Header("Authentication") token: String,
         @Part("image") image: MultipartBody.Part,
     ): ResMamMates<String>
 
     @PUT("password")
     suspend fun changePassword(
+        @Header("Authentication") token: String,
         @Body reqPasswordChange: ReqPasswordChange
     ): ResMamMates<String>
 
     @POST("mam_mates")
     suspend fun getMamRates(
+        @Header("Authentication") token: String,
         @Part("image") image: MultipartBody.Part
     ): ResMamMates<MamRates>
 
     @Multipart
     @POST("reports")
     suspend fun reportMamRates(
+        @Header("Authentication") token: String,
         @Part("name") name: String,
         @Part("price") price: Int,
         @Part("rating") rating: Int,
