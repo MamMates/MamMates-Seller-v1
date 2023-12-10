@@ -1,0 +1,3 @@
+package com.mammates.mammates_seller_v1.presentation.pages.main.change_password
+
+sealed class ChangePasswordEvent

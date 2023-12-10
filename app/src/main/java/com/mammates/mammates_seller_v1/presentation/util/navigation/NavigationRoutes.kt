@@ -19,6 +19,9 @@ sealed class NavigationRoutes(val route: String) {
         data object Add : NavigationRoutes("add")
         data object MamRates : NavigationRoutes("mam_rates")
         data object Account : NavigationRoutes("account")
+        data object AccountSetting : NavigationRoutes("account_setting")
+        data object ChangePassword : NavigationRoutes("change_password")
+        data object Camera : NavigationRoutes("camera")
     }
 
 

@@ -19,10 +19,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.mammates.mammates_seller_v1.util.StatusOrder
 
 @Composable
 fun CardRecentOrder(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    buyer: String,
+    status: StatusOrder
 ) {
     Row(
         modifier = modifier
@@ -46,11 +49,11 @@ fun CardRecentOrder(
     ) {
         Column {
             Text(
-                text = "Mr. Tude",
+                text = buyer,
                 style = MaterialTheme.typography.titleSmall
             )
             Text(
-                text = "Unconfirmed",
+                text = status.name,
                 style = MaterialTheme.typography.bodySmall
             )
         }
@@ -64,5 +67,8 @@ fun CardRecentOrder(
 @Preview(showBackground = true)
 @Composable
 fun CardRecentOrderPreview() {
-    CardRecentOrder()
+    CardRecentOrder(
+        buyer = "Mr. Tude",
+        status = StatusOrder.Unconfirmed
+    )
 }

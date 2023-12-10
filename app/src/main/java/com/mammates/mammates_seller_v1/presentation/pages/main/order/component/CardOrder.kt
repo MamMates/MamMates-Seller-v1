@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.mammates.mammates_seller_v1.domain.model.FoodOrderItem
 import com.mammates.mammates_seller_v1.util.StatusOrder
 
 @Composable
@@ -31,7 +32,8 @@ fun CardOrder(
     modifier: Modifier = Modifier,
     statusOrder: StatusOrder,
     buyer: String,
-    total: Int
+    total: Int,
+    foods: List<FoodOrderItem>
 ) {
     Column(
         modifier = modifier
@@ -60,19 +62,16 @@ fun CardOrder(
         Column(
             modifier = Modifier.padding(horizontal = 20.dp)
         ) {
-            CardOrderFood(
-                foodName = "Donut Kentang rasa coklat",
-                quantity = 4,
-                price = 20000
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-            CardOrderFood(
-                foodName = "Donut Kentang rasa coklat",
-                quantity = 4,
-                price = 20000
-            )
-            Spacer(modifier = Modifier.height(20.dp))
+            foods.forEach { item ->
+                CardOrderFood(
+                    foodName = item.name ?: "No Food Name",
+                    quantity = item.quantity ?: 0,
+                    price = item.price ?: 0
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+            }
         }
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -91,7 +90,7 @@ fun CardOrder(
                     style = MaterialTheme.typography.titleSmall
                 )
                 Text(
-                    text = "Rp. 40000",
+                    text = "Rp. $total",
                     style = MaterialTheme.typography.titleSmall
                 )
             }
@@ -111,7 +110,7 @@ fun CardOrder(
                         minWidth = ButtonDefaults.MinWidth,
                         minHeight = 10.dp
                     ),
-                    onClick = { /*TODO*/ },
+                    onClick = { },
                     enabled = false,
                     contentPadding = PaddingValues(horizontal = 15.dp, vertical = 1.dp),
                     colors = ButtonDefaults.buttonColors(
@@ -146,6 +145,20 @@ fun CardOrderPreview() {
     CardOrder(
         buyer = "Gede Mahardika",
         statusOrder = StatusOrder.Unconfirmed,
-        total = 40000
+        total = 40000,
+        foods = listOf(
+            FoodOrderItem(
+                image = null,
+                name = "Donut Kentang Rasa Coklat",
+                quantity = 4,
+                price = 20000
+            ),
+            FoodOrderItem(
+                image = null,
+                name = "Donut Kentang Rasa Coklat",
+                quantity = 4,
+                price = 20000
+            ),
+        )
     )
 }

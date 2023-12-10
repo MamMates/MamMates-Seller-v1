@@ -6,16 +6,16 @@ import com.google.gson.annotations.SerializedName
 data class Orders(
 
     @field:SerializedName("orders")
-    val orders: List<OrdersItem?>? = null
+    val orders: List<OrderItem?>? = null
 )
 
-data class OrdersItem(
+data class OrderItem(
 
     @field:SerializedName("total")
     val total: Int? = null,
 
     @field:SerializedName("foods")
-    val foods: List<FoodOrderItem?>? = null,
+    val foods: List<FoodOrderItem>? = null,
 
     @field:SerializedName("id")
     val id: Int? = null,

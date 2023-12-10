@@ -14,6 +14,9 @@ enum class StatusOrder(val color: Color) {
     ),
     Canceled(
         color = Color(0xFFDF0000)
+    ),
+    Unidentified (
+        color = Color(0xFF444444)
     )
 
 }

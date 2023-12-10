@@ -22,12 +22,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.mammates.mammates_seller_v1.domain.model.OrderRecentItems
 import com.mammates.mammates_seller_v1.presentation.component.pager.PagerIndicator
 import com.mammates.mammates_seller_v1.presentation.pages.main.home.component.CardArticle
 import com.mammates.mammates_seller_v1.presentation.pages.main.home.component.CardNavigation
+import com.mammates.mammates_seller_v1.presentation.pages.main.home.component.CardRecentOrder
 import com.mammates.mammates_seller_v1.presentation.pages.main.home.component.cardArticleItems
 import com.mammates.mammates_seller_v1.presentation.pages.main.home.component.cardNavigationItems
 import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
+import com.mammates.mammates_seller_v1.util.StatusOrder
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -89,13 +92,34 @@ fun HomeScreen(
             )
             Spacer(modifier = Modifier.height(15.dp))
             // TODO : Implementing Recent Order
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = "No Order Recently",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.outline,
-                textAlign = TextAlign.Center
-            )
+
+            if (state.orderList.isNullOrEmpty()) {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = "No Order Recently",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.outline,
+                    textAlign = TextAlign.Center
+                )
+            } else {
+                Column {
+                    state.orderList.forEach { items ->
+                        CardRecentOrder(
+                            buyer = items.buyer ?: "No Buyer Name",
+                            status = when (items.status) {
+                                0 -> StatusOrder.Canceled
+                                1 -> StatusOrder.Unconfirmed
+                                2 -> StatusOrder.Confirmed
+                                3 -> StatusOrder.Finish
+                                else -> StatusOrder.Unidentified
+                            }
+                        )
+                        Spacer(modifier = Modifier.height(20.dp))
+                    }
+                }
+            }
+
+
             Spacer(modifier = Modifier.height(25.dp))
             Text(
                 modifier = Modifier.fillMaxWidth(),
@@ -124,7 +148,23 @@ fun HomeScreen(
 fun HomeScreenPreview() {
     HomeScreen(
         navController = rememberNavController(),
-        state = HomeState(),
+        state = HomeState(
+            orderList = listOf(
+                OrderRecentItems(
+                    buyer = "Mr. Tude",
+                    status = 1
+                ),
+                OrderRecentItems(
+                    buyer = "Mr. Tude",
+                    status = 1
+                ),
+                OrderRecentItems(
+                    buyer = "Mr. Tude",
+                    status = 1
+                )
+
+            )
+        ),
         onEvent = {}
     )
 }

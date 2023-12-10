@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.mammates.mammates_seller_v1.presentation.pages.main.order.component.CardOrder
+import com.mammates.mammates_seller_v1.presentation.pages.main.order.component.NoOrderLabel
 import com.mammates.mammates_seller_v1.presentation.pages.main.order.component.tabTitleItem
 import com.mammates.mammates_seller_v1.util.StatusOrder
 
@@ -54,36 +55,86 @@ fun OrderScreen(
         }
         Spacer(modifier = Modifier.height(20.dp))
 
-        Column(
-            modifier = Modifier
-                .padding(horizontal = 35.dp)
-                .verticalScroll(scrollState),
-        ) {
+        when (state.tabIndex) {
+            0 -> if (state.unConfirmOrder.isNullOrEmpty()) {
+                NoOrderLabel(statusOrder = StatusOrder.Unconfirmed.name)
+            } else {
+                Column(
+                    modifier = Modifier
+                        .padding(horizontal = 35.dp)
+                        .verticalScroll(scrollState),
+                ) {
+                    state.unConfirmOrder.forEach { items ->
+                        CardOrder(
+                            statusOrder = StatusOrder.Unconfirmed,
+                            buyer = items.buyer ?: "No Buyer",
+                            total = items.total ?: 0,
+                            foods = items.foods ?: emptyList()
+                        )
+                    }
 
-            CardOrder(
-                buyer = "Gede Mahardika",
-                statusOrder = StatusOrder.Unconfirmed,
-                total = 40000
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-            CardOrder(
-                buyer = "Gede Mahardika",
-                statusOrder = StatusOrder.Confirmed,
-                total = 40000
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-            CardOrder(
-                buyer = "Gede Mahardika",
-                statusOrder = StatusOrder.Unconfirmed,
-                total = 40000
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-            CardOrder(
-                buyer = "Gede Mahardika",
-                statusOrder = StatusOrder.Unconfirmed,
-                total = 40000
-            )
-            Spacer(modifier = Modifier.height(20.dp))
+                }
+            }
+
+            1 -> if (state.confirmOrder.isNullOrEmpty()) {
+                NoOrderLabel(statusOrder = StatusOrder.Unconfirmed.name)
+            } else {
+                Column(
+                    modifier = Modifier
+                        .padding(horizontal = 35.dp)
+                        .verticalScroll(scrollState),
+                ) {
+                    state.confirmOrder.forEach { items ->
+                        CardOrder(
+                            statusOrder = StatusOrder.Unconfirmed,
+                            buyer = items.buyer ?: "No Buyer",
+                            total = items.total ?: 0,
+                            foods = items.foods ?: emptyList()
+                        )
+                    }
+
+                }
+            }
+
+            2 -> if (state.finishOrder.isNullOrEmpty()) {
+                NoOrderLabel(statusOrder = StatusOrder.Unconfirmed.name)
+            } else {
+                Column(
+                    modifier = Modifier
+                        .padding(horizontal = 35.dp)
+                        .verticalScroll(scrollState),
+                ) {
+                    state.finishOrder.forEach { items ->
+                        CardOrder(
+                            statusOrder = StatusOrder.Unconfirmed,
+                            buyer = items.buyer ?: "No Buyer",
+                            total = items.total ?: 0,
+                            foods = items.foods ?: emptyList()
+                        )
+                    }
+
+                }
+            }
+
+            3 -> if (state.canceledOrder.isNullOrEmpty()) {
+                NoOrderLabel(statusOrder = StatusOrder.Unconfirmed.name)
+            } else {
+                Column(
+                    modifier = Modifier
+                        .padding(horizontal = 35.dp)
+                        .verticalScroll(scrollState),
+                ) {
+                    state.canceledOrder.forEach { items ->
+                        CardOrder(
+                            statusOrder = StatusOrder.Unconfirmed,
+                            buyer = items.buyer ?: "No Buyer",
+                            total = items.total ?: 0,
+                            foods = items.foods ?: emptyList()
+                        )
+                    }
+
+                }
+            }
         }
     }
 }
