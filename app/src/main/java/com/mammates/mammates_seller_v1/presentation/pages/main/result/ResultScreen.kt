@@ -89,24 +89,23 @@ fun ResultScreen(
 
         }
         Spacer(modifier = Modifier.height(25.dp))
-        Text(
+        Row(
             modifier = Modifier.fillMaxWidth(),
-            text = "Your Photo",
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onBackground,
-        )
-        Spacer(modifier = Modifier.height(15.dp))
-        Image(
-            modifier = Modifier
-                .width(200.dp)
-                .border(width = 1.dp, color = MaterialTheme.colorScheme.onBackground),
-            bitmap = state.image ?: BitmapFactory.decodeResource(
-                context.resources,
-                R.drawable.image_placeholder
-            ).asImageBitmap(),
-            contentDescription = "Result Image",
-            contentScale = ContentScale.Fit
-        )
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Price Sugestion:",
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.inverseSurface
+            )
+            Text(
+                text = "Rp. ${state.price}",
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.inverseSurface
+            )
+
+        }
         Spacer(modifier = Modifier.height(25.dp))
         Text(
             modifier = Modifier.fillMaxWidth(),

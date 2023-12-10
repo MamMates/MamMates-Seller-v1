@@ -1,6 +1,10 @@
 package com.mammates.mammates_seller_v1.presentation.pages.main.store
 
+import com.mammates.mammates_seller_v1.domain.model.FoodItem
+
 data class StoreState(
-    val storeName: String = "Pecel Lele Bro Waw Murah Meriah",
-    val storeAddress : String = "Jalan kampus merdeka 21 gang 69"
+    val storeName: String = "",
+    val storeAddress : String = "",
+
+    val foods : List<FoodItem>? = null
 )

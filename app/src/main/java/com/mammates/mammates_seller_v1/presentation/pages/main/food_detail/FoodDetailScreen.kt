@@ -128,11 +128,9 @@ fun FoodDetailScreen(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
-fun FoodDetailScreenPreview(
-
-) {
+fun FoodDetailScreenPreview() {
     FoodDetailScreen(
         navController = rememberNavController(),
         state = FoodDetailState(),

@@ -77,7 +77,7 @@ fun OrderScreen(
             }
 
             1 -> if (state.confirmOrder.isNullOrEmpty()) {
-                NoOrderLabel(statusOrder = StatusOrder.Unconfirmed.name)
+                NoOrderLabel(statusOrder = StatusOrder.Confirmed.name)
             } else {
                 Column(
                     modifier = Modifier
@@ -86,7 +86,7 @@ fun OrderScreen(
                 ) {
                     state.confirmOrder.forEach { items ->
                         CardOrder(
-                            statusOrder = StatusOrder.Unconfirmed,
+                            statusOrder = StatusOrder.Confirmed,
                             buyer = items.buyer ?: "No Buyer",
                             total = items.total ?: 0,
                             foods = items.foods ?: emptyList()
@@ -97,7 +97,7 @@ fun OrderScreen(
             }
 
             2 -> if (state.finishOrder.isNullOrEmpty()) {
-                NoOrderLabel(statusOrder = StatusOrder.Unconfirmed.name)
+                NoOrderLabel(statusOrder = StatusOrder.Finish.name)
             } else {
                 Column(
                     modifier = Modifier
@@ -106,7 +106,7 @@ fun OrderScreen(
                 ) {
                     state.finishOrder.forEach { items ->
                         CardOrder(
-                            statusOrder = StatusOrder.Unconfirmed,
+                            statusOrder = StatusOrder.Finish,
                             buyer = items.buyer ?: "No Buyer",
                             total = items.total ?: 0,
                             foods = items.foods ?: emptyList()
@@ -117,7 +117,7 @@ fun OrderScreen(
             }
 
             3 -> if (state.canceledOrder.isNullOrEmpty()) {
-                NoOrderLabel(statusOrder = StatusOrder.Unconfirmed.name)
+                NoOrderLabel(statusOrder = StatusOrder.Canceled.name)
             } else {
                 Column(
                     modifier = Modifier
@@ -126,7 +126,7 @@ fun OrderScreen(
                 ) {
                     state.canceledOrder.forEach { items ->
                         CardOrder(
-                            statusOrder = StatusOrder.Unconfirmed,
+                            statusOrder = StatusOrder.Canceled,
                             buyer = items.buyer ?: "No Buyer",
                             total = items.total ?: 0,
                             foods = items.foods ?: emptyList()
@@ -144,7 +144,9 @@ fun OrderScreen(
 fun OrderScreenPreview() {
     OrderScreen(
         navController = rememberNavController(),
-        state = OrderState(),
+        state = OrderState(
+            tabIndex = 0,
+        ),
         onEvent = {}
     )
 }

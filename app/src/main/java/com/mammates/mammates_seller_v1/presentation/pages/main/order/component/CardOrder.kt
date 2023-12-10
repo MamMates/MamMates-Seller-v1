@@ -66,7 +66,8 @@ fun CardOrder(
                 CardOrderFood(
                     foodName = item.name ?: "No Food Name",
                     quantity = item.quantity ?: 0,
-                    price = item.price ?: 0
+                    price = item.price ?: 0,
+                    image = item.image
                 )
                 Spacer(modifier = Modifier.height(20.dp))
             }

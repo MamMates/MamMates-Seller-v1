@@ -6,5 +6,5 @@ import com.mammates.mammates_seller_v1.util.Rating
 data class ResultState(
     val rating: Rating = Rating.ZERO,
     val category: String = "",
-    val image: ImageBitmap? = null
+    val price : Int = 0,
 )

@@ -81,19 +81,34 @@ fun StoreScreen(
                 )
             }
             Spacer(modifier = Modifier.height(25.dp))
-            CardFood(
-                rating = Rating.THREE,
-                foodName = "Donut Suka Terbang",
-                price = 5000
-            )
-            Spacer(modifier = Modifier.height(15.dp))
-            CardFood(
-                rating = Rating.THREE,
-                foodName = "Donut Suka Terbang",
-                price = 5000
-            )
-            Spacer(modifier = Modifier.height(15.dp))
-
+            if (state.foods.isNullOrEmpty()) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    Text(
+                        text = "No Food",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.outline
+                    )
+                }
+            } else {
+                state.foods.forEach { item ->
+                    CardFood(
+                        rating = when (item.mamRates) {
+                            1 -> Rating.ONE
+                            2 -> Rating.TWO
+                            3 -> Rating.THREE
+                            else -> Rating.ZERO
+                        },
+                        foodName = item.name ?: "No Name",
+                        price = item.price ?: 0,
+                        image = item.image
+                    )
+                    Spacer(modifier = Modifier.height(15.dp))
+                }
+            }
         }
     }
 }
@@ -103,7 +118,10 @@ fun StoreScreen(
 fun StoreScreenPreview() {
     StoreScreen(
         navController = rememberNavController(),
-        state = StoreState(),
+        state = StoreState(
+            storeName = "Pecel Lele Bro Waw Murah Meriah",
+            storeAddress = "Jalan kampus merdeka 21 gang 69 "
+        ),
         onEvent = {}
     )
 }
