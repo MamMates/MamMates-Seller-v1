@@ -2,22 +2,32 @@ package com.mammates.mammates_seller_v1.presentation.pages.main.store
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.mammates.mammates_seller_v1.presentation.pages.main.store.component.CardFood
 import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
+import com.mammates.mammates_seller_v1.util.Rating
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,11 +51,49 @@ fun StoreScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding),
-            verticalArrangement = Arrangement.Center,
+                .padding(innerPadding)
+                .padding(horizontal = 35.dp),
+            verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(text = state.exampleState)
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = state.storeName,
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.onBackground,
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.LocationOn,
+                    contentDescription = "Location Icons",
+                    tint = MaterialTheme.colorScheme.outline
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = state.storeAddress,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.outline
+                )
+            }
+            Spacer(modifier = Modifier.height(25.dp))
+            CardFood(
+                rating = Rating.THREE,
+                foodName = "Donut Suka Terbang",
+                price = 5000
+            )
+            Spacer(modifier = Modifier.height(15.dp))
+            CardFood(
+                rating = Rating.THREE,
+                foodName = "Donut Suka Terbang",
+                price = 5000
+            )
+            Spacer(modifier = Modifier.height(15.dp))
+
         }
     }
 }

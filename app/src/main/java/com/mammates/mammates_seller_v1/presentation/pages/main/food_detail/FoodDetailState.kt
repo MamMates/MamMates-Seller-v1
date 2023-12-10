@@ -1,8 +1,8 @@
-package com.mammates.mammates_seller_v1.presentation.pages.main.add
+package com.mammates.mammates_seller_v1.presentation.pages.main.food_detail
 
 import com.mammates.mammates_seller_v1.util.Rating
 
-data class AddState(
+data class FoodDetailState(
     val foodName : String = "",
     val foodNameValidation : String? = null,
 

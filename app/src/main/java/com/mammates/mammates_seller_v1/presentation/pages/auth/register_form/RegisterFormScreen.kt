@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.mammates.mammates_seller_v1.presentation.pages.auth.register_form.component.RegisterFormPasswordTextField
-import com.mammates.mammates_seller_v1.presentation.pages.auth.register_form.component.RegisterFormTextField
+import com.mammates.mammates_seller_v1.presentation.component.text_field.FormTextField
 import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
 
 @Composable
@@ -43,7 +43,7 @@ fun RegisterFormScreen(
             color = MaterialTheme.colorScheme.onBackground,
         )
         Spacer(modifier = Modifier.height(20.dp))
-        RegisterFormTextField(
+        FormTextField(
             value = state.storeName,
             onValueChange = {
                 onEvent(RegisterFormEvent.OnChangeStoreName(it))
@@ -53,7 +53,7 @@ fun RegisterFormScreen(
             description = "Craft a unique identity for your culinary venture – input your store name and let it shine on MamMates",
         )
         Spacer(modifier = Modifier.height(20.dp))
-        RegisterFormTextField(
+        FormTextField(
             value = state.address,
             onValueChange = {
                 onEvent(RegisterFormEvent.OnChangeStoreAddress(it))
@@ -63,7 +63,7 @@ fun RegisterFormScreen(
             description = "Pin your delicious location on the map – provide your store address for a spot-on culinary destination",
         )
         Spacer(modifier = Modifier.height(20.dp))
-        RegisterFormTextField(
+        FormTextField(
             value = state.name,
             onValueChange = {
                 onEvent(RegisterFormEvent.OnChangeName(it))
@@ -73,7 +73,7 @@ fun RegisterFormScreen(
             description = "Personalize your presence – share your full name and let customers know the face behind the fantastic flavors.",
         )
         Spacer(modifier = Modifier.height(20.dp))
-        RegisterFormTextField(
+        FormTextField(
             value = state.email,
             onValueChange = {
                 onEvent(RegisterFormEvent.OnChangeEmail(it))

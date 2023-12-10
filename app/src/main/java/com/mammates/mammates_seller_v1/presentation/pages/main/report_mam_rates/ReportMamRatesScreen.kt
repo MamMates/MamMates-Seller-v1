@@ -1,4 +1,4 @@
-package com.mammates.mammates_seller_v1.presentation.pages.main.add
+package com.mammates.mammates_seller_v1.presentation.pages.main.report_mam_rates
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,9 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -30,14 +27,12 @@ import androidx.navigation.compose.rememberNavController
 import com.mammates.mammates_seller_v1.presentation.component.rating.RatingDisplay
 import com.mammates.mammates_seller_v1.presentation.component.text_field.FormImageTextField
 import com.mammates.mammates_seller_v1.presentation.component.text_field.FormTextField
-import com.mammates.mammates_seller_v1.util.Rating
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddScreen(
+fun ReportMamRatesScreen(
     navController: NavController,
-    state: AddState,
-    onEvent: (AddEvent) -> Unit
+    state: ReportMamRatesState,
+    onEvent: (ReportMamRatesEvent) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -48,14 +43,14 @@ fun AddScreen(
     ) {
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = "Add New Food",
+            text = "Report MamRates",
             style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.onBackground,
         )
         Spacer(modifier = Modifier.height(20.dp))
         FormImageTextField(
             label = "Food Display",
-            description = "Enhance your store's appeal with our food display feature "
+            description = "blablala"
         )
         Spacer(modifier = Modifier.height(20.dp))
         FormTextField(
@@ -63,7 +58,7 @@ fun AddScreen(
             onValueChange = {},
             errorResult = state.foodNameValidation,
             label = "Food Name",
-            description = "Name your culinary creations and make them stand out on MamMates",
+            description = "blablabla",
         )
         Spacer(modifier = Modifier.height(20.dp))
         FormTextField(
@@ -71,77 +66,40 @@ fun AddScreen(
             onValueChange = {},
             errorResult = state.foodPriceValidation,
             label = "Food Price (Rp)",
-            description = "Input your desired prices and attract food enthusiasts on MamMates.",
+            description = "blablala",
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number
             )
         )
         Spacer(modifier = Modifier.height(20.dp))
-        FormImageTextField(
-            label = "MamRates",
-            description = "Upload a photo for automatic MamRates. Once generated, ratings cannot be changed",
-        )
-        Spacer(modifier = Modifier.height(25.dp))
-        Row (
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            RatingDisplay(
-                rating = state.rating
+        FormTextField(
+            value = "${state.rating}",
+            onValueChange = {},
+            errorResult = state.ratingValidation,
+            label = "Your Preferable Rating (0-3)",
+            description = "blablala",
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Number
             )
-            FilledTonalButton(onClick = { /*TODO*/ }) {
-                Text(text = "Generate")
-
-            }
-        }
-        Spacer(modifier = Modifier.height(10.dp))
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = state.foodCategory ?: "Please generate your Rating !",
-            style = MaterialTheme.typography.bodySmall,
-            color= MaterialTheme.colorScheme.secondary,
         )
-        Spacer(modifier = Modifier.height(10.dp))
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = state.suggestion,
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.outline,
-            textAlign = TextAlign.Justify,
-        )
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = "Data doesn’t match ?",
-                style = MaterialTheme.typography.bodySmall
-            )
-            TextButton(
-                contentPadding = PaddingValues(0.dp),
-                onClick = {}
-            ) {
-                Text(
-                    text = "Reports",
-                    style = MaterialTheme.typography.bodySmall
-                )
-            }
-        }
+        Spacer(modifier = Modifier.height(20.dp))
         Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = { /*TODO*/ }
         ) {
-            Text(text = "Add Food")
+            Text(text = "Report")
         }
     }
 }
 
-@Preview(showBackground = true)
+@Preview (showBackground = true)
 @Composable
-fun AddScreenPreview() {
-    AddScreen(
+fun ReportMamRatesScreenPreview(
+
+) {
+    ReportMamRatesScreen(
         navController = rememberNavController(),
-        state = AddState(),
+        state = ReportMamRatesState(),
         onEvent = {}
     )
 }
