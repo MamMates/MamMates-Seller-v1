@@ -12,10 +12,12 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.mammates.mammates_seller_v1.presentation.component.bottom_navigation.BottomNavigation
@@ -23,8 +25,8 @@ import com.mammates.mammates_seller_v1.presentation.component.bottom_navigation.
 import com.mammates.mammates_seller_v1.presentation.component.top_navigation.TopBackNavigation
 import com.mammates.mammates_seller_v1.presentation.component.top_navigation.TopNavigation
 import com.mammates.mammates_seller_v1.presentation.ui.theme.MamMatesSellerv1Theme
+import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationGraph
 import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
-import com.mammates.mammates_seller_v1.presentation.util.navigation.graph.NavigationGraph
 import dagger.hilt.android.AndroidEntryPoint
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,6 +34,8 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
 
         installSplashScreen().apply {
             setOnExitAnimationListener { screen ->
@@ -95,9 +99,18 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     ) { innerPadding ->
+                        val viewModel = hiltViewModel<MainViewModel>()
+                        val state by viewModel.state.collectAsState()
                         NavigationGraph(
                             modifier = Modifier.padding(innerPadding),
                             navController = navController,
+                            startDestination = if (!state.isOnBoarding && !state.isAuth) {
+                                NavigationRoutes.Introduction.route
+                            } else if (!state.isAuth) {
+                                NavigationRoutes.Auth.route
+                            } else {
+                                NavigationRoutes.Main.route
+                            }
                         )
                     }
                 }

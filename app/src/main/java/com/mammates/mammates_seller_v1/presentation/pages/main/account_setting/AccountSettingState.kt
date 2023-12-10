@@ -1,7 +1,5 @@
 package com.mammates.mammates_seller_v1.presentation.pages.main.account_setting
 
-import com.mammates.mammates_seller_v1.util.Rating
-
 data class AccountSettingState(
     val storeName: String = "",
     val storeNameValidation: String? = null,
@@ -15,4 +13,4 @@ data class AccountSettingState(
     val email: String = "",
     val emailValidation: String? = null,
 
-)
+    )

@@ -4,7 +4,7 @@ import com.mammates.mammates_seller_v1.domain.model.FoodItem
 
 data class StoreState(
     val storeName: String = "",
-    val storeAddress : String = "",
+    val storeAddress: String = "",
 
-    val foods : List<FoodItem>? = null
+    val foods: List<FoodItem>? = null
 )

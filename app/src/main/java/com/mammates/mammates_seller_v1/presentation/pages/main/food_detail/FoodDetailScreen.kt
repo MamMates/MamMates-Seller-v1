@@ -25,8 +25,6 @@ import androidx.navigation.compose.rememberNavController
 import com.mammates.mammates_seller_v1.presentation.component.rating.RatingDisplay
 import com.mammates.mammates_seller_v1.presentation.component.text_field.FormImageTextField
 import com.mammates.mammates_seller_v1.presentation.component.text_field.FormTextField
-import com.mammates.mammates_seller_v1.presentation.pages.main.add.AddScreen
-import com.mammates.mammates_seller_v1.presentation.pages.main.add.AddState
 
 @Composable
 fun FoodDetailScreen(
@@ -74,7 +72,7 @@ fun FoodDetailScreen(
             description = "Upload a photo for automatic MamRates. Once generated, ratings cannot be changed",
         )
         Spacer(modifier = Modifier.height(25.dp))
-        Row (
+        Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
@@ -92,7 +90,7 @@ fun FoodDetailScreen(
             modifier = Modifier.fillMaxWidth(),
             text = state.foodCategory ?: "Please generate your Rating !",
             style = MaterialTheme.typography.bodySmall,
-            color= MaterialTheme.colorScheme.secondary,
+            color = MaterialTheme.colorScheme.secondary,
         )
         Spacer(modifier = Modifier.height(10.dp))
         Text(

@@ -47,9 +47,9 @@ fun AccountSettingScreen(
         Spacer(modifier = Modifier.height(20.dp))
         FormTextField(
             value = state.storeName,
-            onValueChange ={
+            onValueChange = {
 
-            } ,
+            },
             errorResult = state.storeNameValidation,
             label = "Store Name",
             description = "blablabla"
@@ -57,9 +57,9 @@ fun AccountSettingScreen(
         Spacer(modifier = Modifier.height(20.dp))
         FormTextField(
             value = state.storeAddress,
-            onValueChange ={
+            onValueChange = {
 
-            } ,
+            },
             errorResult = state.storeAddressValidation,
             label = "Store Address",
             description = "blablabla"
@@ -67,9 +67,9 @@ fun AccountSettingScreen(
         Spacer(modifier = Modifier.height(20.dp))
         FormTextField(
             value = state.name,
-            onValueChange ={
+            onValueChange = {
 
-            } ,
+            },
             errorResult = state.nameValidation,
             label = "Full Name",
             description = "blablabla"
@@ -77,9 +77,9 @@ fun AccountSettingScreen(
         Spacer(modifier = Modifier.height(20.dp))
         FormTextField(
             value = state.email,
-            onValueChange ={
+            onValueChange = {
 
-            } ,
+            },
             errorResult = state.emailValidation,
             label = "Email",
             description = "blablabla"

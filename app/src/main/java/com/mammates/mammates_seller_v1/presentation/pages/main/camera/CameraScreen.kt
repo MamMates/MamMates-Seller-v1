@@ -8,8 +8,8 @@ import androidx.navigation.compose.rememberNavController
 @Composable
 fun CameraScreen(
     navController: NavController,
-    state : CameraState,
-    onEvent : (CameraEvent) -> Unit
+    state: CameraState,
+    onEvent: (CameraEvent) -> Unit
 ) {
 
 }

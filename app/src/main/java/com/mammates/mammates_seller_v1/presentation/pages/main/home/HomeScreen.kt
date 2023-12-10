@@ -14,7 +14,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -29,7 +28,6 @@ import com.mammates.mammates_seller_v1.presentation.pages.main.home.component.Ca
 import com.mammates.mammates_seller_v1.presentation.pages.main.home.component.CardRecentOrder
 import com.mammates.mammates_seller_v1.presentation.pages.main.home.component.cardArticleItems
 import com.mammates.mammates_seller_v1.presentation.pages.main.home.component.cardNavigationItems
-import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
 import com.mammates.mammates_seller_v1.util.StatusOrder
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -46,100 +44,80 @@ fun HomeScreen(
         }
     )
 
-    if (!state.isOnBoarding && !state.isAuth) {
-        LaunchedEffect(key1 = true) {
-            navController.navigate(route = NavigationRoutes.Introduction.route) {
-                popUpTo(route = NavigationRoutes.Main.route) {
-                    inclusive = true
-                }
-            }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState)
+            .padding(horizontal = 35.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        HorizontalPager(state = pagerState, pageSpacing = 20.dp) { page ->
+            CardNavigation(
+                title = cardNavigationItems[page].title,
+                illustration = cardNavigationItems[page].illustration,
+                navController = navController,
+                route = cardNavigationItems[page].route
+            )
         }
-    } else if (!state.isAuth) {
-        LaunchedEffect(key1 = true) {
-            navController.navigate(route = NavigationRoutes.Auth.route) {
-                popUpTo(route = NavigationRoutes.Main.route) {
-                    inclusive = true
-                }
-            }
-        }
-    } else {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(scrollState)
-                .padding(horizontal = 35.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            HorizontalPager(state = pagerState, pageSpacing = 20.dp) { page ->
-                CardNavigation(
-                    title = cardNavigationItems[page].title,
-                    illustration = cardNavigationItems[page].illustration,
-                    navController = navController,
-                    route = cardNavigationItems[page].route
-                )
-            }
 
-            Spacer(modifier = Modifier.height(15.dp))
+        Spacer(modifier = Modifier.height(15.dp))
 
-            PagerIndicator(pagerState = pagerState)
-            Spacer(modifier = Modifier.height(25.dp))
+        PagerIndicator(pagerState = pagerState)
+        Spacer(modifier = Modifier.height(25.dp))
 
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = "Recently Order",
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.primary
+        )
+        Spacer(modifier = Modifier.height(15.dp))
+        // TODO : Implementing Recent Order
+
+        if (state.orderList.isNullOrEmpty()) {
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = "Recently Order",
+                text = "No Order Recently",
                 style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.outline,
+                textAlign = TextAlign.Center
             )
-            Spacer(modifier = Modifier.height(15.dp))
-            // TODO : Implementing Recent Order
-
-            if (state.orderList.isNullOrEmpty()) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = "No Order Recently",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.outline,
-                    textAlign = TextAlign.Center
-                )
-            } else {
-                Column {
-                    state.orderList.forEach { items ->
-                        CardRecentOrder(
-                            buyer = items.buyer ?: "No Buyer Name",
-                            status = when (items.status) {
-                                0 -> StatusOrder.Canceled
-                                1 -> StatusOrder.Unconfirmed
-                                2 -> StatusOrder.Confirmed
-                                3 -> StatusOrder.Finish
-                                else -> StatusOrder.Unidentified
-                            }
-                        )
-                        Spacer(modifier = Modifier.height(20.dp))
-                    }
+        } else {
+            Column {
+                state.orderList.forEach { items ->
+                    CardRecentOrder(
+                        buyer = items.buyer ?: "No Buyer Name",
+                        status = when (items.status) {
+                            0 -> StatusOrder.Canceled
+                            1 -> StatusOrder.Unconfirmed
+                            2 -> StatusOrder.Confirmed
+                            3 -> StatusOrder.Finish
+                            else -> StatusOrder.Unidentified
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(20.dp))
                 }
             }
-
-
-            Spacer(modifier = Modifier.height(25.dp))
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = "Article",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.primary
-            )
-            Spacer(modifier = Modifier.height(15.dp))
-
-            cardArticleItems.forEach { items ->
-                CardArticle(
-                    title = items.title,
-                    illustration = items.illustration,
-                    description = items.description
-                )
-                Spacer(modifier = Modifier.height(15.dp))
-            }
-
         }
 
+
+        Spacer(modifier = Modifier.height(25.dp))
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = "Article",
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.primary
+        )
+        Spacer(modifier = Modifier.height(15.dp))
+
+        cardArticleItems.forEach { items ->
+            CardArticle(
+                title = items.title,
+                illustration = items.illustration,
+                description = items.description
+            )
+            Spacer(modifier = Modifier.height(15.dp))
+        }
     }
 }
 

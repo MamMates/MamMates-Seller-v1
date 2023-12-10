@@ -30,7 +30,7 @@ fun CardFood(
     rating: Rating,
     foodName: String,
     price: Int,
-    image : String?
+    image: String?
 ) {
 
     val context = LocalContext.current
@@ -45,7 +45,8 @@ fun CardFood(
             .padding(horizontal = 20.dp, vertical = 10.dp)
     ) {
         AsyncImage(
-            modifier = Modifier.width(60.dp)
+            modifier = Modifier
+                .width(60.dp)
                 .height(60.dp),
             model = ImageRequest.Builder(context)
                 .data(image)

@@ -45,7 +45,7 @@ fun AccountScreen(
                 modifier = Modifier
                     .width(60.dp)
                     .height(60.dp),
-                painter = painterResource(id = R.drawable.dummy_food ),
+                painter = painterResource(id = R.drawable.dummy_food),
                 contentDescription = "Store Profile",
                 contentScale = ContentScale.Fit
             )
@@ -58,13 +58,13 @@ fun AccountScreen(
         Spacer(modifier = Modifier.height(30.dp))
         CardAccount(
             navController = navController,
-            title = "Account Setting" ,
+            title = "Account Setting",
             route = NavigationRoutes.Main.AccountSetting.route
         )
         Spacer(modifier = Modifier.height(5.dp))
         CardAccount(
             navController = navController,
-            title = "Change Password" ,
+            title = "Change Password",
             route = NavigationRoutes.Main.ChangePassword.route
         )
         Spacer(modifier = Modifier.height(30.dp))

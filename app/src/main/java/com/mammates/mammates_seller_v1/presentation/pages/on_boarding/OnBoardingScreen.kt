@@ -30,7 +30,9 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OnBoardingScreen(
-    navController: NavController
+    navController: NavController,
+    state: OnBoardingState,
+    onEvent: (OnBoardingEvent) -> Unit
 ) {
 
     val pagerState = rememberPagerState(
@@ -70,8 +72,12 @@ fun OnBoardingScreen(
                     if (pagerState.currentPage != pagerState.pageCount - 1) {
                         pagerState.animateScrollToPage(pagerState.currentPage + 1)
                     } else {
-                        navController.popBackStack()
-                        navController.navigate(NavigationRoutes.Auth.route)
+                        onEvent(OnBoardingEvent.SetIntroIsDone)
+                        navController.navigate(NavigationRoutes.Auth.route) {
+                            popUpTo(NavigationRoutes.Introduction.route) {
+                                inclusive = true
+                            }
+                        }
                     }
                 }
             }
@@ -87,6 +93,8 @@ fun OnBoardingScreen(
 @Composable
 fun OnBoardingScreenPreview() {
     OnBoardingScreen(
-        navController = rememberNavController()
+        navController = rememberNavController(),
+        onEvent = {},
+        state = OnBoardingState()
     )
 }

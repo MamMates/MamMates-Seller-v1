@@ -1,6 +1,5 @@
 package com.mammates.mammates_seller_v1.presentation.pages.main.order.component
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,7 +27,7 @@ fun CardOrderFood(
     modifier: Modifier = Modifier,
     foodName: String,
     quantity: Int,
-    image : String?,
+    image: String?,
     price: Int // TODO : Currency type
 ) {
 
@@ -41,7 +40,8 @@ fun CardOrderFood(
         verticalAlignment = Alignment.CenterVertically
     ) {
         AsyncImage(
-            modifier = Modifier.width(60.dp)
+            modifier = Modifier
+                .width(60.dp)
                 .height(60.dp),
             model = ImageRequest.Builder(context)
                 .data(image)
