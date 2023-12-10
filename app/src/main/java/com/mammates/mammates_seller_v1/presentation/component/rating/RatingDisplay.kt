@@ -16,7 +16,7 @@ fun RatingDisplay(
     modifier: Modifier = Modifier,
     rating: Rating
 ) {
-    Row  {
+    Row {
         Icon(
             modifier = modifier,
             imageVector = if (
@@ -31,7 +31,7 @@ fun RatingDisplay(
             contentDescription = "Star One",
             tint = MaterialTheme.colorScheme.secondary,
 
-        )
+            )
         Icon(
             modifier = modifier,
             imageVector = if (

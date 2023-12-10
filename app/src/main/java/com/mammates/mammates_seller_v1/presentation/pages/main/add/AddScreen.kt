@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
@@ -30,7 +28,6 @@ import androidx.navigation.compose.rememberNavController
 import com.mammates.mammates_seller_v1.presentation.component.rating.RatingDisplay
 import com.mammates.mammates_seller_v1.presentation.component.text_field.FormImageTextField
 import com.mammates.mammates_seller_v1.presentation.component.text_field.FormTextField
-import com.mammates.mammates_seller_v1.util.Rating
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -82,7 +79,7 @@ fun AddScreen(
             description = "Upload a photo for automatic MamRates. Once generated, ratings cannot be changed",
         )
         Spacer(modifier = Modifier.height(25.dp))
-        Row (
+        Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
@@ -100,7 +97,7 @@ fun AddScreen(
             modifier = Modifier.fillMaxWidth(),
             text = state.foodCategory ?: "Please generate your Rating !",
             style = MaterialTheme.typography.bodySmall,
-            color= MaterialTheme.colorScheme.secondary,
+            color = MaterialTheme.colorScheme.secondary,
         )
         Spacer(modifier = Modifier.height(10.dp))
         Text(

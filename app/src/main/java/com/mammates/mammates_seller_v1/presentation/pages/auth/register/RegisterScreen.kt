@@ -45,7 +45,7 @@ fun RegisterScreen(
         )
         Spacer(modifier = Modifier.height(50.dp))
         Image(
-            painter = painterResource(id = R.drawable.register_illustration) ,
+            painter = painterResource(id = R.drawable.register_illustration),
             contentDescription = "Register illustration"
         )
         Spacer(modifier = Modifier.height(50.dp))
@@ -59,7 +59,7 @@ fun RegisterScreen(
         Spacer(modifier = Modifier.height(50.dp))
 
         Button(
-            modifier =Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             onClick = {
                 navController.navigate(NavigationRoutes.Auth.RegisterForm.route)
             }
@@ -89,7 +89,7 @@ fun RegisterScreen(
     }
 }
 
-@Preview (showBackground = true)
+@Preview(showBackground = true)
 @Composable
 fun RegisterScreenPreview() {
     RegisterScreen(navController = rememberNavController())

@@ -19,7 +19,7 @@ fun FormTextField(
     label: String,
     description: String,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    ) {
+) {
     Column {
         Text(
             text = label,

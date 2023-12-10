@@ -9,7 +9,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -20,7 +19,7 @@ fun PrimaryTextField(
     errorResult: String?,
     label: String,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    ) {
+) {
 
     TextField(
         modifier = Modifier.fillMaxWidth(),
