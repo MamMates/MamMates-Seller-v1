@@ -30,6 +30,7 @@ import retrofit2.http.Query
 
 interface MamMatesApi {
 
+    // Auth
     @POST("auth/login")
     fun authLogin(
         @Body reqLogin: ReqLogin
@@ -40,6 +41,7 @@ interface MamMatesApi {
         @Body reqRegister: ReqRegister
     ): ResMamMates<String>
 
+    // Order
     @GET("orders/recent")
     suspend fun getOrderRecent(
         @Header("Authentication") token: String
@@ -64,6 +66,7 @@ interface MamMatesApi {
         @Body reqStatusChange: ReqStatusChange
     ): ResMamMates<String>
 
+    // Foods
     @GET("foods")
     suspend fun getAllFoods(
         @Header("Authentication") token: String,

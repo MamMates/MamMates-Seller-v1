@@ -1,5 +1,6 @@
 package com.mammates.mammates_seller_v1.presentation.pages.auth.login
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mammates.mammates_seller_v1.common.Resource
@@ -46,6 +47,18 @@ class LoginViewModel @Inject constructor(
             }
 
             LoginEvent.OnLogin -> {
+
+                _state.value = _state.value.copy(
+                    emailValidationResult = emailValidation(_state.value.email),
+                    passwordValidationResult = passwordValidation(_state.value.password)
+                )
+                if (
+                    !_state.value.emailValidationResult.isNullOrEmpty() &&
+                    !_state.value.passwordValidationResult.isNullOrEmpty()
+                ) {
+                    return
+                }
+
                 authUseCases.authLoginUseCase(_state.value.email, _state.value.password)
                     .onEach { result ->
                         when (result) {
@@ -63,6 +76,7 @@ class LoginViewModel @Inject constructor(
                             }
 
                             is Resource.Success -> {
+                                Log.i("LoginViewModel", "Di Success")
                                 result.data?.let {
                                     tokenUseCases.setTokenUseCase(it)
                                     _state.value = _state.value.copy(
@@ -75,6 +89,12 @@ class LoginViewModel @Inject constructor(
 
                     }.launchIn(viewModelScope)
 
+            }
+
+            LoginEvent.OnDismisDialog -> {
+                _state.value = _state.value.copy(
+                    errorMessage = null,
+                )
             }
         }
     }

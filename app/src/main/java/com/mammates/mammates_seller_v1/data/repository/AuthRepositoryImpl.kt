@@ -5,9 +5,11 @@ import com.mammates.mammates_seller_v1.data.source.remote.dto.ReqLogin
 import com.mammates.mammates_seller_v1.data.source.remote.dto.ReqRegister
 import com.mammates.mammates_seller_v1.data.source.remote.dto.ResMamMates
 import com.mammates.mammates_seller_v1.domain.repository.AuthRepository
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.IOException
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -16,14 +18,12 @@ class AuthRepositoryImpl @Inject constructor(
     private val api: MamMatesApi
 ) : AuthRepository {
     override suspend fun authLogin(email: String, password: String): ResMamMates<String> {
-
         return suspendCoroutine { continuation ->
             val client = api.authLogin(
                 reqLogin = ReqLogin(
                     email, password
                 )
             )
-            var token = ""
             client.enqueue(
                 object : Callback<ResMamMates<String>> {
                     override fun onResponse(
@@ -31,7 +31,7 @@ class AuthRepositoryImpl @Inject constructor(
                         response: Response<ResMamMates<String>>
                     ) {
                         if (response.isSuccessful) {
-                            token = response.headers()["Authentication"].toString()
+                            val token = response.headers()["Authentication"].toString()
                             continuation.resume(
                                 ResMamMates(
                                     response.body()?.status ?: "",
@@ -42,18 +42,33 @@ class AuthRepositoryImpl @Inject constructor(
                             )
                             return
                         }
-                        continuation.resume(
-                            ResMamMates(
-                                response.body()?.status ?: "",
-                                response.body()?.code ?: 0,
-                                response.body()?.message ?: "",
-                                response.body()?.data
+
+                        response.errorBody()?.let {
+                            val jsonObject = JSONObject(it.charStream().readText())
+                            continuation.resume(
+                                ResMamMates(
+                                    jsonObject.getString("status"),
+                                    jsonObject.getInt("code"),
+                                    jsonObject.getString("message"),
+                                    data = null
+                                )
                             )
-                        )
+                        }
+
+
                     }
 
                     override fun onFailure(call: Call<ResMamMates<String>>, t: Throwable) {
-                        throw t
+                        if (t is IOException) {
+                            continuation.resume(
+                                ResMamMates(
+                                    status = "",
+                                    code = 0,
+                                    message = "Couldn't reach server. Check your internet connection.",
+                                    data = null,
+                                )
+                            )
+                        }
                     }
                 }
             )

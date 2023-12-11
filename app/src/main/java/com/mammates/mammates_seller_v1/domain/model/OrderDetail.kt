@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 data class OrderDetail(
 
     @field:SerializedName("order")
-    val order: Orders? = null
+    val order: OrderDetailItem? = null
 )
 
 data class OrderDetailItem(

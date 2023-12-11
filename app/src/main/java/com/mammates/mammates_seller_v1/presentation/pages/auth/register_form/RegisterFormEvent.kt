@@ -9,4 +9,8 @@ sealed class RegisterFormEvent {
     data class OnChangeConfirmPassword(val confirmPassword: String) : RegisterFormEvent()
     data object OnTogglePasswordVisibility : RegisterFormEvent()
     data object OnTogglePasswordConfirmVisibility : RegisterFormEvent()
+    data object OnRegister : RegisterFormEvent()
+
+    data object OnDismisDialogError : RegisterFormEvent()
+    data object OnDismisDialogSuccess : RegisterFormEvent()
 }

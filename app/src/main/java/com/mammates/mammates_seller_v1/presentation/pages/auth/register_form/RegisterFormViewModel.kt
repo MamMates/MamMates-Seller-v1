@@ -1,17 +1,22 @@
 package com.mammates.mammates_seller_v1.presentation.pages.auth.register_form
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.mammates.mammates_seller_v1.common.Resource
+import com.mammates.mammates_seller_v1.domain.use_case.auth.AuthUseCases
 import com.mammates.mammates_seller_v1.presentation.util.validation.emailValidation
 import com.mammates.mammates_seller_v1.presentation.util.validation.emptyValidation
 import com.mammates.mammates_seller_v1.presentation.util.validation.passwordValidation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
 class RegisterFormViewModel @Inject constructor(
-
+    private val authUseCases: AuthUseCases
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(RegisterFormState())
@@ -70,7 +75,7 @@ class RegisterFormViewModel @Inject constructor(
             is RegisterFormEvent.OnChangeConfirmPassword -> {
                 _state.value = _state.value.copy(
                     passwordConfirm = event.confirmPassword,
-                    passwordConfirmValidationResult = if (_state.value.password != _state.value.passwordConfirm) {
+                    passwordConfirmValidationResult = if (_state.value.password != event.confirmPassword) {
                         "Password doesn't match"
                     } else {
                         passwordValidation(event.confirmPassword)
@@ -87,6 +92,89 @@ class RegisterFormViewModel @Inject constructor(
             RegisterFormEvent.OnTogglePasswordVisibility -> {
                 _state.value = _state.value.copy(
                     isPasswordVisible = !_state.value.isPasswordVisible
+                )
+            }
+
+            RegisterFormEvent.OnRegister -> {
+
+                _state.value = _state.value.copy(
+                    storeNameValidationResult = emptyValidation(
+                        label = "Store Name",
+                        value = _state.value.storeName
+                    ),
+                    addressValidationResult = emptyValidation(
+                        label = "Store Address",
+                        value = _state.value.address
+                    ),
+                    nameValidationResult = emptyValidation(
+                        label = "Name",
+                        value = _state.value.name
+                    ),
+                    emailValidationResult = emailValidation(
+                        _state.value.email
+                    ),
+                    passwordValidationResult = passwordValidation(
+                        _state.value.password
+                    ),
+                    passwordConfirmValidationResult = if (_state.value.password != _state.value.passwordConfirm) {
+                        "Password doesn't match"
+                    } else {
+                        passwordValidation(_state.value.passwordConfirm)
+                    }
+                )
+
+                if (
+                    !_state.value.storeNameValidationResult.isNullOrEmpty() &&
+                    !_state.value.addressValidationResult.isNullOrEmpty() &&
+                    !_state.value.nameValidationResult.isNullOrEmpty() &&
+                    !_state.value.emailValidationResult.isNullOrEmpty() &&
+                    !_state.value.passwordValidationResult.isNullOrEmpty() &&
+                    !_state.value.passwordConfirmValidationResult.isNullOrEmpty()
+                ) {
+                    return
+                }
+
+                authUseCases.authRegisterUseCase(
+                    email = _state.value.email,
+                    store = _state.value.storeName,
+                    address = _state.value.address,
+                    seller = _state.value.name,
+                    password = _state.value.password,
+                    passwordConfirm = _state.value.passwordConfirm
+                ).onEach { result ->
+                    when (result) {
+                        is Resource.Error -> {
+                            _state.value = _state.value.copy(
+                                errorMessage = result.message,
+                                isLoading = false,
+                            )
+                        }
+
+                        is Resource.Loading -> {
+                            _state.value = _state.value.copy(
+                                isLoading = true
+                            )
+                        }
+
+                        is Resource.Success -> {
+                            _state.value = _state.value.copy(
+                                isSuccessDialogShow = true,
+                                isLoading = false
+                            )
+                        }
+                    }
+                }.launchIn(viewModelScope)
+            }
+
+            RegisterFormEvent.OnDismisDialogError -> {
+                _state.value = _state.value.copy(
+                    errorMessage = null
+                )
+            }
+
+            RegisterFormEvent.OnDismisDialogSuccess -> {
+                _state.value = _state.value.copy(
+                    isSuccessDialogShow = false
                 )
             }
         }

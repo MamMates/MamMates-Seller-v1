@@ -4,6 +4,7 @@ sealed class LoginEvent {
     data class OnChangeEmail(val email: String) : LoginEvent()
     data class OnChangePassword(val password: String) : LoginEvent()
     data object TogglePasswordVisibility : LoginEvent()
+    data object OnDismisDialog : LoginEvent()
     data object OnLogin : LoginEvent()
 
 }

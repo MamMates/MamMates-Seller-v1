@@ -10,7 +10,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -19,6 +24,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -30,6 +36,7 @@ import com.mammates.mammates_seller_v1.presentation.pages.auth.login.component.L
 import com.mammates.mammates_seller_v1.presentation.util.loading.LoadingAnimation
 import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     navController: NavController,
@@ -47,10 +54,40 @@ fun LoginScreen(
         }
     }
 
+    if (!state.errorMessage.isNullOrEmpty()) {
+        AlertDialog(
+            title = {
+                Text(text = "Register Failed")
+            },
+            text = {
+                Text(
+                    text = state.errorMessage,
+                    textAlign = TextAlign.Center
+                )
+
+            },
+            onDismissRequest = {
+                state.errorMessage.isEmpty()
+            },
+            icon = {
+                Icon(Icons.Default.Info, contentDescription = "Alert Dialog")
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    onEvent(LoginEvent.OnDismisDialog)
+                }) {
+                    Text(text = "Okay")
+
+                }
+            }
+        )
+    }
+
 
     if (state.isLoading) {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -146,6 +183,7 @@ fun LoginScreen(
     }
 }
 
+
 @Preview(showBackground = true)
 @Composable
 fun LoginScreenPreview() {
@@ -153,7 +191,7 @@ fun LoginScreenPreview() {
         navController = rememberNavController(),
         state = LoginState(
             email = "",
-            password = ""
+            password = "",
         ),
         onEvent = {}
     )
