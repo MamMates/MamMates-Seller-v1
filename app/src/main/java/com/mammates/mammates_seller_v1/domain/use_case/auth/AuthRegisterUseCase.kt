@@ -12,7 +12,7 @@ class AuthRegisterUseCase @Inject constructor(
     private val authRepository: AuthRepository
 ) {
 
-    suspend operator fun invoke(
+    operator fun invoke(
         store: String,
         address: String,
         seller: String,

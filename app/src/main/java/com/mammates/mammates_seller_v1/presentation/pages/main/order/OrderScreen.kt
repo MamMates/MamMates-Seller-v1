@@ -13,6 +13,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,6 +23,7 @@ import androidx.navigation.compose.rememberNavController
 import com.mammates.mammates_seller_v1.presentation.pages.main.order.component.CardOrder
 import com.mammates.mammates_seller_v1.presentation.pages.main.order.component.NoOrderLabel
 import com.mammates.mammates_seller_v1.presentation.pages.main.order.component.tabTitleItem
+import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
 import com.mammates.mammates_seller_v1.util.StatusOrder
 
 @Composable
@@ -31,6 +33,16 @@ fun OrderScreen(
     onEvent: (OrderEvent) -> Unit
 ) {
     val scrollState = rememberScrollState()
+
+    LaunchedEffect(key1 = state.isAuth) {
+        if (!state.isAuth) {
+            navController.navigate(route = NavigationRoutes.Auth.route) {
+                popUpTo(route = NavigationRoutes.Main.route) {
+                    inclusive = true
+                }
+            }
+        }
+    }
 
     Column(
         modifier = Modifier

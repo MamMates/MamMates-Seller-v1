@@ -11,14 +11,18 @@ import javax.inject.Inject
 class AuthLoginUseCase @Inject constructor(
     private val authRepository: AuthRepository
 ) {
-    suspend operator fun invoke(
+    operator fun invoke(
         email: String,
         password: String,
     ): Flow<Resource<String>> = flow {
         try {
             emit(Resource.Loading())
-            val message = authRepository.authLogin(email, password).message
-            emit(Resource.Success(message))
+            val res = authRepository.authLogin(email, password)
+            if (res.data.isNullOrEmpty()) {
+                emit(Resource.Error(res.message))
+                return@flow
+            }
+            emit(Resource.Success(res.data))
         } catch (e: HttpException) {
             emit(Resource.Error(e.localizedMessage ?: "An unexpected error occured"))
         } catch (e: IOException) {

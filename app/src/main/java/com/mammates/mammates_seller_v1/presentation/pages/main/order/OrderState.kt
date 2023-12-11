@@ -3,7 +3,8 @@ package com.mammates.mammates_seller_v1.presentation.pages.main.order
 import com.mammates.mammates_seller_v1.domain.model.OrderItem
 
 data class OrderState(
-    val exampleState: String = "Example Order State",
+    val isAuth: Boolean = false,
+
     val tabIndex: Int = 0,
 
     val unConfirmOrder: List<OrderItem>? = null,

@@ -15,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -26,6 +27,7 @@ import com.mammates.mammates_seller_v1.R
 import com.mammates.mammates_seller_v1.presentation.component.text_field.PasswordTextField
 import com.mammates.mammates_seller_v1.presentation.component.text_field.PrimaryTextField
 import com.mammates.mammates_seller_v1.presentation.pages.auth.login.component.LoginTitle
+import com.mammates.mammates_seller_v1.presentation.util.loading.LoadingAnimation
 import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
 
 @Composable
@@ -34,94 +36,111 @@ fun LoginScreen(
     state: LoginState,
     onEvent: (LoginEvent) -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 35.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.login_illustration),
-            contentDescription = "Login illustration",
-        )
-        Spacer(modifier = Modifier.height(30.dp))
-        LoginTitle(
-            title = "Welcome Back !",
-            description = "Empower the journey towards a sustainable environment"
-        )
-        Spacer(modifier = Modifier.height(30.dp))
-        PrimaryTextField(
-            value = state.email,
-            onValueChange = { onEvent(LoginEvent.OnChangeEmail(it)) },
-            errorResult = state.emailValidationResult,
-            label = "Email"
-        )
-        Spacer(modifier = Modifier.height(15.dp))
-        PasswordTextField(
-            onValueChange = {
-                onEvent(LoginEvent.OnChangePassword(it))
-            },
-            label = "Password",
-            value = state.password,
-            errorResult = state.passwordValidationResult,
-            isPasswordVisible = state.isPasswordVisible,
-            togglePasswordVisible = {
-                onEvent(LoginEvent.TogglePasswordVisibility)
-            }
-        )
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
+    LaunchedEffect(key1 = state.isAuth) {
+        if (state.isAuth) {
+            navController.navigate(NavigationRoutes.Main.route) {
+                popUpTo(NavigationRoutes.Auth.route) {
+                    inclusive = true
+                }
+            }
+        }
+    }
+
+
+    if (state.isLoading) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TextButton(
-                contentPadding = PaddingValues(0.dp),
-                onClick = {
-                    navController.navigate(NavigationRoutes.Auth.ResetPassword.route)
+            LoadingAnimation()
+        }
+    } else {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 35.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.login_illustration),
+                contentDescription = "Login illustration",
+            )
+            Spacer(modifier = Modifier.height(30.dp))
+            LoginTitle(
+                title = "Welcome Back !",
+                description = "Empower the journey towards a sustainable environment"
+            )
+            Spacer(modifier = Modifier.height(30.dp))
+            PrimaryTextField(
+                value = state.email,
+                onValueChange = { onEvent(LoginEvent.OnChangeEmail(it)) },
+                errorResult = state.emailValidationResult,
+                label = "Email"
+            )
+            Spacer(modifier = Modifier.height(15.dp))
+            PasswordTextField(
+                onValueChange = {
+                    onEvent(LoginEvent.OnChangePassword(it))
                 },
+                label = "Password",
+                value = state.password,
+                errorResult = state.passwordValidationResult,
+                isPasswordVisible = state.isPasswordVisible,
+                togglePasswordVisible = {
+                    onEvent(LoginEvent.TogglePasswordVisibility)
+                }
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
             ) {
-                Text(
-                    text = "Forgot password ?",
-                    style = MaterialTheme.typography.bodySmall
-                )
-            }
-        }
-
-
-        Spacer(modifier = Modifier.height(30.dp))
-        Button(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = {
-                // TODO Submit Button Login
-                onEvent(LoginEvent.OnLogin)
-                navController.navigate(NavigationRoutes.Main.route) {
-                    popUpTo(NavigationRoutes.Auth.route) {
-                        inclusive = true
-                    }
+                TextButton(
+                    contentPadding = PaddingValues(0.dp),
+                    onClick = {
+                        navController.navigate(NavigationRoutes.Auth.ResetPassword.route)
+                    },
+                ) {
+                    Text(
+                        text = "Forgot password ?",
+                        style = MaterialTheme.typography.bodySmall
+                    )
                 }
             }
-        ) {
-            Text(
-                text = "Login"
-            )
-        }
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = "Don’t have an account ?",
-                style = MaterialTheme.typography.bodySmall
-            )
-            TextButton(
-                contentPadding = PaddingValues(0.dp),
+
+
+            Spacer(modifier = Modifier.height(30.dp))
+            Button(
+                modifier = Modifier.fillMaxWidth(),
                 onClick = {
-                    navController.navigate(NavigationRoutes.Auth.Register.route)
+                    // TODO Submit Button Login
+                    onEvent(LoginEvent.OnLogin)
                 }
             ) {
                 Text(
-                    text = "Register",
+                    text = "Login"
+                )
+            }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = "Don’t have an account ?",
                     style = MaterialTheme.typography.bodySmall
                 )
+                TextButton(
+                    contentPadding = PaddingValues(0.dp),
+                    onClick = {
+                        navController.navigate(NavigationRoutes.Auth.Register.route)
+                    }
+                ) {
+                    Text(
+                        text = "Register",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
             }
         }
     }

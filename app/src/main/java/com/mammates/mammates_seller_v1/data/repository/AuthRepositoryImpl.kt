@@ -9,49 +9,55 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class AuthRepositoryImpl @Inject constructor(
     private val api: MamMatesApi
 ) : AuthRepository {
     override suspend fun authLogin(email: String, password: String): ResMamMates<String> {
-        val client = api.authLogin(
-            reqLogin = ReqLogin(
-                email, password
+
+        return suspendCoroutine { continuation ->
+            val client = api.authLogin(
+                reqLogin = ReqLogin(
+                    email, password
+                )
             )
-        )
-        var resMamMates: ResMamMates<String> = ResMamMates(
-            status = "",
-            code = 0,
-            data = "",
-            message = ""
-        )
-        var token = ""
-        client.enqueue(
-            object : Callback<ResMamMates<String>> {
-                override fun onResponse(
-                    call: Call<ResMamMates<String>>,
-                    response: Response<ResMamMates<String>>
-                ) {
-                    if (response.isSuccessful) {
-                        token = response.headers()["Authentication"].toString()
-                        return
+            var token = ""
+            client.enqueue(
+                object : Callback<ResMamMates<String>> {
+                    override fun onResponse(
+                        call: Call<ResMamMates<String>>,
+                        response: Response<ResMamMates<String>>
+                    ) {
+                        if (response.isSuccessful) {
+                            token = response.headers()["Authentication"].toString()
+                            continuation.resume(
+                                ResMamMates(
+                                    response.body()?.status ?: "",
+                                    response.body()?.code ?: 0,
+                                    response.body()?.message ?: "",
+                                    token
+                                )
+                            )
+                            return
+                        }
+                        continuation.resume(
+                            ResMamMates(
+                                response.body()?.status ?: "",
+                                response.body()?.code ?: 0,
+                                response.body()?.message ?: "",
+                                response.body()?.data
+                            )
+                        )
                     }
 
-                    resMamMates = resMamMates.copy(
-                        status = response.body()?.status ?: "",
-                        code = response.body()?.code ?: 0,
-                        data = token,
-                        message = response.body()?.message ?: ""
-                    )
-
+                    override fun onFailure(call: Call<ResMamMates<String>>, t: Throwable) {
+                        throw t
+                    }
                 }
-
-                override fun onFailure(call: Call<ResMamMates<String>>, t: Throwable) {
-                    throw t
-                }
-            }
-        )
-        return resMamMates
+            )
+        }
     }
 
     override suspend fun authRegister(

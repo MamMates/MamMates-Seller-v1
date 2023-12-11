@@ -28,7 +28,7 @@ class TokenPreference @Inject constructor(
 
     suspend fun clearToken() {
         dataStore.edit { preferences ->
-            preferences.clear()
+            preferences[TOKEN] = ""
         }
     }
 

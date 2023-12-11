@@ -14,6 +14,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -32,6 +33,17 @@ fun AccountScreen(
     state: AccountState,
     onEvent: (AccountEvent) -> Unit
 ) {
+
+    LaunchedEffect(key1 = state.isAuth) {
+        if (!state.isAuth) {
+            navController.navigate(route = NavigationRoutes.Auth.route) {
+                popUpTo(route = NavigationRoutes.Main.route) {
+                    inclusive = true
+                }
+            }
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -70,7 +82,9 @@ fun AccountScreen(
         Spacer(modifier = Modifier.height(30.dp))
         Button(
             modifier = Modifier.fillMaxWidth(),
-            onClick = { /*TODO*/ }
+            onClick = {
+                onEvent(AccountEvent.OnLogout)
+            }
         ) {
             Text(text = "Logout")
         }

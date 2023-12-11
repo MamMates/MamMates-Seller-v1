@@ -31,7 +31,7 @@ import retrofit2.http.Query
 interface MamMatesApi {
 
     @POST("auth/login")
-    suspend fun authLogin(
+    fun authLogin(
         @Body reqLogin: ReqLogin
     ): Call<ResMamMates<String>>
 
