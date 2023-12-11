@@ -42,7 +42,11 @@ fun AccountSettingScreen(
         Spacer(modifier = Modifier.height(20.dp))
         FormImageTextField(
             label = "Store Profile Picture",
-            description = "Upload a captivating store profile picture that represents the heart and soul of your culinary offerings on MamMates."
+            description = "Upload a captivating store profile picture that represents the heart and soul of your culinary offerings on MamMates.",
+            onImageCapture = {
+
+            },
+            imageUri = state.profileImage
         )
         Spacer(modifier = Modifier.height(20.dp))
         FormTextField(

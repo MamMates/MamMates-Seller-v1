@@ -48,7 +48,11 @@ fun FoodDetailScreen(
         Spacer(modifier = Modifier.height(20.dp))
         FormImageTextField(
             label = "Food Display",
-            description = "Enhance your store's appeal with our food display feature "
+            description = "Enhance your store's appeal with our food display feature ",
+            onImageCapture = {
+
+            },
+            imageUri = state.foodDisplayImage
         )
         Spacer(modifier = Modifier.height(20.dp))
         FormTextField(
@@ -70,6 +74,10 @@ fun FoodDetailScreen(
         FormImageTextField(
             label = "MamRates",
             description = "Upload a photo for automatic MamRates. Once generated, ratings cannot be changed",
+            onImageCapture = {
+
+            },
+            imageUri = state.foodMamRatesImage
         )
         Spacer(modifier = Modifier.height(25.dp))
         Row(

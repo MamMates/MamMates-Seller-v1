@@ -1,6 +1,11 @@
 package com.mammates.mammates_seller_v1.presentation.component.text_field
 
-import android.graphics.BitmapFactory
+import android.Manifest
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -17,21 +22,57 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
+import coil.compose.rememberAsyncImagePainter
 import com.mammates.mammates_seller_v1.R
+import com.mammates.mammates_seller_v1.util.createImageFile
+import java.util.Objects
 
 @Composable
 fun FormImageTextField(
     modifier: Modifier = Modifier,
     label: String,
     description: String,
-    image: ImageBitmap? = null,
+    onImageCapture: (Uri) -> Unit,
+    imageUri: Uri?
 ) {
     val context = LocalContext.current
+    val file = context.createImageFile()
+    val uri = FileProvider.getUriForFile(
+        Objects.requireNonNull(context),
+        context.packageName + ".provider",
+        file
+    )
+
+    val cameraLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.TakePicture(),
+            onResult = {
+                onImageCapture(uri)
+            }
+        )
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted ->
+            if (isGranted) {
+                Toast.makeText(context, "Permission Granted!", Toast.LENGTH_SHORT)
+                    .show()
+                cameraLauncher.launch(uri)
+            } else {
+                Toast.makeText(context, "Permission Denied!", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
+    )
+
+
 
     Column(
         modifier = modifier
@@ -62,18 +103,27 @@ fun FormImageTextField(
                         shape = RoundedCornerShape(10.dp)
                     )
                     .clickable {
+                        val permissionCheckResult =
+                            ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
+                        if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
+                            cameraLauncher.launch(uri)
+                        } else {
+                            permissionLauncher.launch(Manifest.permission.CAMERA)
+                        }
 
                     }
             ) {
                 Image(
+                    painter = if (imageUri?.path.isNullOrEmpty()) {
+                        painterResource(id = R.drawable.image_placeholder)
+                    } else {
+                        rememberAsyncImagePainter(model = imageUri)
+                    },
                     modifier = Modifier
                         .width(135.dp)
                         .height(135.dp),
-                    bitmap = image ?: BitmapFactory.decodeResource(
-                        context.resources,
-                        R.drawable.image_placeholder
-                    ).asImageBitmap(),
-                    contentDescription = "Food Display"
+                    contentDescription = "Food Display",
+                    contentScale = ContentScale.Crop
                 )
             }
 
@@ -85,8 +135,9 @@ fun FormImageTextField(
 @Composable
 fun FormImageTextFieldPreview() {
     FormImageTextField(
-
         label = "Food Display",
-        description = "Enhance your store's appeal with our food display feature"
+        description = "Enhance your store's appeal with our food display feature",
+        onImageCapture = {},
+        imageUri = Uri.EMPTY
     )
 }

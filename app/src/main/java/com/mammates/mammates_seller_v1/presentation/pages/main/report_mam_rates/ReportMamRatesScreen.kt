@@ -44,7 +44,11 @@ fun ReportMamRatesScreen(
         Spacer(modifier = Modifier.height(20.dp))
         FormImageTextField(
             label = "Food Display",
-            description = "blablala"
+            description = "blablala",
+            onImageCapture = {
+
+            },
+            imageUri = state.foodImage
         )
         Spacer(modifier = Modifier.height(20.dp))
         FormTextField(
