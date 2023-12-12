@@ -17,6 +17,8 @@ import com.mammates.mammates_seller_v1.presentation.pages.main.home.HomeScreen
 import com.mammates.mammates_seller_v1.presentation.pages.main.home.HomeViewModel
 import com.mammates.mammates_seller_v1.presentation.pages.main.mam_rates.MamRatesScreen
 import com.mammates.mammates_seller_v1.presentation.pages.main.mam_rates.MamRatesViewModel
+import com.mammates.mammates_seller_v1.presentation.pages.main.mam_rates_result.MamRatesResultScreen
+import com.mammates.mammates_seller_v1.presentation.pages.main.mam_rates_result.MamRatesResultViewModel
 import com.mammates.mammates_seller_v1.presentation.pages.main.order.OrderScreen
 import com.mammates.mammates_seller_v1.presentation.pages.main.order.OrderViewModel
 import com.mammates.mammates_seller_v1.presentation.pages.main.order_detail.OrderDetailScreen
@@ -46,6 +48,15 @@ fun NavGraphBuilder.mainGraph(navController: NavController) {
             val viewModel = hiltViewModel<OrderViewModel>()
             val state by viewModel.state.collectAsState()
             OrderScreen(
+                navController = navController,
+                state = state,
+                onEvent = viewModel::onEvent
+            )
+        }
+        composable(route = NavigationRoutes.Main.Result.route) {
+            val viewModel = hiltViewModel<MamRatesResultViewModel>()
+            val state by viewModel.state.collectAsState()
+            MamRatesResultScreen(
                 navController = navController,
                 state = state,
                 onEvent = viewModel::onEvent

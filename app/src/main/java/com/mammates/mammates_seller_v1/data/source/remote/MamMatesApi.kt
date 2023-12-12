@@ -139,10 +139,12 @@ interface MamMatesApi {
         @Body reqPasswordChange: ReqPasswordChange
     ): ResMamMates<String>
 
+    // MamRates
+    @Multipart
     @POST("mam_mates")
     suspend fun getMamRates(
         @Header("Authentication") token: String,
-        @Part("image") image: MultipartBody.Part
+        @Part image: MultipartBody.Part
     ): ResMamMates<MamRates>
 
     @Multipart

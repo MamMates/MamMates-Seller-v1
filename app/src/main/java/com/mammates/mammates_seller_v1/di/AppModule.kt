@@ -4,6 +4,7 @@ import android.content.Context
 import com.mammates.mammates_seller_v1.common.Constants
 import com.mammates.mammates_seller_v1.data.repository.AuthRepositoryImpl
 import com.mammates.mammates_seller_v1.data.repository.IntroRepositoryImpl
+import com.mammates.mammates_seller_v1.data.repository.MamRatesRepositoryImpl
 import com.mammates.mammates_seller_v1.data.repository.OrderRepositoryImpl
 import com.mammates.mammates_seller_v1.data.repository.TokenRepositoryImpl
 import com.mammates.mammates_seller_v1.data.source.local.IntroPreference
@@ -11,6 +12,7 @@ import com.mammates.mammates_seller_v1.data.source.local.TokenPreference
 import com.mammates.mammates_seller_v1.data.source.remote.MamMatesApi
 import com.mammates.mammates_seller_v1.domain.repository.AuthRepository
 import com.mammates.mammates_seller_v1.domain.repository.IntroRepository
+import com.mammates.mammates_seller_v1.domain.repository.MamRatesRepository
 import com.mammates.mammates_seller_v1.domain.repository.OrderRepository
 import com.mammates.mammates_seller_v1.domain.repository.TokenRepository
 import com.mammates.mammates_seller_v1.domain.use_case.auth.AuthLoginUseCase
@@ -19,6 +21,8 @@ import com.mammates.mammates_seller_v1.domain.use_case.auth.AuthUseCases
 import com.mammates.mammates_seller_v1.domain.use_case.intro.GetIntroIsDoneUseCase
 import com.mammates.mammates_seller_v1.domain.use_case.intro.IntroUseCases
 import com.mammates.mammates_seller_v1.domain.use_case.intro.SetIntroIsDoneUseCase
+import com.mammates.mammates_seller_v1.domain.use_case.mam_rates.GetMamRatesUseCase
+import com.mammates.mammates_seller_v1.domain.use_case.mam_rates.MamRatesUseCases
 import com.mammates.mammates_seller_v1.domain.use_case.order.ChangeOrderStatusUseCase
 import com.mammates.mammates_seller_v1.domain.use_case.order.GetOrderDetailUseCase
 import com.mammates.mammates_seller_v1.domain.use_case.order.GetOrderRecentUseCase
@@ -111,12 +115,26 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun providesMamRatesRepository(mamMatesApi: MamMatesApi): MamRatesRepository {
+        return MamRatesRepositoryImpl(mamMatesApi)
+    }
+
+    @Provides
+    @Singleton
     fun providesOrderUseCase(orderRepository: OrderRepository): OrderUseCases {
         return OrderUseCases(
             getOrderDetailUseCase = GetOrderDetailUseCase(orderRepository),
             getOrdersUseCase = GetOrdersUseCase(orderRepository),
             getOrderRecentUseCase = GetOrderRecentUseCase(orderRepository),
             changeOrderStatusUseCase = ChangeOrderStatusUseCase(orderRepository)
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun providesMamRatesUseCase(mamRatesRepository: MamRatesRepository): MamRatesUseCases {
+        return MamRatesUseCases(
+            getMamRatesUseCase = GetMamRatesUseCase(mamRatesRepository)
         )
     }
 

@@ -1,4 +1,4 @@
-package com.mammates.mammates_seller_v1.presentation.pages.main.order_detail.component
+package com.mammates.mammates_seller_v1.presentation.component.text
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues

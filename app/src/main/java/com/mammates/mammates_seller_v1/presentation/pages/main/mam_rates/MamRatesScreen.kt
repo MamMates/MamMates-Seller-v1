@@ -83,7 +83,9 @@ fun MamRatesScreen(
         Spacer(modifier = Modifier.height(50.dp))
         Button(
             modifier = Modifier.fillMaxWidth(),
-            onClick = { /*TODO*/ }
+            onClick = {
+                navController.navigate(NavigationRoutes.Main.Result.route)
+            }
         ) {
             Text(text = "See Your Food MamRates")
         }

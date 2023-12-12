@@ -13,7 +13,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -31,7 +30,6 @@ import com.mammates.mammates_seller_v1.presentation.component.rating.RatingDispl
 import com.mammates.mammates_seller_v1.presentation.component.text_field.FormImageTextField
 import com.mammates.mammates_seller_v1.presentation.component.text_field.FormTextField
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddScreen(
     navController: NavController,

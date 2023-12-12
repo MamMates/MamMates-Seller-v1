@@ -13,7 +13,6 @@ sealed class NavigationRoutes(val route: String) {
 
     data object Main : NavigationRoutes("main") {
         data object Home : NavigationRoutes("home")
-
         data object Order : NavigationRoutes("order")
         data object OrderDetail : NavigationRoutes("order_detail")
         data object Store : NavigationRoutes("store")
@@ -22,7 +21,7 @@ sealed class NavigationRoutes(val route: String) {
         data object Account : NavigationRoutes("account")
         data object AccountSetting : NavigationRoutes("account_setting")
         data object ChangePassword : NavigationRoutes("change_password")
-        data object Camera : NavigationRoutes("camera")
+        data object Result : NavigationRoutes("result")
     }
 
 

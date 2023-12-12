@@ -8,8 +8,8 @@ data class MamRates(
 )
 
 data class MamRatesItem(
-    @field:SerializedName("name")
-    val name: String? = null,
+    @field:SerializedName("category")
+    val category: Int? = null,
 
     @field:SerializedName("price")
     val price: Int? = null,

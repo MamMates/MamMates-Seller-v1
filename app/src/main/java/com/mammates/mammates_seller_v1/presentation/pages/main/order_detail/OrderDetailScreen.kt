@@ -22,6 +22,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -29,9 +30,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.mammates.mammates_seller_v1.presentation.component.text.TextLabelValue
 import com.mammates.mammates_seller_v1.presentation.pages.main.order.component.CardOrderFood
-import com.mammates.mammates_seller_v1.presentation.pages.main.order_detail.component.TextLabelValue
 import com.mammates.mammates_seller_v1.presentation.util.loading.LoadingAnimation
+import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
 import com.mammates.mammates_seller_v1.util.StatusOrder
 
 @Composable
@@ -42,6 +44,16 @@ fun OrderDetailScreen(
 ) {
 
     val scrollState = rememberScrollState()
+
+    LaunchedEffect(key1 = state.token) {
+        if (state.token.isEmpty()) {
+            navController.navigate(route = NavigationRoutes.Auth.route) {
+                popUpTo(route = NavigationRoutes.Main.route) {
+                    inclusive = true
+                }
+            }
+        }
+    }
 
     if (!state.errorMessage.isNullOrEmpty()) {
         AlertDialog(
