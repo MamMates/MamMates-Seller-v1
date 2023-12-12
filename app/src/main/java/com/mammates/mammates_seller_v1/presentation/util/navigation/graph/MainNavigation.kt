@@ -5,7 +5,9 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mammates.mammates_seller_v1.presentation.pages.main.account.AccountScreen
 import com.mammates.mammates_seller_v1.presentation.pages.main.account.AccountViewModel
@@ -17,6 +19,8 @@ import com.mammates.mammates_seller_v1.presentation.pages.main.mam_rates.MamRate
 import com.mammates.mammates_seller_v1.presentation.pages.main.mam_rates.MamRatesViewModel
 import com.mammates.mammates_seller_v1.presentation.pages.main.order.OrderScreen
 import com.mammates.mammates_seller_v1.presentation.pages.main.order.OrderViewModel
+import com.mammates.mammates_seller_v1.presentation.pages.main.order_detail.OrderDetailScreen
+import com.mammates.mammates_seller_v1.presentation.pages.main.order_detail.OrderDetailViewModel
 import com.mammates.mammates_seller_v1.presentation.pages.main.store.StoreScreen
 import com.mammates.mammates_seller_v1.presentation.pages.main.store.StoreViewModel
 import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
@@ -36,10 +40,31 @@ fun NavGraphBuilder.mainGraph(navController: NavController) {
                 onEvent = viewModel::onEvent
             )
         }
-        composable(route = NavigationRoutes.Main.Order.route) {
+        composable(
+            route = NavigationRoutes.Main.Order.route,
+        ) {
             val viewModel = hiltViewModel<OrderViewModel>()
             val state by viewModel.state.collectAsState()
             OrderScreen(
+                navController = navController,
+                state = state,
+                onEvent = viewModel::onEvent
+            )
+        }
+        composable(
+            route = NavigationRoutes.Main.OrderDetail.route + "?order_id={order_id}",
+            arguments = listOf(
+                navArgument(
+                    name = "order_id",
+                ) {
+                    type = NavType.IntType
+                    defaultValue = -69
+                }
+            )
+        ) {
+            val viewModel = hiltViewModel<OrderDetailViewModel>()
+            val state by viewModel.state.collectAsState()
+            OrderDetailScreen(
                 navController = navController,
                 state = state,
                 onEvent = viewModel::onEvent

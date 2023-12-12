@@ -91,7 +91,7 @@ class LoginViewModel @Inject constructor(
 
             }
 
-            LoginEvent.OnDismisDialog -> {
+            LoginEvent.OnDismissErrorDialog -> {
                 _state.value = _state.value.copy(
                     errorMessage = null,
                 )

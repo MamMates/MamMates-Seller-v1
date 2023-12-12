@@ -2,6 +2,7 @@ package com.mammates.mammates_seller_v1.presentation.pages.main.order.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -14,11 +15,17 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,8 +40,16 @@ fun CardOrder(
     statusOrder: StatusOrder,
     buyer: String,
     total: Int,
-    foods: List<FoodOrderItem>
+    foods: List<FoodOrderItem>,
+    onConfirmOrder: () -> Unit,
+    onSeeDetail: () -> Unit,
+    onCancelOrder: () -> Unit,
 ) {
+
+    var expanded by remember {
+        mutableStateOf(false)
+    }
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -48,17 +63,52 @@ fun CardOrder(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Gede Mahardika",
+                text = buyer,
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.inverseSurface
             )
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(imageVector = Icons.Default.MoreVert, contentDescription = "Menu Dropdown")
+            Box {
+                IconButton(onClick = {
+                    expanded = true
+                }) {
+                    Icon(imageVector = Icons.Default.MoreVert, contentDescription = "Menu Dropdown")
+                }
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = {
+                        expanded = false
+                    }
+                ) {
+                    DropdownMenuItem(
+                        text = {
+                            Text(
+                                text = "See Details",
+                                color = MaterialTheme.colorScheme.onBackground
+                            )
+                        },
+                        onClick = onSeeDetail
+                    )
+                    if (
+                        statusOrder != StatusOrder.Finish &&
+                        statusOrder != StatusOrder.Canceled &&
+                        statusOrder != StatusOrder.Unidentified
+                    ) {
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = "Cancel Order",
+                                    color = MaterialTheme.colorScheme.onBackground
+                                )
+                            },
+                            onClick = onCancelOrder
+                        )
+                    }
+                }
             }
+
         }
         Spacer(modifier = Modifier.height(20.dp))
 
-        // TODO : Foreach every food order
         Column(
             modifier = Modifier.padding(horizontal = 20.dp)
         ) {
@@ -129,12 +179,18 @@ fun CardOrder(
             }
         }
         Spacer(modifier = Modifier.height(25.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.End
+        if (
+            statusOrder != StatusOrder.Finish &&
+            statusOrder != StatusOrder.Canceled &&
+            statusOrder != StatusOrder.Unidentified
         ) {
-            Button(onClick = { /*TODO*/ }) {
-                Text(text = "Confirm Order")
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                Button(onClick = onConfirmOrder) {
+                    Text(text = "Confirm Order")
+                }
             }
         }
     }
@@ -160,6 +216,10 @@ fun CardOrderPreview() {
                 quantity = 4,
                 price = 20000
             ),
-        )
+        ),
+        onConfirmOrder = {},
+        onSeeDetail = {},
+        onCancelOrder = {}
     )
+
 }

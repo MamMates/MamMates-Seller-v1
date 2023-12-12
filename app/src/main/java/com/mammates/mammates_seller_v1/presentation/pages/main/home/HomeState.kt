@@ -6,5 +6,9 @@ data class HomeState(
     val isOnBoarding: Boolean = false,
     val isAuth: Boolean = false,
 
+    val isLoading: Boolean = false,
+
+    val errorMessage: String? = null,
+
     val orderList: List<OrderRecentItems>? = null
 )

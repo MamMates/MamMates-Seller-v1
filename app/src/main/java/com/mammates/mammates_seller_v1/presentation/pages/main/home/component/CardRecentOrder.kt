@@ -19,13 +19,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.rememberNavController
+import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
 import com.mammates.mammates_seller_v1.util.StatusOrder
 
 @Composable
 fun CardRecentOrder(
     modifier: Modifier = Modifier,
     buyer: String,
-    status: StatusOrder
+    status: StatusOrder,
+    navController: NavController
 ) {
     Row(
         modifier = modifier
@@ -40,10 +45,16 @@ fun CardRecentOrder(
                 color = MaterialTheme.colorScheme.outlineVariant,
                 shape = RoundedCornerShape(20)
             )
-            .padding(horizontal = 20.dp, vertical = 20.dp)
             .clickable {
-
-            },
+                navController.navigate(NavigationRoutes.Main.Order.route) {
+                    popUpTo(navController.graph.findStartDestination().id) {
+                        saveState = true
+                    }
+                    restoreState = true
+                    launchSingleTop = true
+                }
+            }
+            .padding(horizontal = 20.dp, vertical = 20.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -69,6 +80,7 @@ fun CardRecentOrder(
 fun CardRecentOrderPreview() {
     CardRecentOrder(
         buyer = "Mr. Tude",
-        status = StatusOrder.Unconfirmed
+        status = StatusOrder.Unconfirmed,
+        navController = rememberNavController()
     )
 }

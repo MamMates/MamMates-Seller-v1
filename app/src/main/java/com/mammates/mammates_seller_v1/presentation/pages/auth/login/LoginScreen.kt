@@ -74,7 +74,7 @@ fun LoginScreen(
             },
             confirmButton = {
                 TextButton(onClick = {
-                    onEvent(LoginEvent.OnDismisDialog)
+                    onEvent(LoginEvent.OnDismissErrorDialog)
                 }) {
                     Text(text = "Okay")
 

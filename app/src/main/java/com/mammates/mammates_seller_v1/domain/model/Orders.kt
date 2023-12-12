@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 data class Orders(
 
     @field:SerializedName("orders")
-    val orders: List<OrderItem?>? = null
+    val orders: List<OrderItem>? = null
 )
 
 data class OrderItem(

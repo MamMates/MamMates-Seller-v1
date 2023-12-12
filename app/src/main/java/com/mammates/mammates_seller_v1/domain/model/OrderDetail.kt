@@ -15,7 +15,7 @@ data class OrderDetailItem(
     val total: Int? = null,
 
     @field:SerializedName("foods")
-    val foods: List<FoodOrderItem?>? = null,
+    val foods: List<FoodOrderItem>? = null,
 
     @field:SerializedName("category")
     val category: Int? = null,

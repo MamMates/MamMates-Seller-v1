@@ -7,7 +7,7 @@ data class AddState(
     val foodName: String = "",
     val foodNameValidation: String? = null,
 
-    val foodPrice: Int? = null,
+    val foodPrice: Int = 0,
     val foodPriceValidation: String? = null,
 
     val foodCategory: String? = null,
