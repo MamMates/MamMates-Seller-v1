@@ -53,7 +53,7 @@ fun HomeScreen(
         }
     )
 
-    if (!state.isOnBoarding && !state.isAuth) {
+    if (!state.isOnBoarding && state.token.isEmpty()) {
         LaunchedEffect(key1 = Unit) {
 
             navController.navigate(route = NavigationRoutes.Introduction.route) {
@@ -62,7 +62,7 @@ fun HomeScreen(
                 }
             }
         }
-    } else if (!state.isAuth) {
+    } else if (state.token.isEmpty()) {
         LaunchedEffect(key1 = Unit) {
 
             navController.navigate(route = NavigationRoutes.Auth.route) {

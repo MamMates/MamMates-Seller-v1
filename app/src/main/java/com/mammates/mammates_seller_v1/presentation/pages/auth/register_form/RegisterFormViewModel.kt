@@ -97,31 +97,7 @@ class RegisterFormViewModel @Inject constructor(
 
             RegisterFormEvent.OnRegister -> {
 
-                _state.value = _state.value.copy(
-                    storeNameValidationResult = emptyValidation(
-                        label = "Store Name",
-                        value = _state.value.storeName
-                    ),
-                    addressValidationResult = emptyValidation(
-                        label = "Store Address",
-                        value = _state.value.address
-                    ),
-                    nameValidationResult = emptyValidation(
-                        label = "Name",
-                        value = _state.value.name
-                    ),
-                    emailValidationResult = emailValidation(
-                        _state.value.email
-                    ),
-                    passwordValidationResult = passwordValidation(
-                        _state.value.password
-                    ),
-                    passwordConfirmValidationResult = if (_state.value.password != _state.value.passwordConfirm) {
-                        "Password doesn't match"
-                    } else {
-                        passwordValidation(_state.value.passwordConfirm)
-                    }
-                )
+                validateAllFieldValue()
 
                 if (
                     !_state.value.storeNameValidationResult.isNullOrEmpty() &&
@@ -134,36 +110,8 @@ class RegisterFormViewModel @Inject constructor(
                     return
                 }
 
-                authUseCases.authRegisterUseCase(
-                    email = _state.value.email,
-                    store = _state.value.storeName,
-                    address = _state.value.address,
-                    seller = _state.value.name,
-                    password = _state.value.password,
-                    passwordConfirm = _state.value.passwordConfirm
-                ).onEach { result ->
-                    when (result) {
-                        is Resource.Error -> {
-                            _state.value = _state.value.copy(
-                                errorMessage = result.message,
-                                isLoading = false,
-                            )
-                        }
+                registerUser()
 
-                        is Resource.Loading -> {
-                            _state.value = _state.value.copy(
-                                isLoading = true
-                            )
-                        }
-
-                        is Resource.Success -> {
-                            _state.value = _state.value.copy(
-                                isSuccessDialogShow = true,
-                                isLoading = false
-                            )
-                        }
-                    }
-                }.launchIn(viewModelScope)
             }
 
             RegisterFormEvent.OnDismisDialogError -> {
@@ -178,6 +126,67 @@ class RegisterFormViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    private fun validateAllFieldValue() {
+        _state.value = _state.value.copy(
+            storeNameValidationResult = emptyValidation(
+                label = "Store Name",
+                value = _state.value.storeName
+            ),
+            addressValidationResult = emptyValidation(
+                label = "Store Address",
+                value = _state.value.address
+            ),
+            nameValidationResult = emptyValidation(
+                label = "Name",
+                value = _state.value.name
+            ),
+            emailValidationResult = emailValidation(
+                _state.value.email
+            ),
+            passwordValidationResult = passwordValidation(
+                _state.value.password
+            ),
+            passwordConfirmValidationResult = if (_state.value.password != _state.value.passwordConfirm) {
+                "Password doesn't match"
+            } else {
+                passwordValidation(_state.value.passwordConfirm)
+            }
+        )
+    }
+
+    private fun registerUser() {
+        authUseCases.authRegisterUseCase(
+            email = _state.value.email,
+            store = _state.value.storeName,
+            address = _state.value.address,
+            seller = _state.value.name,
+            password = _state.value.password,
+            passwordConfirm = _state.value.passwordConfirm
+        ).onEach { result ->
+            when (result) {
+                is Resource.Error -> {
+                    _state.value = _state.value.copy(
+                        errorMessage = result.message,
+                        isLoading = false,
+                    )
+                }
+
+                is Resource.Loading -> {
+                    _state.value = _state.value.copy(
+                        isLoading = true
+                    )
+                }
+
+                is Resource.Success -> {
+                    _state.value = _state.value.copy(
+                        isSuccessDialogShow = true,
+                        isLoading = false
+                    )
+                }
+            }
+        }.launchIn(viewModelScope)
     }
 
 

@@ -76,16 +76,16 @@ interface MamMatesApi {
     @POST("foods")
     suspend fun addFood(
         @Header("Authentication") token: String,
-        @Part("image") image: MultipartBody.Part,
+        @Part image: MultipartBody.Part?,
         @Part("name") name: String,
         @Part("price") price: Int,
         @Part("category") category: String,
-        @Part("mam_image") mamImage: MultipartBody.Part,
+        @Part mamImage: MultipartBody.Part,
         @Part("mam_rates") mamRates: Int,
     ): ResMamMates<String>
 
     @GET("foods/{id}")
-    suspend fun getFoodDetails(
+    suspend fun getFoodDetail(
         @Header("Authentication") token: String,
         @Path("id") id: Int
     ): ResMamMates<FoodDetail>
@@ -95,11 +95,11 @@ interface MamMatesApi {
     suspend fun updateFood(
         @Header("Authentication") token: String,
         @Path("id") id: Int,
-        @Part("image") image: MultipartBody.Part,
+        @Part image: MultipartBody.Part?,
         @Part("name") name: String,
         @Part("price") price: Int,
         @Part("category") category: String,
-        @Part("mam_image") mamImage: MultipartBody.Part,
+        @Part mamImage: MultipartBody.Part,
         @Part("mam_rates") mamRates: Int,
     ): ResMamMates<String>
 
@@ -109,6 +109,7 @@ interface MamMatesApi {
         @Path("id") id: Int,
     ): ResMamMates<String>
 
+    // Account
     @GET("accounts/store")
     suspend fun getStore(
         @Header("Authentication") token: String,

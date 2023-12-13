@@ -1,5 +1,6 @@
 package com.mammates.mammates_seller_v1.presentation.pages.main.mam_rates_result
 
+import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -29,9 +30,7 @@ class MamRatesResultViewModel @Inject constructor(
     val state = _state.asStateFlow()
 
     init {
-        _state.value = _state.value.copy(
-            token = tokenUseCases.getTokenUseCase()
-        )
+        getTokenValue()
     }
 
     fun onEvent(event: MamRatesResultEvent) {
@@ -57,66 +56,78 @@ class MamRatesResultViewModel @Inject constructor(
                     )
                     return
                 }
-                val imgFile = ImageUtils.uriToFile(_state.value.imageUri, event.context)
 
-                val multipartBody = MultipartBody.Part.createFormData(
-                    "image",
-                    imgFile.name,
-                    imgFile.asRequestBody("*/*".toMediaType())
-                )
+                getMamRates(event.context)
 
-                mamRatesUseCases.getMamRatesUseCase(
-                    token = _state.value.token,
-                    image = multipartBody
-                ).onEach { result ->
-                    when (result) {
-                        is Resource.Error -> {
-                            _state.value = _state.value.copy(
-                                errorMessage = result.message,
-                                isLoading = false
-                            )
-                        }
-
-                        is Resource.Loading -> {
-                            _state.value = _state.value.copy(
-                                isLoading = true
-                            )
-                        }
-
-                        is Resource.Success -> {
-                            result.data?.let { data ->
-                                _state.value = _state.value.copy(
-                                    successMessage = result.message,
-                                    rating = when (data.rating) {
-                                        1 -> Rating.ONE
-                                        2 -> Rating.TWO
-                                        3 -> Rating.THREE
-                                        0 -> Rating.ZERO
-                                        else -> Rating.Undefine
-                                    },
-                                    category = when (data.category) {
-                                        0 -> Category.Bika_Ambon.name.replace("_", " ")
-                                        1 -> Category.Dadar_Gulung.name.replace("_", " ")
-                                        2 -> Category.Donat.name.replace("_", " ")
-                                        3 -> Category.Kue_Cubit.name.replace("_", " ")
-                                        4 -> Category.Kue_Klepon.name.replace("_", " ")
-                                        5 -> Category.Kue_Lapis.name.replace("_", " ")
-                                        6 -> Category.Kue_Lumpur.name.replace("_", " ")
-                                        7 -> Category.Kue_Risoles.name.replace("_", " ")
-                                        8 -> Category.Putu_Ayu.name.replace("_", " ")
-                                        9 -> Category.Roti.name.replace("_", " ")
-                                        else -> Category.Undefine.name.replace("_", " ")
-
-                                    },
-                                    price = data.price ?: -69,
-                                    isLoading = false
-                                )
-                            }
-                        }
-                    }
-                }.launchIn(viewModelScope)
             }
         }
+    }
+
+    private fun getTokenValue() {
+        _state.value = _state.value.copy(
+            token = tokenUseCases.getTokenUseCase()
+        )
+    }
+
+    private fun getMamRates(context: Context) {
+        val imgFile = ImageUtils.uriToFile(_state.value.imageUri, context)
+
+        val multipartBody = MultipartBody.Part.createFormData(
+            "image",
+            imgFile.name,
+            imgFile.asRequestBody("*/*".toMediaType())
+        )
+
+        mamRatesUseCases.getMamRatesUseCase(
+            token = _state.value.token,
+            image = multipartBody
+        ).onEach { result ->
+            when (result) {
+                is Resource.Error -> {
+                    _state.value = _state.value.copy(
+                        errorMessage = result.message,
+                        isLoading = false
+                    )
+                }
+
+                is Resource.Loading -> {
+                    _state.value = _state.value.copy(
+                        isLoading = true
+                    )
+                }
+
+                is Resource.Success -> {
+                    result.data?.let { data ->
+                        _state.value = _state.value.copy(
+                            successMessage = result.message,
+                            rating = when (data.rating) {
+                                1 -> Rating.ONE
+                                2 -> Rating.TWO
+                                3 -> Rating.THREE
+                                0 -> Rating.ZERO
+                                else -> Rating.Undefine
+                            },
+                            category = when (data.category) {
+                                0 -> Category.Bika_Ambon.name.replace("_", " ")
+                                1 -> Category.Dadar_Gulung.name.replace("_", " ")
+                                2 -> Category.Donat.name.replace("_", " ")
+                                3 -> Category.Kue_Cubit.name.replace("_", " ")
+                                4 -> Category.Kue_Klepon.name.replace("_", " ")
+                                5 -> Category.Kue_Lapis.name.replace("_", " ")
+                                6 -> Category.Kue_Lumpur.name.replace("_", " ")
+                                7 -> Category.Kue_Risoles.name.replace("_", " ")
+                                8 -> Category.Putu_Ayu.name.replace("_", " ")
+                                9 -> Category.Roti.name.replace("_", " ")
+                                else -> Category.Undefine.name.replace("_", " ")
+
+                            },
+                            price = data.price ?: -69,
+                            isLoading = false
+                        )
+                    }
+                }
+            }
+        }.launchIn(viewModelScope)
     }
 
 }

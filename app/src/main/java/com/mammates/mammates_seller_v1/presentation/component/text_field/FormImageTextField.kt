@@ -21,6 +21,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -29,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.mammates.mammates_seller_v1.R
 import com.mammates.mammates_seller_v1.util.createImageFile
@@ -40,7 +44,8 @@ fun FormImageTextField(
     label: String,
     description: String,
     onImageCapture: (Uri) -> Unit,
-    imageUri: Uri?
+    imageUri: Uri?,
+    imageUrl: String? = null,
 ) {
     val context = LocalContext.current
     val file = context.createImageFile()
@@ -49,6 +54,11 @@ fun FormImageTextField(
         context.packageName + ".provider",
         file
     )
+
+    val isImageTaken by remember {
+        mutableStateOf(imageUrl.isNullOrEmpty())
+    }
+
 
     val cameraLauncher =
         rememberLauncherForActivityResult(
@@ -113,18 +123,32 @@ fun FormImageTextField(
 
                     }
             ) {
-                Image(
-                    painter = if (imageUri?.path.isNullOrEmpty()) {
-                        painterResource(id = R.drawable.image_placeholder)
-                    } else {
-                        rememberAsyncImagePainter(model = imageUri)
-                    },
-                    modifier = Modifier
-                        .width(135.dp)
-                        .height(135.dp),
-                    contentDescription = "Food Display",
-                    contentScale = ContentScale.Crop
-                )
+                if (isImageTaken) {
+                    Image(
+                        painter = if (imageUri?.path.isNullOrEmpty()) {
+                            painterResource(id = R.drawable.image_placeholder)
+                        } else {
+                            rememberAsyncImagePainter(model = imageUri)
+                        },
+                        modifier = Modifier
+                            .width(135.dp)
+                            .height(135.dp),
+                        contentDescription = "Image Display",
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    AsyncImage(
+                        modifier = Modifier
+                            .width(135.dp)
+                            .height(135.dp),
+                        model = imageUrl,
+                        contentDescription = "",
+                        placeholder = painterResource(
+                            id = R.drawable.image_placeholder
+                        ),
+                        contentScale = ContentScale.Crop
+                    )
+                }
             }
 
         }

@@ -23,10 +23,8 @@ class OrderViewModel @Inject constructor(
     val state = _state.asStateFlow()
 
     init {
-        _state.value = _state.value.copy(
-            token = tokenUseCases.getTokenUseCase()
-        )
-        getOrder(_state.value.tabIndex)
+        getTokenValue()
+        getOrderBasedOnTheirTab()
     }
 
     fun onEvent(event: OrderEvent) {
@@ -36,7 +34,7 @@ class OrderViewModel @Inject constructor(
                     tabIndex = event.index
                 )
 
-                getOrderWithStatus()
+                getOrderBasedOnTheirTab()
             }
 
             OrderEvent.OnDismissErrorDialog -> {
@@ -55,39 +53,9 @@ class OrderViewModel @Inject constructor(
                     _state.value.statusTarget.statusNumber <= 3 ||
                     _state.value.statusTarget.statusNumber > 1
                 ) {
-                    orderUseCases.changeOrderStatusUseCase(
-                        id = _state.value.orderId,
-                        token = _state.value.token,
-                        status = if (_state.value.statusTarget == StatusOrder.Canceled) {
-                            0
-                        } else {
-                            _state.value.statusTarget.statusNumber
-                        }
-                    ).onEach { result ->
-                        when (result) {
-                            is Resource.Error -> {
-                                _state.value = _state.value.copy(
-                                    errorMessage = result.message,
-                                    isLoading = false,
-                                )
-                            }
-
-                            is Resource.Loading -> {
-                                _state.value = _state.value.copy(
-                                    isLoading = true
-                                )
-                            }
-
-                            is Resource.Success -> {
-                                _state.value = _state.value.copy(
-                                    successMessage = result.data,
-                                    isLoading = false
-                                )
-                            }
-                        }
-                    }.launchIn(viewModelScope)
+                    changeOrderStatus()
                 }
-                getOrderWithStatus()
+                getOrderBasedOnTheirTab()
             }
 
             is OrderEvent.OnOpenChangeStatusDialog -> {
@@ -119,7 +87,13 @@ class OrderViewModel @Inject constructor(
         }
     }
 
-    private fun getOrderWithStatus() {
+    private fun getTokenValue() {
+        _state.value = _state.value.copy(
+            token = tokenUseCases.getTokenUseCase()
+        )
+    }
+
+    private fun getOrderBasedOnTheirTab() {
         when (_state.value.tabIndex) {
             // Unconfirmed
             0 -> {
@@ -159,6 +133,40 @@ class OrderViewModel @Inject constructor(
                 is Resource.Success -> {
                     _state.value = _state.value.copy(
                         orders = result.data,
+                        isLoading = false
+                    )
+                }
+            }
+        }.launchIn(viewModelScope)
+    }
+
+    private fun changeOrderStatus() {
+        orderUseCases.changeOrderStatusUseCase(
+            id = _state.value.orderId,
+            token = _state.value.token,
+            status = if (_state.value.statusTarget == StatusOrder.Canceled) {
+                0
+            } else {
+                _state.value.statusTarget.statusNumber
+            }
+        ).onEach { result ->
+            when (result) {
+                is Resource.Error -> {
+                    _state.value = _state.value.copy(
+                        errorMessage = result.message,
+                        isLoading = false,
+                    )
+                }
+
+                is Resource.Loading -> {
+                    _state.value = _state.value.copy(
+                        isLoading = true
+                    )
+                }
+
+                is Resource.Success -> {
+                    _state.value = _state.value.copy(
+                        successMessage = result.data,
                         isLoading = false
                     )
                 }

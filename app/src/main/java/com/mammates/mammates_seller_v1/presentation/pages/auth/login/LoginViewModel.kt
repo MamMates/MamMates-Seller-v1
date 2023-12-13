@@ -1,6 +1,5 @@
 package com.mammates.mammates_seller_v1.presentation.pages.auth.login
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mammates.mammates_seller_v1.common.Resource
@@ -48,10 +47,8 @@ class LoginViewModel @Inject constructor(
 
             LoginEvent.OnLogin -> {
 
-                _state.value = _state.value.copy(
-                    emailValidationResult = emailValidation(_state.value.email),
-                    passwordValidationResult = passwordValidation(_state.value.password)
-                )
+                validateAllFieldValue()
+
                 if (
                     !_state.value.emailValidationResult.isNullOrEmpty() &&
                     !_state.value.passwordValidationResult.isNullOrEmpty()
@@ -59,35 +56,7 @@ class LoginViewModel @Inject constructor(
                     return
                 }
 
-                authUseCases.authLoginUseCase(_state.value.email, _state.value.password)
-                    .onEach { result ->
-                        when (result) {
-                            is Resource.Error -> {
-                                _state.value = _state.value.copy(
-                                    errorMessage = result.message,
-                                    isLoading = false
-                                )
-                            }
-
-                            is Resource.Loading -> {
-                                _state.value = _state.value.copy(
-                                    isLoading = true
-                                )
-                            }
-
-                            is Resource.Success -> {
-                                Log.i("LoginViewModel", "Di Success")
-                                result.data?.let {
-                                    tokenUseCases.setTokenUseCase(it)
-                                    _state.value = _state.value.copy(
-                                        isAuth = true,
-                                        isLoading = false
-                                    )
-                                }
-                            }
-                        }
-
-                    }.launchIn(viewModelScope)
+                loginUser()
 
             }
 
@@ -97,6 +66,44 @@ class LoginViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    private fun validateAllFieldValue() {
+        _state.value = _state.value.copy(
+            emailValidationResult = emailValidation(_state.value.email),
+            passwordValidationResult = passwordValidation(_state.value.password)
+        )
+    }
+
+    private fun loginUser() {
+        authUseCases.authLoginUseCase(_state.value.email, _state.value.password)
+            .onEach { result ->
+                when (result) {
+                    is Resource.Error -> {
+                        _state.value = _state.value.copy(
+                            errorMessage = result.message,
+                            isLoading = false
+                        )
+                    }
+
+                    is Resource.Loading -> {
+                        _state.value = _state.value.copy(
+                            isLoading = true
+                        )
+                    }
+
+                    is Resource.Success -> {
+                        result.data?.let {
+                            tokenUseCases.setTokenUseCase(it)
+                            _state.value = _state.value.copy(
+                                isAuth = true,
+                                isLoading = false
+                            )
+                        }
+                    }
+                }
+
+            }.launchIn(viewModelScope)
     }
 
 

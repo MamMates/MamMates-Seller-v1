@@ -13,6 +13,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -30,7 +32,8 @@ fun CardFood(
     rating: Rating,
     foodName: String,
     price: Int,
-    image: String?
+    image: String?,
+    isValid: Boolean,
 ) {
 
     val context = LocalContext.current
@@ -53,10 +56,23 @@ fun CardFood(
                 .crossfade(true)
                 .build(),
             contentDescription = "Food Thumbnail",
-            placeholder = painterResource(id = R.drawable.dummy_food)
+            placeholder = painterResource(id = R.drawable.dummy_food),
+            colorFilter = if (!isValid) {
+                ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0f) })
+            } else {
+                null
+            }
+
         )
         Spacer(modifier = Modifier.width(20.dp))
         Column {
+            if (!isValid) {
+                Text(
+                    text = "Not Updated !",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
             Text(
                 text = foodName,
                 style = MaterialTheme.typography.titleSmall,
@@ -82,6 +98,7 @@ fun CardFoodPreview() {
         rating = Rating.TWO,
         foodName = "Donut Keju Suka Terbang",
         price = 5000,
-        image = ""
+        image = "",
+        isValid = true
     )
 }

@@ -24,38 +24,11 @@ class HomeViewModel @Inject constructor(
     val state = _state.asStateFlow()
 
     init {
-        val token = tokenUseCases.getTokenUseCase()
-        _state.value = _state.value.copy(
-            isOnBoarding = introUseCases.getIntroIsDoneUseCase(),
-            isAuth = token.isNotEmpty()
-        )
 
-        if (token.isNotEmpty()) {
-            ordersUseCase.getOrderRecentUseCase(
-                token = token,
-            ).onEach { result ->
-                when (result) {
-                    is Resource.Error -> {
-                        _state.value = _state.value.copy(
-                            errorMessage = result.message,
-                            isLoading = false
-                        )
-                    }
+        getTokenValue()
 
-                    is Resource.Loading -> {
-                        _state.value = _state.value.copy(
-                            isLoading = true
-                        )
-                    }
-
-                    is Resource.Success -> {
-                        _state.value = _state.value.copy(
-                            orderList = result.data,
-                            isLoading = false
-                        )
-                    }
-                }
-            }.launchIn(viewModelScope)
+        if (_state.value.token.isNotEmpty()) {
+            getRecentOrder()
         }
     }
 
@@ -68,5 +41,40 @@ class HomeViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    private fun getTokenValue() {
+        _state.value = _state.value.copy(
+            isOnBoarding = introUseCases.getIntroIsDoneUseCase(),
+            token = tokenUseCases.getTokenUseCase()
+        )
+    }
+
+    private fun getRecentOrder() {
+        ordersUseCase.getOrderRecentUseCase(
+            token = _state.value.token,
+        ).onEach { result ->
+            when (result) {
+                is Resource.Error -> {
+                    _state.value = _state.value.copy(
+                        errorMessage = result.message,
+                        isLoading = false
+                    )
+                }
+
+                is Resource.Loading -> {
+                    _state.value = _state.value.copy(
+                        isLoading = true
+                    )
+                }
+
+                is Resource.Success -> {
+                    _state.value = _state.value.copy(
+                        orderList = result.data,
+                        isLoading = false
+                    )
+                }
+            }
+        }.launchIn(viewModelScope)
     }
 }
