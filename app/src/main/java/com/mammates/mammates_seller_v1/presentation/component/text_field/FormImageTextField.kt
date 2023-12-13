@@ -46,6 +46,7 @@ fun FormImageTextField(
     onImageCapture: (Uri) -> Unit,
     imageUri: Uri?,
     imageUrl: String? = null,
+    validationText: String? = null,
 ) {
     val context = LocalContext.current
     val file = context.createImageFile()
@@ -151,6 +152,14 @@ fun FormImageTextField(
                 }
             }
 
+        }
+        Spacer(modifier = Modifier.height(5.dp))
+        if (!validationText.isNullOrEmpty()) {
+            Text(
+                text = validationText,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.error
+            )
         }
     }
 }

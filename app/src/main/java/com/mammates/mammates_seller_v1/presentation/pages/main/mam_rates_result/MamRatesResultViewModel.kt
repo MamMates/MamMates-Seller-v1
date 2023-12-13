@@ -49,7 +49,6 @@ class MamRatesResultViewModel @Inject constructor(
             }
 
             is MamRatesResultEvent.OnGetMamRates -> {
-
                 if (_state.value.imageUri == Uri.EMPTY) {
                     _state.value = _state.value.copy(
                         errorMessage = "Please Input Your Photo"

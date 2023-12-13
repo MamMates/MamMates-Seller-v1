@@ -15,7 +15,7 @@ class AddFoodUseCase @Inject constructor(
 ) {
     operator fun invoke(
         token: String,
-        image: MultipartBody.Part?,
+        image: MultipartBody.Part,
         name: String,
         price: Int,
         category: String,

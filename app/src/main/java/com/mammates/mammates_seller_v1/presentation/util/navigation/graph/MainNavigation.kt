@@ -108,7 +108,17 @@ fun NavGraphBuilder.mainGraph(navController: NavController) {
                 onEvent = viewModel::onEvent
             )
         }
-        composable(route = NavigationRoutes.Main.Add.route) {
+        composable(
+            route = NavigationRoutes.Main.Add.route + "?food_id={food_id}",
+            arguments = listOf(
+                navArgument(
+                    name = "food_id",
+                ) {
+                    type = NavType.IntType
+                    defaultValue = -69
+                }
+            )
+        ) {
             val viewModel = hiltViewModel<AddViewModel>()
             val state by viewModel.state.collectAsState()
             AddScreen(

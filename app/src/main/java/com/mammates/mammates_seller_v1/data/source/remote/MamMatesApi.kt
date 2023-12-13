@@ -76,7 +76,7 @@ interface MamMatesApi {
     @POST("foods")
     suspend fun addFood(
         @Header("Authentication") token: String,
-        @Part image: MultipartBody.Part?,
+        @Part image: MultipartBody.Part,
         @Part("name") name: String,
         @Part("price") price: Int,
         @Part("category") category: String,
@@ -95,7 +95,7 @@ interface MamMatesApi {
     suspend fun updateFood(
         @Header("Authentication") token: String,
         @Path("id") id: Int,
-        @Part image: MultipartBody.Part?,
+        @Part image: MultipartBody.Part,
         @Part("name") name: String,
         @Part("price") price: Int,
         @Part("category") category: String,

@@ -16,48 +16,51 @@ fun RatingDisplay(
     modifier: Modifier = Modifier,
     rating: Rating
 ) {
-    Row {
-        Icon(
-            modifier = modifier,
-            imageVector = if (
-                rating == Rating.ONE ||
-                rating == Rating.TWO ||
-                rating == Rating.THREE
-            ) {
-                Icons.Default.Star
-            } else {
-                Icons.Outlined.StarOutline
-            },
-            contentDescription = "Star One",
-            tint = MaterialTheme.colorScheme.secondary,
+    if (rating != Rating.Undefine) {
+
+        Row {
+            Icon(
+                modifier = modifier,
+                imageVector = if (
+                    rating == Rating.ONE ||
+                    rating == Rating.TWO ||
+                    rating == Rating.THREE
+                ) {
+                    Icons.Default.Star
+                } else {
+                    Icons.Outlined.StarOutline
+                },
+                contentDescription = "Star One",
+                tint = MaterialTheme.colorScheme.secondary,
+
+                )
+            Icon(
+                modifier = modifier,
+                imageVector = if (
+                    rating == Rating.TWO ||
+                    rating == Rating.THREE
+                ) {
+                    Icons.Default.Star
+                } else {
+                    Icons.Outlined.StarOutline
+                },
+                contentDescription = "Star Two",
+                tint = MaterialTheme.colorScheme.secondary
 
             )
-        Icon(
-            modifier = modifier,
-            imageVector = if (
-                rating == Rating.TWO ||
-                rating == Rating.THREE
-            ) {
-                Icons.Default.Star
-            } else {
-                Icons.Outlined.StarOutline
-            },
-            contentDescription = "Star Two",
-            tint = MaterialTheme.colorScheme.secondary
-
-        )
-        Icon(
-            modifier = modifier,
-            imageVector = if (
-                rating == Rating.THREE
-            ) {
-                Icons.Default.Star
-            } else {
-                Icons.Outlined.StarOutline
-            },
-            contentDescription = "Star Three",
-            tint = MaterialTheme.colorScheme.secondary
-        )
+            Icon(
+                modifier = modifier,
+                imageVector = if (
+                    rating == Rating.THREE
+                ) {
+                    Icons.Default.Star
+                } else {
+                    Icons.Outlined.StarOutline
+                },
+                contentDescription = "Star Three",
+                tint = MaterialTheme.colorScheme.secondary
+            )
+        }
     }
 }
 

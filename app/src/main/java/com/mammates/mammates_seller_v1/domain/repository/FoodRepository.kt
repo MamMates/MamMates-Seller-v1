@@ -12,7 +12,7 @@ interface FoodRepository {
 
     suspend fun addFood(
         token: String,
-        image: MultipartBody.Part?,
+        image: MultipartBody.Part,
         name: String,
         price: Int,
         category: String,
@@ -28,7 +28,7 @@ interface FoodRepository {
     suspend fun updateFood(
         token: String,
         id: Int,
-        image: MultipartBody.Part?,
+        image: MultipartBody.Part,
         name: String,
         price: Int,
         category: String,

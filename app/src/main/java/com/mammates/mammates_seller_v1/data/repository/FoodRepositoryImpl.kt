@@ -17,7 +17,7 @@ class FoodRepositoryImpl @Inject constructor(
 
     override suspend fun addFood(
         token: String,
-        image: MultipartBody.Part?,
+        image: MultipartBody.Part,
         name: String,
         price: Int,
         category: String,
@@ -36,7 +36,7 @@ class FoodRepositoryImpl @Inject constructor(
     override suspend fun updateFood(
         token: String,
         id: Int,
-        image: MultipartBody.Part?,
+        image: MultipartBody.Part,
         name: String,
         price: Int,
         category: String,

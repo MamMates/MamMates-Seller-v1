@@ -49,7 +49,11 @@ fun AddScreen(
     ) {
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = "Add New Food",
+            text = if (state.isEdit) {
+                "Edit Your Food"
+            } else {
+                "Add New Food"
+            },
             style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.onBackground,
         )
@@ -60,20 +64,29 @@ fun AddScreen(
             onImageCapture = {
                 onEvent(AddEvent.OnChangeFoodDisplayImage(it))
             },
-            imageUri = state.foodDisplayImage
+            imageUri = state.foodDisplayImage,
+            imageUrl = state.foodDisplayUrlImage
         )
         Spacer(modifier = Modifier.height(20.dp))
         FormTextField(
             value = state.foodName,
-            onValueChange = {},
+            onValueChange = {
+                onEvent(AddEvent.OnChangeFoodName(it))
+            },
             errorResult = state.foodNameValidation,
             label = "Food Name",
             description = "Name your culinary creations and make them stand out on MamMates",
         )
         Spacer(modifier = Modifier.height(20.dp))
         FormTextField(
-            value = "${state.foodPrice}",
-            onValueChange = {},
+            value = if (state.foodPrice == 0) {
+                ""
+            } else {
+                "${state.foodPrice}"
+            },
+            onValueChange = {
+                onEvent(AddEvent.OnChangeFoodPrice(it))
+            },
             errorResult = state.foodPriceValidation,
             label = "Food Price (Rp)",
             description = "Input your desired prices and attract food enthusiasts on MamMates.",
@@ -81,13 +94,27 @@ fun AddScreen(
                 keyboardType = KeyboardType.Number
             )
         )
+        Spacer(modifier = Modifier.height(5.dp))
+        Text(
+            text = if (state.foodPriceSuggestion == null) {
+                "No Price Suggestion Provides"
+            } else {
+                "Price Suggestion = Rp. ${state.foodPriceSuggestion}"
+            },
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.outline
+        )
+
         Spacer(modifier = Modifier.height(20.dp))
         FormImageTextField(
             label = "MamRates",
             description = "Upload a photo for automatic MamRates. Once generated, ratings cannot be changed",
             onImageCapture = {
+                onEvent(AddEvent.OnChangeFoodMamRatesImage(it))
             },
-            imageUri = state.foodMamRatesImage
+            imageUri = state.foodMamRatesImage,
+            validationText = state.foodMamRatesImageValidation,
+            imageUrl = state.foodMamRatesUrlImage
         )
         Spacer(modifier = Modifier.height(25.dp))
         Row(
@@ -99,14 +126,24 @@ fun AddScreen(
                 rating = state.rating
             )
             FilledTonalButton(onClick = { /*TODO*/ }) {
-                Text(text = "Generate")
+                Text(
+                    text = if (state.isEdit) {
+                        "Update"
+                    } else {
+                        "Generate"
+                    }
+                )
 
             }
         }
         Spacer(modifier = Modifier.height(10.dp))
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = state.foodCategory ?: "Please generate your Rating !",
+            text = if (!state.foodCategory.isNullOrEmpty()) {
+                "Category : ${state.foodCategory}"
+            } else {
+                "Please generate your Rating !"
+            },
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.secondary,
         )

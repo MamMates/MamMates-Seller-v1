@@ -97,7 +97,7 @@ fun StoreScreen(
         Scaffold(
             floatingActionButton = {
                 FloatingActionButton(onClick = {
-                    navController.navigate(NavigationRoutes.Main.Add.route)
+                    navController.navigate(NavigationRoutes.Main.Add.route + "?food_id=-69")
                 }) {
                     Icon(
                         imageVector = Icons.Filled.Add,
