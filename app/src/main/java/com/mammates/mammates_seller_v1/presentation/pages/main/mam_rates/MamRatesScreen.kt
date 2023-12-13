@@ -33,8 +33,8 @@ fun MamRatesScreen(
     onEvent: (MamRatesEvent) -> Unit
 ) {
 
-    LaunchedEffect(key1 = state.isAuth) {
-        if (!state.isAuth) {
+    LaunchedEffect(key1 = state.token) {
+        if (state.token.isEmpty()) {
             navController.navigate(route = NavigationRoutes.Auth.route) {
                 popUpTo(route = NavigationRoutes.Main.route) {
                     inclusive = true

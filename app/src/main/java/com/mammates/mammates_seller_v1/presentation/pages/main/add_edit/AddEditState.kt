@@ -1,9 +1,9 @@
-package com.mammates.mammates_seller_v1.presentation.pages.main.add
+package com.mammates.mammates_seller_v1.presentation.pages.main.add_edit
 
 import android.net.Uri
 import com.mammates.mammates_seller_v1.util.Rating
 
-data class AddState(
+data class AddEditState(
 
     val id: Int = -69,
     val isEdit: Boolean = false,
@@ -31,4 +31,6 @@ data class AddState(
     val foodMamRatesImageValidation: String? = null,
     val foodMamRatesUrlImage: String? = null,
 
-    )
+    val isConfirmDeleteDialogOpen: Boolean = false
+
+)

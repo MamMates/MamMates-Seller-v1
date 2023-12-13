@@ -17,7 +17,7 @@ class MamRatesViewModel @Inject constructor(
 
     init {
         _state.value = _state.value.copy(
-            isAuth = tokenUseCases.getTokenUseCase().isNotEmpty()
+            token = tokenUseCases.getTokenUseCase()
         )
     }
 

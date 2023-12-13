@@ -15,6 +15,14 @@ data class AccountSettingState(
     val email: String = "",
     val emailValidation: String? = null,
 
-    val profileImage: Uri = Uri.EMPTY
+    val profileImageUri: Uri = Uri.EMPTY,
+    val profileImageUrl: String? = null,
+
+    val token: String = "",
+    val isLoading: Boolean = false,
+    val errorMessage: String? = null,
+    val successMessage: String? = null,
+
+    val isConfirmDeleteDialogOpen: Boolean = false
 
 )

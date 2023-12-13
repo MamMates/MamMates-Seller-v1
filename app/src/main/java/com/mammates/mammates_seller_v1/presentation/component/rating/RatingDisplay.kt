@@ -1,5 +1,6 @@
 package com.mammates.mammates_seller_v1.presentation.component.rating
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
@@ -60,6 +61,10 @@ fun RatingDisplay(
                 contentDescription = "Star Three",
                 tint = MaterialTheme.colorScheme.secondary
             )
+        }
+    } else {
+        Box {
+
         }
     }
 }

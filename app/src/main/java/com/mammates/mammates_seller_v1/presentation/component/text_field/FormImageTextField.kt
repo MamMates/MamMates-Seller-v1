@@ -21,9 +21,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -55,10 +52,6 @@ fun FormImageTextField(
         context.packageName + ".provider",
         file
     )
-
-    val isImageTaken by remember {
-        mutableStateOf(imageUrl.isNullOrEmpty())
-    }
 
 
     val cameraLauncher =
@@ -124,20 +117,16 @@ fun FormImageTextField(
 
                     }
             ) {
-                if (isImageTaken) {
+                if (imageUri != Uri.EMPTY) {
                     Image(
-                        painter = if (imageUri?.path.isNullOrEmpty()) {
-                            painterResource(id = R.drawable.image_placeholder)
-                        } else {
-                            rememberAsyncImagePainter(model = imageUri)
-                        },
+                        painter = rememberAsyncImagePainter(model = imageUri),
                         modifier = Modifier
                             .width(135.dp)
                             .height(135.dp),
                         contentDescription = "Image Display",
                         contentScale = ContentScale.Crop
                     )
-                } else {
+                } else if (!imageUrl.isNullOrEmpty()) {
                     AsyncImage(
                         modifier = Modifier
                             .width(135.dp)
@@ -149,11 +138,20 @@ fun FormImageTextField(
                         ),
                         contentScale = ContentScale.Crop
                     )
+                } else {
+                    Image(
+                        painter = painterResource(id = R.drawable.image_placeholder),
+                        modifier = Modifier
+                            .width(135.dp)
+                            .height(135.dp),
+                        contentDescription = "Image Display",
+                        contentScale = ContentScale.Crop
+                    )
                 }
             }
 
         }
-        Spacer(modifier = Modifier.height(5.dp))
+        Spacer(modifier = Modifier.height(10.dp))
         if (!validationText.isNullOrEmpty()) {
             Text(
                 text = validationText,

@@ -164,7 +164,10 @@ fun StoreScreen(
                                 foodName = item.name ?: "No Name",
                                 price = item.price ?: 0,
                                 image = item.image,
-                                isValid = item.isValid ?: false
+                                isValid = item.isValid ?: false,
+                                onClickCard = {
+                                    navController.navigate(NavigationRoutes.Main.Add.route + "?food_id=${item.id}")
+                                }
                             )
                             Spacer(modifier = Modifier.height(15.dp))
                         }

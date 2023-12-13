@@ -67,7 +67,7 @@ class StoreViewModel @Inject constructor(
                     )
                 }
             }
-        }
+        }.launchIn(viewModelScope)
     }
 
     private fun getFoodData() {

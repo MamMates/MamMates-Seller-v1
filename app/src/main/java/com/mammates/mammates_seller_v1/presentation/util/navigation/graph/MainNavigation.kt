@@ -11,8 +11,12 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mammates.mammates_seller_v1.presentation.pages.main.account.AccountScreen
 import com.mammates.mammates_seller_v1.presentation.pages.main.account.AccountViewModel
-import com.mammates.mammates_seller_v1.presentation.pages.main.add.AddScreen
-import com.mammates.mammates_seller_v1.presentation.pages.main.add.AddViewModel
+import com.mammates.mammates_seller_v1.presentation.pages.main.account_setting.AccountSettingScreen
+import com.mammates.mammates_seller_v1.presentation.pages.main.account_setting.AccountSettingViewModel
+import com.mammates.mammates_seller_v1.presentation.pages.main.add_edit.AddEditScreen
+import com.mammates.mammates_seller_v1.presentation.pages.main.add_edit.AddEditViewModel
+import com.mammates.mammates_seller_v1.presentation.pages.main.change_password.ChangePasswordScreen
+import com.mammates.mammates_seller_v1.presentation.pages.main.change_password.ChangePasswordViewModel
 import com.mammates.mammates_seller_v1.presentation.pages.main.home.HomeScreen
 import com.mammates.mammates_seller_v1.presentation.pages.main.home.HomeViewModel
 import com.mammates.mammates_seller_v1.presentation.pages.main.mam_rates.MamRatesScreen
@@ -23,6 +27,8 @@ import com.mammates.mammates_seller_v1.presentation.pages.main.order.OrderScreen
 import com.mammates.mammates_seller_v1.presentation.pages.main.order.OrderViewModel
 import com.mammates.mammates_seller_v1.presentation.pages.main.order_detail.OrderDetailScreen
 import com.mammates.mammates_seller_v1.presentation.pages.main.order_detail.OrderDetailViewModel
+import com.mammates.mammates_seller_v1.presentation.pages.main.report_mam_rates.ReportMamRatesScreen
+import com.mammates.mammates_seller_v1.presentation.pages.main.report_mam_rates.ReportMamRatesViewModel
 import com.mammates.mammates_seller_v1.presentation.pages.main.store.StoreScreen
 import com.mammates.mammates_seller_v1.presentation.pages.main.store.StoreViewModel
 import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
@@ -119,9 +125,43 @@ fun NavGraphBuilder.mainGraph(navController: NavController) {
                 }
             )
         ) {
-            val viewModel = hiltViewModel<AddViewModel>()
+            val viewModel = hiltViewModel<AddEditViewModel>()
             val state by viewModel.state.collectAsState()
-            AddScreen(
+            AddEditScreen(
+                navController = navController,
+                state = state,
+                onEvent = viewModel::onEvent
+            )
+        }
+        composable(
+            route = NavigationRoutes.Main.ReportMamRates.route
+        ) {
+            val viewModel = hiltViewModel<ReportMamRatesViewModel>()
+            val state by viewModel.state.collectAsState()
+            ReportMamRatesScreen(
+                navController = navController,
+                state = state,
+                onEvent = viewModel::onEvent
+            )
+        }
+
+        composable(
+            route = NavigationRoutes.Main.AccountSetting.route
+        ) {
+            val viewModel = hiltViewModel<AccountSettingViewModel>()
+            val state by viewModel.state.collectAsState()
+            AccountSettingScreen(
+                navController = navController,
+                state = state,
+                onEvent = viewModel::onEvent
+            )
+        }
+        composable(
+            route = NavigationRoutes.Main.ChangePassword.route
+        ) {
+            val viewModel = hiltViewModel<ChangePasswordViewModel>()
+            val state by viewModel.state.collectAsState()
+            ChangePasswordScreen(
                 navController = navController,
                 state = state,
                 onEvent = viewModel::onEvent

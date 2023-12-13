@@ -1,6 +1,7 @@
 package com.mammates.mammates_seller_v1.presentation.pages.main.store.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -34,6 +35,7 @@ fun CardFood(
     price: Int,
     image: String?,
     isValid: Boolean,
+    onClickCard: () -> Unit
 ) {
 
     val context = LocalContext.current
@@ -45,6 +47,9 @@ fun CardFood(
                 color = MaterialTheme.colorScheme.surface,
                 shape = RoundedCornerShape(10)
             )
+            .clickable {
+                onClickCard()
+            }
             .padding(horizontal = 20.dp, vertical = 10.dp)
     ) {
         AsyncImage(
@@ -99,6 +104,7 @@ fun CardFoodPreview() {
         foodName = "Donut Keju Suka Terbang",
         price = 5000,
         image = "",
-        isValid = true
+        isValid = true,
+        onClickCard = {}
     )
 }

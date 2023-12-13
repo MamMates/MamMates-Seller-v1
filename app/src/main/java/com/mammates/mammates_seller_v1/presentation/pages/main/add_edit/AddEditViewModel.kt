@@ -1,4 +1,4 @@
-package com.mammates.mammates_seller_v1.presentation.pages.main.add
+package com.mammates.mammates_seller_v1.presentation.pages.main.add_edit
 
 import android.content.Context
 import android.net.Uri
@@ -24,14 +24,14 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import javax.inject.Inject
 
 @HiltViewModel
-class AddViewModel @Inject constructor(
+class AddEditViewModel @Inject constructor(
     private val foodUseCases: FoodUseCases,
     private val mamRatesUseCases: MamRatesUseCases,
     private val tokenUseCases: TokenUseCases,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(AddState())
+    private val _state = MutableStateFlow(AddEditState())
     val state = _state.asStateFlow()
 
     init {
@@ -40,9 +40,13 @@ class AddViewModel @Inject constructor(
 
         savedStateHandle.get<Int>("food_id")?.let { id ->
             _state.value = _state.value.copy(
-                id = id
-            )
+                id = id,
+
+                )
             if (id != -69) {
+                _state.value = _state.value.copy(
+                    isEdit = true
+                )
                 if (_state.value.token.isNotEmpty()) {
                     getFoodDetailData()
                 }
@@ -50,29 +54,29 @@ class AddViewModel @Inject constructor(
         }
     }
 
-    fun onEvent(event: AddEvent) {
+    fun onEvent(event: AddEditEvent) {
         when (event) {
-            is AddEvent.OnChangeFoodDisplayImage -> {
+            is AddEditEvent.OnChangeFoodDisplayImage -> {
                 _state.value = _state.value.copy(
                     foodDisplayImage = event.uri
                 )
             }
 
-            is AddEvent.OnChangeFoodMamRatesImage -> {
+            is AddEditEvent.OnChangeFoodMamRatesImage -> {
                 _state.value = _state.value.copy(
                     foodMamRatesImage = event.uri,
                     foodMamRatesImageValidation = null
                 )
             }
 
-            is AddEvent.OnChangeFoodName -> {
+            is AddEditEvent.OnChangeFoodName -> {
                 _state.value = _state.value.copy(
                     foodName = event.name,
                     foodNameValidation = emptyValidation(event.name, "Food Name")
                 )
             }
 
-            is AddEvent.OnChangeFoodPrice -> {
+            is AddEditEvent.OnChangeFoodPrice -> {
                 try {
                     _state.value = _state.value.copy(
                         foodPrice = event.price.toInt()
@@ -87,7 +91,7 @@ class AddViewModel @Inject constructor(
                 )
             }
 
-            is AddEvent.OnGenerateMamRatesFromImage -> {
+            is AddEditEvent.OnGenerateMamRatesFromImage -> {
                 if (_state.value.foodMamRatesImage == Uri.EMPTY) {
                     _state.value = _state.value.copy(
                         foodMamRatesImageValidation = "Please input your food image !!"
@@ -99,13 +103,24 @@ class AddViewModel @Inject constructor(
 
             }
 
-            is AddEvent.OnUpdateAddFood -> {
+            is AddEditEvent.OnUpdateAddFood -> {
                 validateAllFieldValue()
+
+                if (_state.value.rating == Rating.Undefine ||
+                    _state.value.foodCategory == Category.Undefine.name ||
+                    _state.value.foodPriceSuggestion == -69
+                ) {
+                    _state.value = _state.value.copy(
+                        errorMessage = "Please generate your MamRates !"
+                    )
+                    return
+                }
 
                 if (
                     !_state.value.foodNameValidation.isNullOrEmpty() &&
                     !_state.value.foodPriceValidation.isNullOrEmpty() &&
                     !_state.value.foodMamRatesImageValidation.isNullOrEmpty()
+
                 ) {
                     return
                 }
@@ -115,6 +130,24 @@ class AddViewModel @Inject constructor(
                 }
                 addFood(event.context)
             }
+
+            AddEditEvent.OnDismissDialog -> {
+                _state.value = _state.value.copy(
+                    errorMessage = null,
+                    successMessage = null,
+                    isConfirmDeleteDialogOpen = false
+                )
+            }
+
+            AddEditEvent.OnDeleteFood -> {
+                deleteFood()
+            }
+
+            AddEditEvent.OnOpenDeleteDialog -> {
+                _state.value = _state.value.copy(
+                    isConfirmDeleteDialogOpen = true
+                )
+            }
         }
     }
 
@@ -122,6 +155,35 @@ class AddViewModel @Inject constructor(
         _state.value = _state.value.copy(
             token = tokenUseCases.getTokenUseCase()
         )
+    }
+
+    private fun deleteFood() {
+        foodUseCases.deleteFoodUseCase(_state.value.token, _state.value.id)
+            .onEach { result ->
+                when (result) {
+                    is Resource.Error -> {
+                        _state.value = _state.value.copy(
+                            errorMessage = result.message,
+                            isLoading = false,
+                            isConfirmDeleteDialogOpen = false
+                        )
+                    }
+
+                    is Resource.Loading -> {
+                        _state.value = _state.value.copy(
+                            isLoading = true
+                        )
+                    }
+
+                    is Resource.Success -> {
+                        _state.value = _state.value.copy(
+                            successMessage = result.data,
+                            isLoading = false,
+                            isConfirmDeleteDialogOpen = false
+                        )
+                    }
+                }
+            }.launchIn(viewModelScope)
     }
 
     private fun editFood(context: Context) {
@@ -142,9 +204,29 @@ class AddViewModel @Inject constructor(
                 _state.value.foodMamRatesUrlImage
             ),
             mamRates = _state.value.rating.rating,
-        ).onEach {
-            TODO("IMPLEMENT THE DIALOG")
-        }
+        ).onEach { result ->
+            when (result) {
+                is Resource.Error -> {
+                    _state.value = _state.value.copy(
+                        errorMessage = result.message,
+                        isLoading = false
+                    )
+                }
+
+                is Resource.Loading -> {
+                    _state.value = _state.value.copy(
+                        isLoading = true
+                    )
+                }
+
+                is Resource.Success -> {
+                    _state.value = _state.value.copy(
+                        successMessage = result.data,
+                        isLoading = false,
+                    )
+                }
+            }
+        }.launchIn(viewModelScope)
     }
 
     private fun addFood(context: Context) {
@@ -164,9 +246,30 @@ class AddViewModel @Inject constructor(
                 _state.value.foodMamRatesUrlImage
             ),
             mamRates = _state.value.rating.rating,
-        ).onEach {
-            TODO("IMPLEMENT THE DIALOG")
-        }
+        ).onEach { result ->
+            when (result) {
+                is Resource.Error -> {
+                    _state.value = _state.value.copy(
+                        errorMessage = result.message,
+                        isLoading = false
+                    )
+                }
+
+                is Resource.Loading -> {
+                    _state.value = _state.value.copy(
+                        isLoading = true
+                    )
+                }
+
+                is Resource.Success -> {
+                    _state.value = _state.value.copy(
+                        successMessage = result.data,
+                        isLoading = false,
+                    )
+                }
+            }
+
+        }.launchIn(viewModelScope)
     }
 
     private fun imageMultiPartData(context: Context, uri: Uri, url: String?): MultipartBody.Part {
@@ -208,7 +311,13 @@ class AddViewModel @Inject constructor(
             } else {
                 null
             },
-            foodPriceValidation = emptyValidation(_state.value.foodPrice.toString(), "Price"),
+            foodPriceValidation = emptyValidation(
+                if (_state.value.foodPrice == 0) {
+                    ""
+                } else {
+                    _state.value.foodPrice.toString()
+                }, "Price"
+            ),
         )
     }
 
@@ -233,7 +342,7 @@ class AddViewModel @Inject constructor(
                         _state.value = _state.value.copy(
                             foodDisplayUrlImage = data.image,
                             foodName = data.name ?: "",
-                            foodPriceSuggestion = data.price,
+                            foodPrice = data.price ?: -69,
                             foodMamRatesUrlImage = data.mamImage,
                             rating = when (data.mamRates) {
                                 0 -> Rating.ZERO
@@ -314,7 +423,7 @@ class AddViewModel @Inject constructor(
                                 else -> Category.Undefine.name.replace("_", " ")
 
                             },
-                            foodPrice = data.price ?: -69,
+                            foodPriceSuggestion = data.price ?: -69,
                             isLoading = false
                         )
                     }

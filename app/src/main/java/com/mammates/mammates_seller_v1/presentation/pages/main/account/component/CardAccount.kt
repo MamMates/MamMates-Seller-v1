@@ -18,21 +18,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 
 @Composable
 fun CardAccount(
     modifier: Modifier = Modifier,
-    navController: NavController,
     title: String,
-    route: String
+    onClick: () -> Unit
 ) {
     Column(
         modifier = modifier
             .padding(vertical = 10.dp)
             .clickable {
-                navController.navigate(route)
+                onClick()
             },
     ) {
         Row(
@@ -59,7 +56,6 @@ fun CardAccount(
 fun CardAccountPreview() {
     CardAccount(
         title = "Account Setting",
-        route = "",
-        navController = rememberNavController()
+        onClick = {}
     )
 }

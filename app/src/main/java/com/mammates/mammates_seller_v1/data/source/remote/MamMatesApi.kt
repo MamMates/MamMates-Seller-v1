@@ -131,7 +131,7 @@ interface MamMatesApi {
     @PATCH("accounts/seller")
     suspend fun updateProfilePicture(
         @Header("Authentication") token: String,
-        @Part("image") image: MultipartBody.Part,
+        @Part image: MultipartBody.Part,
     ): ResMamMates<String>
 
     @PUT("password")
