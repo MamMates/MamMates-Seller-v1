@@ -23,7 +23,6 @@ class AccountViewModel @Inject constructor(
 
     init {
         getTokenValue()
-        getStoreData()
     }
 
     fun onEvent(event: AccountEvent) {
@@ -31,16 +30,21 @@ class AccountViewModel @Inject constructor(
             AccountEvent.OnLogout -> {
                 viewModelScope.launch {
                     tokenUseCases.clearTokenUseCase()
-                    _state.value = _state.value.copy(
-                        token = ""
-                    )
                 }
+                _state.value = _state.value.copy(
+                    token = ""
+                )
             }
 
             AccountEvent.OnDismissDialog -> {
                 _state.value = _state.value.copy(
                     errorMessage = null
                 )
+            }
+
+            AccountEvent.OnRefreshPage -> {
+                getTokenValue()
+                getStoreData()
             }
         }
     }

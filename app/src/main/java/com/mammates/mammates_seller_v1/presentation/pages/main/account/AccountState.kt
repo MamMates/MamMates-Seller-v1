@@ -6,4 +6,6 @@ data class AccountState(
     val isLoading: Boolean = false,
     val storeImage: String? = null,
     val errorMessage: String? = null,
-)
+    val isNotAuthorizeDialogOpen: Boolean = false,
+
+    )

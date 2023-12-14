@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -79,16 +80,15 @@ class AddEditViewModel @Inject constructor(
             is AddEditEvent.OnChangeFoodPrice -> {
                 try {
                     _state.value = _state.value.copy(
-                        foodPrice = event.price.toInt()
+                        foodPrice = event.price.toInt(),
+                        foodPriceValidation = emptyValidation(event.price, "Price")
                     )
                 } catch (e: NumberFormatException) {
                     _state.value = _state.value.copy(
-                        foodPriceValidation = "Price can't input other than number"
+                        foodPriceValidation = "Price can't input other than number",
+                        foodPrice = 0,
                     )
                 }
-                _state.value = _state.value.copy(
-                    foodPriceValidation = emptyValidation(event.price, "Price")
-                )
             }
 
             is AddEditEvent.OnGenerateMamRatesFromImage -> {
@@ -148,6 +148,15 @@ class AddEditViewModel @Inject constructor(
                     isConfirmDeleteDialogOpen = true
                 )
             }
+
+            AddEditEvent.OnDismissNotAuthorize -> {
+                viewModelScope.launch {
+                    tokenUseCases.clearTokenUseCase()
+                }
+                _state.value = _state.value.copy(
+                    token = ""
+                )
+            }
         }
     }
 
@@ -162,6 +171,14 @@ class AddEditViewModel @Inject constructor(
             .onEach { result ->
                 when (result) {
                     is Resource.Error -> {
+                        if (result.message.equals("401")) {
+                            _state.value = _state.value.copy(
+                                isNotAuthorizeDialogOpen = true,
+                                isLoading = false,
+                            )
+                            return@onEach
+                        }
+
                         _state.value = _state.value.copy(
                             errorMessage = result.message,
                             isLoading = false,
@@ -207,6 +224,13 @@ class AddEditViewModel @Inject constructor(
         ).onEach { result ->
             when (result) {
                 is Resource.Error -> {
+                    if (result.message.equals("401")) {
+                        _state.value = _state.value.copy(
+                            isNotAuthorizeDialogOpen = true,
+                            isLoading = false,
+                        )
+                        return@onEach
+                    }
                     _state.value = _state.value.copy(
                         errorMessage = result.message,
                         isLoading = false
@@ -249,6 +273,14 @@ class AddEditViewModel @Inject constructor(
         ).onEach { result ->
             when (result) {
                 is Resource.Error -> {
+                    if (result.message.equals("401")) {
+                        _state.value = _state.value.copy(
+                            isNotAuthorizeDialogOpen = true,
+                            isLoading = false,
+                        )
+                        return@onEach
+                    }
+
                     _state.value = _state.value.copy(
                         errorMessage = result.message,
                         isLoading = false
@@ -325,6 +357,15 @@ class AddEditViewModel @Inject constructor(
         foodUseCases.getFoodDetailUseCase(_state.value.token, _state.value.id).onEach { result ->
             when (result) {
                 is Resource.Error -> {
+
+                    if (result.message.equals("401")) {
+                        _state.value = _state.value.copy(
+                            isNotAuthorizeDialogOpen = true,
+                            isLoading = false,
+                        )
+                        return@onEach
+                    }
+
                     _state.value = _state.value.copy(
                         errorMessage = result.message,
                         isLoading = false
@@ -363,7 +404,8 @@ class AddEditViewModel @Inject constructor(
                                 8 -> Category.Putu_Ayu.name.replace("_", " ")
                                 9 -> Category.Roti.name.replace("_", " ")
                                 else -> Category.Undefine.name.replace("_", " ")
-                            }
+                            },
+                            isLoading = false
                         )
                     }
                 }
@@ -386,6 +428,14 @@ class AddEditViewModel @Inject constructor(
         ).onEach { result ->
             when (result) {
                 is Resource.Error -> {
+                    if (result.message.equals("401")) {
+                        _state.value = _state.value.copy(
+                            isNotAuthorizeDialogOpen = true,
+                            isLoading = false,
+                        )
+                        return@onEach
+                    }
+
                     _state.value = _state.value.copy(
                         errorMessage = result.message,
                         isLoading = false

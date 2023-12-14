@@ -16,5 +16,7 @@ data class OrderDetailState(
     val errorMessage: String? = null,
     val successMessage: String? = null,
     val isConfirmDialogOpen: Boolean = false,
-    val isConfirmCanceledDialogOpen: Boolean = false
-)
+    val isConfirmCanceledDialogOpen: Boolean = false,
+    val isNotAuthorizeDialogOpen: Boolean = false,
+
+    )

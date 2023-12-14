@@ -7,4 +7,5 @@ sealed class MamRatesResultEvent {
     data class OnCaptureImage(val uri: Uri) : MamRatesResultEvent()
     data object OnDismissDialog : MamRatesResultEvent()
     data class OnGetMamRates(val context: Context) : MamRatesResultEvent()
+    data object OnDismissNotAuthorize : MamRatesResultEvent()
 }

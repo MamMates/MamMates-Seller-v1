@@ -8,4 +8,6 @@ sealed class OrderEvent {
     data class OnOpenChangeStatusDialog(val id: Int, val statusTarget: StatusOrder) : OrderEvent()
     data object OnDismissChangeStatusDialog : OrderEvent()
     data object OnConfirmChangeStatus : OrderEvent()
+    data object OnRefreshPage : OrderEvent()
+    data object OnDismissNotAuthorize : OrderEvent()
 }

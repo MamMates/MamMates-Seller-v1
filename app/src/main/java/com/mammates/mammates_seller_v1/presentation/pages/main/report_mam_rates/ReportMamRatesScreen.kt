@@ -8,19 +8,28 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.mammates.mammates_seller_v1.presentation.component.text_field.FormImageTextField
 import com.mammates.mammates_seller_v1.presentation.component.text_field.FormTextField
+import com.mammates.mammates_seller_v1.presentation.util.loading.LoadingAnimation
 
 @Composable
 fun ReportMamRatesScreen(
@@ -28,64 +37,183 @@ fun ReportMamRatesScreen(
     state: ReportMamRatesState,
     onEvent: (ReportMamRatesEvent) -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 35.dp),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = "Report MamRates",
-            style = MaterialTheme.typography.headlineMedium,
-            color = MaterialTheme.colorScheme.onBackground,
-        )
-        Spacer(modifier = Modifier.height(20.dp))
-        FormImageTextField(
-            label = "Food Display",
-            description = "blablala",
-            onImageCapture = {
+
+    val context = LocalContext.current
+
+    if (state.isNotAuthorizeDialogOpen) {
+        AlertDialog(
+            title = {
+                Text(text = "Please Login")
+            },
+            text = {
+                Text(
+                    text = "You must login to continue !",
+                    textAlign = TextAlign.Center
+                )
 
             },
-            imageUri = state.foodImage
+            onDismissRequest = {
+                state.isNotAuthorizeDialogOpen
+            },
+            icon = {
+                Icon(Icons.Default.Info, contentDescription = "Alert Dialog")
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    onEvent(ReportMamRatesEvent.OnDismissNotAuthorize)
+                }) {
+                    Text(text = "Login")
+
+                }
+            }
         )
-        Spacer(modifier = Modifier.height(20.dp))
-        FormTextField(
-            value = state.foodName,
-            onValueChange = {},
-            errorResult = state.foodNameValidation,
-            label = "Food Name",
-            description = "blablabla",
+    }
+
+    if (!state.errorMessage.isNullOrEmpty()) {
+        AlertDialog(
+            title = {
+                Text(text = "Error !")
+            },
+            text = {
+                Text(
+                    text = state.errorMessage,
+                    textAlign = TextAlign.Center
+                )
+
+            },
+            onDismissRequest = {
+                state.errorMessage.isEmpty()
+            },
+            icon = {
+                Icon(Icons.Default.Info, contentDescription = "Error Dialog")
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    onEvent(ReportMamRatesEvent.OnDismissDialog)
+                }) {
+                    Text(text = "Okay")
+
+                }
+            }
         )
-        Spacer(modifier = Modifier.height(20.dp))
-        FormTextField(
-            value = "${state.foodPrice ?: "Not Set"}",
-            onValueChange = {},
-            errorResult = state.foodPriceValidation,
-            label = "Food Price (Rp)",
-            description = "blablala",
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number
-            )
+    }
+    if (!state.successMessage.isNullOrEmpty()) {
+        AlertDialog(
+            title = {
+                Text(text = "Success !")
+            },
+            text = {
+                Text(
+                    text = state.successMessage,
+                    textAlign = TextAlign.Center
+                )
+
+            },
+            onDismissRequest = {
+                state.successMessage.isEmpty()
+            },
+            icon = {
+                Icon(Icons.Default.CheckCircle, contentDescription = "Success Dialog")
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    onEvent(ReportMamRatesEvent.OnDismissDialog)
+                    navController.popBackStack()
+                }) {
+                    Text(text = "Okay")
+
+                }
+            }
         )
-        Spacer(modifier = Modifier.height(20.dp))
-        FormTextField(
-            value = "${state.rating}",
-            onValueChange = {},
-            errorResult = state.ratingValidation,
-            label = "Your Preferable Rating (0-3)",
-            description = "blablala",
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number
-            )
-        )
-        Spacer(modifier = Modifier.height(20.dp))
-        Button(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = { /*TODO*/ }
+    }
+
+    if (state.isLoading) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Report")
+            LoadingAnimation()
+        }
+    } else {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 35.dp),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = "Report MamRates",
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.onBackground,
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+            FormImageTextField(
+                label = "Food Display",
+                description = "blablala",
+                onImageCapture = {
+                    onEvent(ReportMamRatesEvent.OnChangeFoodImageUri(it))
+                },
+                imageUri = state.foodImage,
+                validationText = state.foodImageValidation
+
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+            FormTextField(
+                value = state.foodName,
+                onValueChange = {
+                    onEvent(ReportMamRatesEvent.OnChangeFoodName(it))
+                },
+                errorResult = state.foodNameValidation,
+                label = "Food Name",
+                description = "blablabla",
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+            FormTextField(
+                value = if (state.foodPrice == 0) {
+                    ""
+                } else {
+                    "${state.foodPrice}"
+                },
+                onValueChange = {
+                    onEvent(ReportMamRatesEvent.OnChangeFoodPrice(it))
+                },
+                errorResult = state.foodPriceValidation,
+                label = "Food Price (Rp)",
+                description = "blablala",
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number
+                )
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+            FormTextField(
+                value = if (state.rating == 0) {
+                    ""
+                } else {
+                    "${state.rating}"
+                },
+                onValueChange = {
+                    onEvent(ReportMamRatesEvent.OnChangeRating(it))
+                },
+                errorResult = state.ratingValidation,
+                label = "Your Preferable Rating (0-3)",
+                description = "blablala",
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number
+                )
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = {
+                    onEvent(ReportMamRatesEvent.OnSubmitReport(context))
+                }
+            ) {
+                Text(text = "Report")
+            }
         }
     }
 }

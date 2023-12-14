@@ -2,6 +2,7 @@ package com.mammates.mammates_seller_v1.data.repository
 
 import com.mammates.mammates_seller_v1.data.source.remote.MamMatesApi
 import com.mammates.mammates_seller_v1.data.source.remote.dto.ReqAccountSeller
+import com.mammates.mammates_seller_v1.data.source.remote.dto.ReqPasswordChange
 import com.mammates.mammates_seller_v1.data.source.remote.dto.ResMamMates
 import com.mammates.mammates_seller_v1.domain.model.AccountSeller
 import com.mammates.mammates_seller_v1.domain.model.Store
@@ -42,6 +43,22 @@ class AccountRepositoryImpl @Inject constructor(
     ): ResMamMates<String> {
         return api.updateProfilePicture(
             token, image
+        )
+    }
+
+    override suspend fun changePassword(
+        token: String,
+        oldPassword: String,
+        newPassword: String,
+        newPasswordConfirm: String
+    ): ResMamMates<String> {
+        return api.changePassword(
+            token = token,
+            reqPasswordChange = ReqPasswordChange(
+                oldPassword = oldPassword,
+                newPassword = newPassword,
+                newPasswordRepeat = newPasswordConfirm
+            )
         )
     }
 }

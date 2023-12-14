@@ -20,6 +20,7 @@ import com.mammates.mammates_seller_v1.domain.repository.MamRatesRepository
 import com.mammates.mammates_seller_v1.domain.repository.OrderRepository
 import com.mammates.mammates_seller_v1.domain.repository.TokenRepository
 import com.mammates.mammates_seller_v1.domain.use_case.account.AccountUseCases
+import com.mammates.mammates_seller_v1.domain.use_case.account.ChangePasswordUseCase
 import com.mammates.mammates_seller_v1.domain.use_case.account.GetAccountUseCase
 import com.mammates.mammates_seller_v1.domain.use_case.account.GetStoreUseCase
 import com.mammates.mammates_seller_v1.domain.use_case.account.UpdateAccountUseCase
@@ -38,6 +39,7 @@ import com.mammates.mammates_seller_v1.domain.use_case.intro.IntroUseCases
 import com.mammates.mammates_seller_v1.domain.use_case.intro.SetIntroIsDoneUseCase
 import com.mammates.mammates_seller_v1.domain.use_case.mam_rates.GetMamRatesUseCase
 import com.mammates.mammates_seller_v1.domain.use_case.mam_rates.MamRatesUseCases
+import com.mammates.mammates_seller_v1.domain.use_case.mam_rates.ReportMamRatesUseCase
 import com.mammates.mammates_seller_v1.domain.use_case.order.ChangeOrderStatusUseCase
 import com.mammates.mammates_seller_v1.domain.use_case.order.GetOrderDetailUseCase
 import com.mammates.mammates_seller_v1.domain.use_case.order.GetOrderRecentUseCase
@@ -160,7 +162,8 @@ object AppModule {
     @Singleton
     fun providesMamRatesUseCase(mamRatesRepository: MamRatesRepository): MamRatesUseCases {
         return MamRatesUseCases(
-            getMamRatesUseCase = GetMamRatesUseCase(mamRatesRepository)
+            getMamRatesUseCase = GetMamRatesUseCase(mamRatesRepository),
+            reportMamRatesUseCase = ReportMamRatesUseCase(mamRatesRepository)
         )
     }
 
@@ -183,7 +186,8 @@ object AppModule {
             getAccountUseCase = GetAccountUseCase(accountRepository),
             getStoreUseCase = GetStoreUseCase(accountRepository),
             updateAccountUseCase = UpdateAccountUseCase(accountRepository),
-            updateProfilePictureUseCase = UpdateProfilePictureUseCase(accountRepository)
+            updateProfilePictureUseCase = UpdateProfilePictureUseCase(accountRepository),
+            changePasswordUseCase = ChangePasswordUseCase(accountRepository)
         )
     }
 

@@ -5,4 +5,5 @@ data class AccountUseCases(
     val getStoreUseCase: GetStoreUseCase,
     val updateAccountUseCase: UpdateAccountUseCase,
     val updateProfilePictureUseCase: UpdateProfilePictureUseCase,
+    val changePasswordUseCase: ChangePasswordUseCase
 )

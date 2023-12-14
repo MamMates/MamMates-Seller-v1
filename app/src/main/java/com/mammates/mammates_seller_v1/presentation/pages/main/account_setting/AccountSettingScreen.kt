@@ -43,6 +43,7 @@ fun AccountSettingScreen(
     val context = LocalContext.current
     val scrollState = rememberScrollState()
 
+
     if (!state.errorMessage.isNullOrEmpty()) {
         AlertDialog(
             title = {
@@ -105,7 +106,7 @@ fun AccountSettingScreen(
         )
     }
 
-    if (state.isConfirmDeleteDialogOpen) {
+    if (state.isConfirmDialogOpen) {
         AlertDialog(
             title = {
                 Text(text = "Confirm the action")
@@ -114,7 +115,7 @@ fun AccountSettingScreen(
                 Text(text = "Are you sure wanna save this changes ?")
             },
             onDismissRequest = {
-                !state.isConfirmDeleteDialogOpen
+                !state.isConfirmDialogOpen
             },
             confirmButton = {
                 TextButton(

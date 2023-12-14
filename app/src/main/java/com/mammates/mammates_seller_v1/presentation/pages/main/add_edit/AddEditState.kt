@@ -31,6 +31,8 @@ data class AddEditState(
     val foodMamRatesImageValidation: String? = null,
     val foodMamRatesUrlImage: String? = null,
 
-    val isConfirmDeleteDialogOpen: Boolean = false
+    val isConfirmDeleteDialogOpen: Boolean = false,
+    val isNotAuthorizeDialogOpen: Boolean = false,
 
-)
+
+    )

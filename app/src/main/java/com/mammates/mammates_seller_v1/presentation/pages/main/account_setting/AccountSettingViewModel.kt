@@ -75,13 +75,13 @@ class AccountSettingViewModel @Inject constructor(
                 _state.value = _state.value.copy(
                     errorMessage = null,
                     successMessage = null,
-                    isConfirmDeleteDialogOpen = false
+                    isConfirmDialogOpen = false
                 )
             }
 
             AccountSettingEvent.OnOpenConfirmDialog -> {
                 _state.value = _state.value.copy(
-                    isConfirmDeleteDialogOpen = true
+                    isConfirmDialogOpen = true
                 )
             }
 

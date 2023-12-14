@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,7 +25,6 @@ class OrderViewModel @Inject constructor(
 
     init {
         getTokenValue()
-        getOrderBasedOnTheirTab()
     }
 
     fun onEvent(event: OrderEvent) {
@@ -83,7 +83,19 @@ class OrderViewModel @Inject constructor(
                 )
             }
 
+            OrderEvent.OnRefreshPage -> {
+                getTokenValue()
+                getOrderBasedOnTheirTab()
+            }
 
+            OrderEvent.OnDismissNotAuthorize -> {
+                viewModelScope.launch {
+                    tokenUseCases.clearTokenUseCase()
+                }
+                _state.value = _state.value.copy(
+                    token = ""
+                )
+            }
         }
     }
 
@@ -118,6 +130,14 @@ class OrderViewModel @Inject constructor(
         orderUseCases.getOrdersUseCase(_state.value.token, status).onEach { result ->
             when (result) {
                 is Resource.Error -> {
+                    if (result.message.equals("401")) {
+                        _state.value = _state.value.copy(
+                            isNotAuthorizeDialogOpen = true,
+                            isLoading = false,
+                        )
+                        return@onEach
+                    }
+
                     _state.value = _state.value.copy(
                         errorMessage = result.message,
                         isLoading = false
@@ -152,6 +172,14 @@ class OrderViewModel @Inject constructor(
         ).onEach { result ->
             when (result) {
                 is Resource.Error -> {
+                    if (result.message.equals("401")) {
+                        _state.value = _state.value.copy(
+                            isNotAuthorizeDialogOpen = true,
+                            isLoading = false,
+                        )
+                        return@onEach
+                    }
+
                     _state.value = _state.value.copy(
                         errorMessage = result.message,
                         isLoading = false,

@@ -16,4 +16,16 @@ class MamRatesRepositoryImpl @Inject constructor(
     ): ResMamMates<MamRates> {
         return api.getMamRates(token, image)
     }
+
+    override suspend fun reportMamRates(
+        token: String,
+        name: String,
+        price: Int,
+        rating: Int,
+        image: MultipartBody.Part
+    ): ResMamMates<String> {
+        return api.reportMamRates(
+            token, name, price, rating, image
+        )
+    }
 }

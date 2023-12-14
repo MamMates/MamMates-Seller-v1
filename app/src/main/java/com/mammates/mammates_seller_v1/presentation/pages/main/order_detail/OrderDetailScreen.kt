@@ -11,9 +11,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -36,6 +40,7 @@ import com.mammates.mammates_seller_v1.presentation.util.loading.LoadingAnimatio
 import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
 import com.mammates.mammates_seller_v1.util.StatusOrder
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun OrderDetailScreen(
     navController: NavController,
@@ -44,6 +49,9 @@ fun OrderDetailScreen(
 ) {
 
     val scrollState = rememberScrollState()
+    val pullRefreshState = rememberPullRefreshState(refreshing = state.isLoading, onRefresh = {
+        onEvent(OrderDetailEvent.OnRefreshPage)
+    })
 
     LaunchedEffect(key1 = state.token) {
         if (state.token.isEmpty()) {
@@ -53,6 +61,35 @@ fun OrderDetailScreen(
                 }
             }
         }
+    }
+
+    if (state.isNotAuthorizeDialogOpen) {
+        AlertDialog(
+            title = {
+                Text(text = "Please Login")
+            },
+            text = {
+                Text(
+                    text = "You must login to continue !",
+                    textAlign = TextAlign.Center
+                )
+
+            },
+            onDismissRequest = {
+                state.isNotAuthorizeDialogOpen
+            },
+            icon = {
+                Icon(Icons.Default.Info, contentDescription = "Alert Dialog")
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    onEvent(OrderDetailEvent.OnDismissNotAuthorize)
+                }) {
+                    Text(text = "Login")
+
+                }
+            }
+        )
     }
 
     if (!state.errorMessage.isNullOrEmpty()) {
@@ -174,114 +211,120 @@ fun OrderDetailScreen(
     }
 
 
-
-    if (state.isLoading) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            LoadingAnimation()
-        }
-    } else {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(start = 35.dp, end = 35.dp, bottom = 20.dp),
-        ) {
-            Column(
-                modifier = Modifier.verticalScroll(scrollState),
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = "Order Detail",
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-                Spacer(modifier = Modifier.height(35.dp))
-                TextLabelValue(label = "Invoice", value = state.invoice)
-                TextLabelValue(label = "Name", value = state.buyer)
-                TextLabelValue(label = "Tanggal Pembelian", value = state.date)
-                Spacer(modifier = Modifier.height(20.dp))
-                if (state.foods.isNullOrEmpty()) {
-                    Box(modifier = Modifier.padding(vertical = 50.dp)) {
-                        Text(
-                            modifier = Modifier.fillMaxWidth(),
-                            text = "No Foods",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.outline,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(20.dp))
-                } else {
-                    state.foods.forEach { item ->
-                        CardOrderFood(
-                            foodName = item.name ?: "No Name",
-                            quantity = item.quantity ?: 0,
-                            image = item.image,
-                            price = item.price ?: 0
-                        )
-                        Spacer(modifier = Modifier.height(20.dp))
-                    }
-                }
-                TextLabelValue(
-                    label = "Status",
-                    statusOrder = state.status
-                )
-                TextLabelValue(
-                    label = "Total",
-                    value = "Rp. ${state.total}"
-                )
-                TextLabelValue(
-                    label = "Payment Method",
-                    value = "Cash On Delivery"
-                )
-
-
-            }
+    Box(
+        modifier = Modifier.pullRefresh(pullRefreshState)
+    ) {
+        if (state.isLoading) {
             Column(
                 modifier = Modifier
-                    .background(color = MaterialTheme.colorScheme.background)
-                    .align(Alignment.BottomCenter)
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                if (
-                    state.status != StatusOrder.Canceled &&
-                    state.status != StatusOrder.Finish &&
-                    state.status != StatusOrder.Unidentified
+                LoadingAnimation()
+            }
+        } else {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(start = 35.dp, end = 35.dp, bottom = 20.dp),
+            ) {
+                Column(
+                    modifier = Modifier.verticalScroll(scrollState),
+                    verticalArrangement = Arrangement.Top,
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    OutlinedButton(
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "Order Detail",
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                    Spacer(modifier = Modifier.height(35.dp))
+                    TextLabelValue(label = "Invoice", value = state.invoice)
+                    TextLabelValue(label = "Name", value = state.buyer)
+                    TextLabelValue(label = "Tanggal Pembelian", value = state.date)
+                    Spacer(modifier = Modifier.height(20.dp))
+                    if (state.foods.isNullOrEmpty()) {
+                        Box(modifier = Modifier.padding(vertical = 50.dp)) {
+                            Text(
+                                modifier = Modifier.fillMaxWidth(),
+                                text = "No Foods",
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.outline,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(20.dp))
+                    } else {
+                        state.foods.forEach { item ->
+                            CardOrderFood(
+                                foodName = item.name ?: "No Name",
+                                quantity = item.quantity ?: 0,
+                                image = item.image,
+                                price = item.price ?: 0
+                            )
+                            Spacer(modifier = Modifier.height(20.dp))
+                        }
+                    }
+                    TextLabelValue(
+                        label = "Status",
+                        statusOrder = state.status
+                    )
+                    TextLabelValue(
+                        label = "Total",
+                        value = "Rp. ${state.total}"
+                    )
+                    TextLabelValue(
+                        label = "Payment Method",
+                        value = "Cash On Delivery"
+                    )
+
+
+                }
+                Column(
+                    modifier = Modifier
+                        .background(color = MaterialTheme.colorScheme.background)
+                        .align(Alignment.BottomCenter)
+                ) {
+                    if (
+                        state.status != StatusOrder.Canceled &&
+                        state.status != StatusOrder.Finish &&
+                        state.status != StatusOrder.Unidentified
+                    ) {
+                        OutlinedButton(
+                            modifier = Modifier.fillMaxWidth(),
+                            onClick = {
+                                onEvent(OrderDetailEvent.OnOpenConfirmDialog())
+                            }
+                        ) {
+                            Text(
+                                text = when (state.status) {
+                                    StatusOrder.Unconfirmed -> "Confirm Order"
+                                    StatusOrder.Confirmed -> "Finish Order"
+                                    else -> "Confirm Order"
+                                }
+                            )
+                        }
+                    }
+
+                    Button(
                         modifier = Modifier.fillMaxWidth(),
                         onClick = {
-                            onEvent(OrderDetailEvent.OnOpenConfirmDialog())
+                            onEvent(OrderDetailEvent.OnOpenConfirmDialog(isCanceled = true))
                         }
                     ) {
-                        Text(
-                            text = when (state.status) {
-                                StatusOrder.Unconfirmed -> "Confirm Order"
-                                StatusOrder.Confirmed -> "Finish Order"
-                                else -> "Confirm Order"
-                            }
-                        )
+                        Text(text = "Cancel Order")
                     }
-                }
-
-                Button(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = {
-                        onEvent(OrderDetailEvent.OnOpenConfirmDialog(isCanceled = true))
-                    }
-                ) {
-                    Text(text = "Cancel Order")
                 }
             }
         }
+        PullRefreshIndicator(
+            modifier = Modifier.align(Alignment.TopCenter),
+            refreshing = state.isLoading,
+            state = pullRefreshState
+        )
     }
-
-
 }
 
 @Preview(showBackground = true)

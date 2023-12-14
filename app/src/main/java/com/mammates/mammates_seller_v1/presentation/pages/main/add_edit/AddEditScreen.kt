@@ -50,6 +50,35 @@ fun AddEditScreen(
     val scrollState = rememberScrollState()
     val context = LocalContext.current
 
+    if (state.isNotAuthorizeDialogOpen) {
+        AlertDialog(
+            title = {
+                Text(text = "Please Login")
+            },
+            text = {
+                Text(
+                    text = "You must login to continue !",
+                    textAlign = TextAlign.Center
+                )
+
+            },
+            onDismissRequest = {
+                state.isNotAuthorizeDialogOpen
+            },
+            icon = {
+                Icon(Icons.Default.Info, contentDescription = "Alert Dialog")
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    onEvent(AddEditEvent.OnDismissNotAuthorize)
+                }) {
+                    Text(text = "Login")
+
+                }
+            }
+        )
+    }
+
     if (!state.errorMessage.isNullOrEmpty()) {
         AlertDialog(
             title = {
@@ -102,7 +131,7 @@ fun AddEditScreen(
                         popUpTo(NavigationRoutes.Main.Add.route) {
                             inclusive = true
                         }
-                        launchSingleTop = true
+                        launchSingleTop
                     }
                 }) {
                     Text(text = "Okay")

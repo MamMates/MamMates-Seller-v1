@@ -28,11 +28,15 @@ class UpdateAccountUseCase @Inject constructor(
             val errorMessage = e.response()?.errorBody()
             errorMessage?.let {
                 val jsonObject = JSONObject(it.charStream().readText())
-                emit(
-                    Resource.Error(
-                        jsonObject.getString("message") ?: "An unexpected error occured"
+                if (jsonObject.getInt("code") == 401) {
+                    emit(Resource.Error("401"))
+                } else {
+                    emit(
+                        Resource.Error(
+                            jsonObject.getString("message") ?: "An unexpected error occured",
+                        )
                     )
-                )
+                }
             }
         } catch (e: IOException) {
             emit(Resource.Error("Couldn't reach server. Check your internet connection."))

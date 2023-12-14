@@ -4,4 +4,6 @@ sealed class OrderDetailEvent {
     data object OnDismissDialog : OrderDetailEvent()
     data class OnChangeStatusOrder(val isCanceled: Boolean = false) : OrderDetailEvent()
     data class OnOpenConfirmDialog(val isCanceled: Boolean = false) : OrderDetailEvent()
+    data object OnDismissNotAuthorize : OrderDetailEvent()
+    data object OnRefreshPage : OrderDetailEvent()
 }

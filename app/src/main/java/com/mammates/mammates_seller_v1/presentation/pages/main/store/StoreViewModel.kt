@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,14 +24,7 @@ class StoreViewModel @Inject constructor(
     val state = _state.asStateFlow()
 
     init {
-        _state.value = _state.value.copy(
-            token = tokenUseCases.getTokenUseCase()
-        )
-
-        if (_state.value.token.isNotEmpty()) {
-            getStoreData()
-            getFoodData()
-        }
+        getTokenValue()
     }
 
     fun onEvent(event: StoreEvent) {
@@ -40,13 +34,42 @@ class StoreViewModel @Inject constructor(
                     errorMessage = null
                 )
             }
+
+            StoreEvent.OnRefreshPage -> {
+                getTokenValue()
+                getStoreData()
+                getFoodData()
+            }
+
+            StoreEvent.OnDismissNotAuthorize -> {
+                viewModelScope.launch {
+                    tokenUseCases.clearTokenUseCase()
+                }
+                _state.value = _state.value.copy(
+                    token = ""
+                )
+            }
         }
+    }
+
+    private fun getTokenValue() {
+        _state.value = _state.value.copy(
+            token = tokenUseCases.getTokenUseCase()
+        )
     }
 
     private fun getStoreData() {
         accountUseCases.getStoreUseCase(_state.value.token).onEach { result ->
             when (result) {
                 is Resource.Error -> {
+                    if (result.message.equals("401")) {
+                        _state.value = _state.value.copy(
+                            isNotAuthorizeDialogOpen = true,
+                            isLoading = false,
+                        )
+                        return@onEach
+                    }
+
                     _state.value = _state.value.copy(
                         errorMessage = result.message,
                         isLoading = false,
@@ -74,6 +97,15 @@ class StoreViewModel @Inject constructor(
         foodUseCases.getAllFoodsUseCase(_state.value.token).onEach { result ->
             when (result) {
                 is Resource.Error -> {
+
+                    if (result.message.equals("401")) {
+                        _state.value = _state.value.copy(
+                            isNotAuthorizeDialogOpen = true,
+                            isLoading = false,
+                        )
+                        return@onEach
+                    }
+
                     _state.value = _state.value.copy(
                         errorMessage = result.message,
                         isLoading = false,

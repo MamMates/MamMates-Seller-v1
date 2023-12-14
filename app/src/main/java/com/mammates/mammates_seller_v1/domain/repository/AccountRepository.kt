@@ -26,4 +26,12 @@ interface AccountRepository {
         token: String,
         image: MultipartBody.Part,
     ): ResMamMates<String>
+
+    suspend fun changePassword(
+        token: String,
+        oldPassword: String,
+        newPassword: String,
+        confirmNewPassword: String,
+    ): ResMamMates<String>
+
 }

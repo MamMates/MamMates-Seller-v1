@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -59,6 +60,15 @@ class MamRatesResultViewModel @Inject constructor(
                 getMamRates(event.context)
 
             }
+
+            MamRatesResultEvent.OnDismissNotAuthorize -> {
+                viewModelScope.launch {
+                    tokenUseCases.clearTokenUseCase()
+                }
+                _state.value = _state.value.copy(
+                    token = ""
+                )
+            }
         }
     }
 
@@ -83,6 +93,14 @@ class MamRatesResultViewModel @Inject constructor(
         ).onEach { result ->
             when (result) {
                 is Resource.Error -> {
+                    if (result.message.equals("401")) {
+                        _state.value = _state.value.copy(
+                            isNotAuthorizeDialogOpen = true,
+                            isLoading = false,
+                        )
+                        return@onEach
+                    }
+
                     _state.value = _state.value.copy(
                         errorMessage = result.message,
                         isLoading = false

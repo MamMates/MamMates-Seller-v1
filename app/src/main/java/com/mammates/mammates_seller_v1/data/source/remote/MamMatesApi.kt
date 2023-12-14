@@ -155,6 +155,6 @@ interface MamMatesApi {
         @Part("name") name: String,
         @Part("price") price: Int,
         @Part("rating") rating: Int,
-        @Part("image") image: MultipartBody.Part,
+        @Part image: MultipartBody.Part,
     ): ResMamMates<String>
 }

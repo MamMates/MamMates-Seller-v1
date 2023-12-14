@@ -10,5 +10,7 @@ data class StoreState(
     val foods: List<FoodItem>? = null,
 
     val errorMessage: String? = null,
-    val isLoading: Boolean = false
-)
+    val isLoading: Boolean = false,
+    val isNotAuthorizeDialogOpen: Boolean = false,
+
+    )

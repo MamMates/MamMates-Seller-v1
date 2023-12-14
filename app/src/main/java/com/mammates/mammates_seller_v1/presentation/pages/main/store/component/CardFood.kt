@@ -13,17 +13,19 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.mammates.mammates_seller_v1.R
+import com.mammates.mammates_seller_v1.common.Constants
 import com.mammates.mammates_seller_v1.presentation.component.rating.RatingDisplay
 import com.mammates.mammates_seller_v1.util.Rating
 
@@ -50,23 +52,26 @@ fun CardFood(
             .clickable {
                 onClickCard()
             }
-            .padding(horizontal = 20.dp, vertical = 10.dp)
+            .padding(horizontal = 20.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         AsyncImage(
             modifier = Modifier
                 .width(60.dp)
                 .height(60.dp),
-            model = ImageRequest.Builder(context)
-                .data(image)
-                .crossfade(true)
-                .build(),
+            model = if (!image.isNullOrEmpty()) {
+                image
+            } else {
+                Constants.DUMMY_PHOTO
+            },
             contentDescription = "Food Thumbnail",
             placeholder = painterResource(id = R.drawable.dummy_food),
             colorFilter = if (!isValid) {
                 ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0f) })
             } else {
                 null
-            }
+            },
+            contentScale = ContentScale.Crop
 
         )
         Spacer(modifier = Modifier.width(20.dp))

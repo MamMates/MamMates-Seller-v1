@@ -9,4 +9,12 @@ interface MamRatesRepository {
         token: String,
         image: MultipartBody.Part
     ): ResMamMates<MamRates>
+
+    suspend fun reportMamRates(
+        token: String,
+        name: String,
+        price: Int,
+        rating: Int,
+        image: MultipartBody.Part,
+    ): ResMamMates<String>
 }

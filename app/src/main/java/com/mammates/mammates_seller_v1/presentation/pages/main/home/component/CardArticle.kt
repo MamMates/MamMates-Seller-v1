@@ -17,6 +17,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -28,7 +29,12 @@ fun CardArticle(
     title: String,
     illustration: Int,
     description: String,
+    url: String
 ) {
+
+    val uriHandler = LocalUriHandler.current
+
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -64,7 +70,9 @@ fun CardArticle(
                 minWidth = ButtonDefaults.MinWidth,
                 minHeight = 10.dp
             ),
-            onClick = { /*TODO*/ },
+            onClick = {
+                uriHandler.openUri(url)
+            },
             contentPadding = PaddingValues(0.dp)
         ) {
             Text(
@@ -83,6 +91,7 @@ fun CardArticlePreview() {
     CardArticle(
         title = "'Best before' labels scrutinised as food waste concerns grow",
         illustration = R.drawable.article_1,
-        description = "As awareness grows around the world about the problem of food waste, one culprit in particular is drawing scrutiny: “best before” labels."
+        description = "As awareness grows around the world about the problem of food waste, one culprit in particular is drawing scrutiny: “best before” labels.",
+        url = ""
     )
 }

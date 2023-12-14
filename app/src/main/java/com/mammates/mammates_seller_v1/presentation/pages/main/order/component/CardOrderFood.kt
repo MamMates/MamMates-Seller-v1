@@ -19,8 +19,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.mammates.mammates_seller_v1.R
+import com.mammates.mammates_seller_v1.common.Constants
 
 @Composable
 fun CardOrderFood(
@@ -43,10 +43,11 @@ fun CardOrderFood(
             modifier = Modifier
                 .width(60.dp)
                 .height(60.dp),
-            model = ImageRequest.Builder(context)
-                .data(image)
-                .crossfade(true)
-                .build(),
+            model = if (!image.isNullOrEmpty()) {
+                image
+            } else {
+                Constants.DUMMY_PHOTO
+            },
             contentDescription = "Food Picture",
             contentScale = ContentScale.Crop,
             placeholder = painterResource(id = R.drawable.dummy_food)

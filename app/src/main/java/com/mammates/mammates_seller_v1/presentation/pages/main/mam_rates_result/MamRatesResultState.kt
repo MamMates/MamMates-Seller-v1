@@ -11,5 +11,7 @@ data class MamRatesResultState(
     val isLoading: Boolean = false,
     val successMessage: String? = null,
     val errorMessage: String? = null,
-    val token: String = ""
-)
+    val token: String = "",
+    val isNotAuthorizeDialogOpen: Boolean = false,
+
+    )

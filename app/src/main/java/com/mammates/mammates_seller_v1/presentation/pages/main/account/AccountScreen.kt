@@ -1,6 +1,7 @@
 package com.mammates.mammates_seller_v1.presentation.pages.main.account
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -9,8 +10,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -19,27 +23,55 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.currentStateAsState
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
-import com.mammates.mammates_seller_v1.R
+import com.mammates.mammates_seller_v1.common.Constants
 import com.mammates.mammates_seller_v1.presentation.pages.main.account.component.CardAccount
 import com.mammates.mammates_seller_v1.presentation.util.loading.LoadingAnimation
 import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AccountScreen(
     navController: NavController,
     state: AccountState,
     onEvent: (AccountEvent) -> Unit
 ) {
+
+    val pullRefreshState = rememberPullRefreshState(refreshing = state.isLoading, onRefresh = {
+        onEvent(AccountEvent.OnRefreshPage)
+    })
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val lifecycleState by lifecycleOwner.lifecycle.currentStateAsState()
+
+    LaunchedEffect(lifecycleState) {
+        when (lifecycleState) {
+            Lifecycle.State.DESTROYED -> {}
+            Lifecycle.State.INITIALIZED -> {}
+            Lifecycle.State.CREATED -> {
+            }
+
+            Lifecycle.State.STARTED -> {
+                onEvent(AccountEvent.OnRefreshPage)
+            }
+
+            Lifecycle.State.RESUMED -> {
+
+            }
+        }
+    }
 
     LaunchedEffect(key1 = state.token) {
         if (state.token.isEmpty()) {
@@ -79,67 +111,102 @@ fun AccountScreen(
             }
         )
     }
-
-    if (state.isLoading) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            LoadingAnimation()
-        }
-    } else {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 35.dp),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Spacer(modifier = Modifier.height(20.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                AsyncImage(
-                    modifier = Modifier
-                        .width(60.dp)
-                        .height(60.dp),
-                    model = state.storeImage,
-                    placeholder = painterResource(id = R.drawable.dummy_food),
-                    contentDescription = "Store Profile",
-                    contentScale = ContentScale.Crop
-                )
-                Spacer(modifier = Modifier.width(20.dp))
+    if (state.isNotAuthorizeDialogOpen) {
+        AlertDialog(
+            title = {
+                Text(text = "Please Login")
+            },
+            text = {
                 Text(
-                    text = state.storeName,
-                    style = MaterialTheme.typography.headlineSmall
+                    text = "You must login to continue !",
+                    textAlign = TextAlign.Center
                 )
-            }
-            Spacer(modifier = Modifier.height(30.dp))
-            CardAccount(
-                onClick = {
-                    navController.navigate(NavigationRoutes.Main.AccountSetting.route)
-                },
-                title = "Account Setting",
-            )
-            Spacer(modifier = Modifier.height(5.dp))
-            CardAccount(
-                title = "Change Password",
-                onClick = {
-                    navController.navigate(NavigationRoutes.Main.ChangePassword.route)
-                },
-            )
-            Spacer(modifier = Modifier.height(30.dp))
-            Button(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = {
+
+            },
+            onDismissRequest = {
+                state.isNotAuthorizeDialogOpen
+            },
+            icon = {
+                Icon(Icons.Default.Info, contentDescription = "Alert Dialog")
+            },
+            confirmButton = {
+                TextButton(onClick = {
                     onEvent(AccountEvent.OnLogout)
+                }) {
+                    Text(text = "Login")
+
                 }
+            }
+        )
+    }
+
+    Box(
+        modifier = Modifier.pullRefresh(pullRefreshState)
+    ) {
+        if (state.isLoading) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "Logout")
+                LoadingAnimation()
+            }
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 35.dp),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Spacer(modifier = Modifier.height(20.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    AsyncImage(
+                        modifier = Modifier
+                            .width(60.dp)
+                            .height(60.dp),
+                        model = if (state.storeImage.isNullOrEmpty()) {
+                            Constants.DUMMY_PHOTO
+                        } else {
+                            state.storeImage
+                        },
+                        contentDescription = "Store Profile",
+                        contentScale = ContentScale.Crop
+                    )
+                    Spacer(modifier = Modifier.width(20.dp))
+                    Text(
+                        text = state.storeName,
+                        style = MaterialTheme.typography.headlineSmall
+                    )
+                }
+                Spacer(modifier = Modifier.height(30.dp))
+                CardAccount(
+                    onClick = {
+                        navController.navigate(NavigationRoutes.Main.AccountSetting.route)
+                    },
+                    title = "Account Setting",
+                )
+                Spacer(modifier = Modifier.height(5.dp))
+                CardAccount(
+                    title = "Change Password",
+                    onClick = {
+                        navController.navigate(NavigationRoutes.Main.ChangePassword.route)
+                    },
+                )
+                Spacer(modifier = Modifier.height(30.dp))
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = {
+                        onEvent(AccountEvent.OnLogout)
+                    }
+                ) {
+                    Text(text = "Logout")
+                }
             }
         }
     }
