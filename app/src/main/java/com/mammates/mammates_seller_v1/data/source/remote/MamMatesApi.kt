@@ -82,6 +82,7 @@ interface MamMatesApi {
         @Part("category") category: String,
         @Part mamImage: MultipartBody.Part,
         @Part("mam_rates") mamRates: Int,
+        @Query("ignoreCache") ignoreCache: Int = 1,
     ): ResMamMates<String>
 
     @GET("foods/{id}")
@@ -101,6 +102,7 @@ interface MamMatesApi {
         @Part("category") category: String,
         @Part mamImage: MultipartBody.Part,
         @Part("mam_rates") mamRates: Int,
+        @Query("ignoreCache") ignoreCache: Int = 1,
     ): ResMamMates<String>
 
     @DELETE("foods/{id}")
@@ -132,6 +134,7 @@ interface MamMatesApi {
     suspend fun updateProfilePicture(
         @Header("Authentication") token: String,
         @Part image: MultipartBody.Part,
+        @Query("ignoreCache") ignoreCache: Int = 1,
     ): ResMamMates<String>
 
     @PUT("password")
@@ -145,7 +148,8 @@ interface MamMatesApi {
     @POST("mam_mates")
     suspend fun getMamRates(
         @Header("Authentication") token: String,
-        @Part image: MultipartBody.Part
+        @Part image: MultipartBody.Part,
+        @Query("ignoreCache") ignoreCache: Int = 1,
     ): ResMamMates<MamRates>
 
     @Multipart
@@ -156,5 +160,6 @@ interface MamMatesApi {
         @Part("price") price: Int,
         @Part("rating") rating: Int,
         @Part image: MultipartBody.Part,
+        @Query("ignoreCache") ignoreCache: Int = 1,
     ): ResMamMates<String>
 }

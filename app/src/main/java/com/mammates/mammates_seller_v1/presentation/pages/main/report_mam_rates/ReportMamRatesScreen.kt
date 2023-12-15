@@ -169,7 +169,7 @@ fun ReportMamRatesScreen(
                 },
                 errorResult = state.foodNameValidation,
                 label = "Food Name",
-                description = "blablabla",
+                description = "Kindly provide the accurate name of your food in the designated report section.",
             )
             Spacer(modifier = Modifier.height(20.dp))
             FormTextField(
@@ -183,7 +183,7 @@ fun ReportMamRatesScreen(
                 },
                 errorResult = state.foodPriceValidation,
                 label = "Food Price (Rp)",
-                description = "blablala",
+                description = "Please enter the accurate price for your food in the report section.",
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number
                 )
@@ -200,7 +200,7 @@ fun ReportMamRatesScreen(
                 },
                 errorResult = state.ratingValidation,
                 label = "Your Preferable Rating (0-3)",
-                description = "blablala",
+                description = "Kindly input the correct rating for your food in the report section.",
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number
                 )

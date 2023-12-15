@@ -18,13 +18,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.mammates.mammates_seller_v1.R
 import com.mammates.mammates_seller_v1.common.Constants
 import com.mammates.mammates_seller_v1.presentation.component.rating.RatingDisplay
 import com.mammates.mammates_seller_v1.util.Rating
@@ -39,8 +36,6 @@ fun CardFood(
     isValid: Boolean,
     onClickCard: () -> Unit
 ) {
-
-    val context = LocalContext.current
 
     Row(
         modifier = modifier
@@ -62,10 +57,9 @@ fun CardFood(
             model = if (!image.isNullOrEmpty()) {
                 image
             } else {
-                Constants.DUMMY_PHOTO
+                Constants.DUMMY_PHOTO_FOOD
             },
             contentDescription = "Food Thumbnail",
-            placeholder = painterResource(id = R.drawable.dummy_food),
             colorFilter = if (!isValid) {
                 ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0f) })
             } else {

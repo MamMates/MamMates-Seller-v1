@@ -171,7 +171,7 @@ fun AccountScreen(
                             .width(60.dp)
                             .height(60.dp),
                         model = if (state.storeImage.isNullOrEmpty()) {
-                            Constants.DUMMY_PHOTO
+                            Constants.DUMMY_PHOTO_PROFILE
                         } else {
                             state.storeImage
                         },
