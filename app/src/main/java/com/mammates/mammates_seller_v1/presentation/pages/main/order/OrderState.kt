@@ -20,5 +20,5 @@ data class OrderState(
     val orderId: Int = -69,
     val statusTarget: StatusOrder = StatusOrder.Unidentified,
     val isNotAuthorizeDialogOpen: Boolean = false,
-
-    )
+    val isRefresh: Boolean = false
+)

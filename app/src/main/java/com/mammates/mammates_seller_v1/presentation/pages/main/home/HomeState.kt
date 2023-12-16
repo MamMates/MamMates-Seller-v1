@@ -12,4 +12,6 @@ data class HomeState(
 
     val orderList: List<OrderRecentItems>? = null,
     val isNotAuthorizeDialogOpen: Boolean = false,
+    val isRefresh: Boolean = false
+
 )

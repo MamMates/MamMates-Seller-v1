@@ -31,7 +31,7 @@ class AuthRepositoryImpl @Inject constructor(
                         response: Response<ResMamMates<String>>
                     ) {
                         if (response.isSuccessful) {
-                            val token = response.headers()["Authentication"].toString()
+                            val token = response.headers()["Authorization"].toString()
                             continuation.resume(
                                 ResMamMates(
                                     response.body()?.status ?: "",

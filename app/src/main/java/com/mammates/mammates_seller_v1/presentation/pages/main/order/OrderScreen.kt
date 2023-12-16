@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
@@ -52,9 +54,10 @@ fun OrderScreen(
     navController: NavController, state: OrderState, onEvent: (OrderEvent) -> Unit
 ) {
 
-    val pullRefreshState = rememberPullRefreshState(refreshing = state.isLoading, onRefresh = {
+    val pullRefreshState = rememberPullRefreshState(refreshing = state.isRefresh, onRefresh = {
         onEvent(OrderEvent.OnRefreshPage)
     })
+    val scrollState = rememberScrollState()
 
     val lifecycleOwner = LocalLifecycleOwner.current
     val lifecycleState by lifecycleOwner.lifecycle.currentStateAsState()
@@ -205,7 +208,8 @@ fun OrderScreen(
     ) {
         if (state.isLoading) {
             Column(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -232,7 +236,11 @@ fun OrderScreen(
                 Spacer(modifier = Modifier.height(20.dp))
 
                 if (state.orders.isNullOrEmpty()) {
+
                     NoOrderLabel(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(scrollState),
                         statusOrder = when (state.tabIndex) {
                             0 -> StatusOrder.Unconfirmed.name
                             1 -> StatusOrder.Confirmed.name
@@ -241,6 +249,7 @@ fun OrderScreen(
                             else -> StatusOrder.Unidentified.name
                         }
                     )
+
                 } else {
                     LazyColumn(
                         modifier = Modifier.padding(horizontal = 35.dp)
@@ -301,7 +310,7 @@ fun OrderScreen(
         }
         PullRefreshIndicator(
             modifier = Modifier.align(Alignment.TopCenter),
-            refreshing = state.isLoading,
+            refreshing = state.isRefresh,
             state = pullRefreshState
         )
     }

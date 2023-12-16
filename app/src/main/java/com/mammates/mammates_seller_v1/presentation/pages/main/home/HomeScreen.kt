@@ -61,7 +61,7 @@ fun HomeScreen(
             3
         }
     )
-    val pullRefreshState = rememberPullRefreshState(refreshing = state.isLoading, onRefresh = {
+    val pullRefreshState = rememberPullRefreshState(refreshing = state.isRefresh, onRefresh = {
         onEvent(HomeEvent.OnRefreshPage)
     })
 
@@ -166,8 +166,6 @@ fun HomeScreen(
     Box(
         modifier = Modifier.pullRefresh(pullRefreshState)
     ) {
-
-
         if (state.isLoading) {
             Column(
                 modifier = Modifier
@@ -257,7 +255,7 @@ fun HomeScreen(
         }
         PullRefreshIndicator(
             modifier = Modifier.align(Alignment.TopCenter),
-            refreshing = state.isLoading,
+            refreshing = state.isRefresh,
             state = pullRefreshState
         )
     }

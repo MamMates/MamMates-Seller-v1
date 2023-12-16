@@ -78,7 +78,7 @@ fun StoreScreen(
         }
     }
 
-    val pullRefreshState = rememberPullRefreshState(refreshing = state.isLoading, onRefresh = {
+    val pullRefreshState = rememberPullRefreshState(refreshing = state.isRefresh, onRefresh = {
         onEvent(StoreEvent.OnRefreshPage)
     })
 
@@ -260,7 +260,7 @@ fun StoreScreen(
         }
         PullRefreshIndicator(
             modifier = Modifier.align(Alignment.TopCenter),
-            refreshing = state.isLoading,
+            refreshing = state.isRefresh,
             state = pullRefreshState
         )
     }

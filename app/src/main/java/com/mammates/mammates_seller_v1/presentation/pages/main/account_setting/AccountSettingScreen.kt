@@ -44,34 +44,7 @@ fun AccountSettingScreen(
     val scrollState = rememberScrollState()
 
 
-    if (!state.errorMessage.isNullOrEmpty()) {
-        AlertDialog(
-            title = {
-                Text(text = "Error !")
-            },
-            text = {
 
-                Text(
-                    text = state.errorMessage,
-                    textAlign = TextAlign.Center
-                )
-            },
-            onDismissRequest = {
-                state.errorMessage.isEmpty()
-            },
-            icon = {
-                Icon(Icons.Default.Info, contentDescription = "Error Dialog")
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    onEvent(AccountSettingEvent.OnDismissDialog)
-                }) {
-                    Text(text = "Okay")
-
-                }
-            }
-        )
-    }
     if (!state.successMessage.isNullOrEmpty()) {
         AlertDialog(
             title = {
@@ -98,6 +71,35 @@ fun AccountSettingScreen(
                         }
                         launchSingleTop = true
                     }
+                }) {
+                    Text(text = "Okay")
+
+                }
+            }
+        )
+    }
+
+    if (!state.errorMessage.isNullOrEmpty()) {
+        AlertDialog(
+            title = {
+                Text(text = "Error !")
+            },
+            text = {
+
+                Text(
+                    text = state.errorMessage,
+                    textAlign = TextAlign.Center
+                )
+            },
+            onDismissRequest = {
+                state.errorMessage.isEmpty()
+            },
+            icon = {
+                Icon(Icons.Default.Info, contentDescription = "Error Dialog")
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    onEvent(AccountSettingEvent.OnDismissDialog)
                 }) {
                     Text(text = "Okay")
 

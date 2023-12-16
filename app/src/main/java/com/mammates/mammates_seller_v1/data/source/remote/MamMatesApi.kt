@@ -44,24 +44,24 @@ interface MamMatesApi {
     // Order
     @GET("orders/recent")
     suspend fun getOrderRecent(
-        @Header("Authentication") token: String
+        @Header("Authorization") token: String
     ): ResMamMates<OrdersRecent>
 
     @GET("orders")
     suspend fun getOrders(
-        @Header("Authentication") token: String,
+        @Header("Authorization") token: String,
         @Query("status") status: Int
     ): ResMamMates<Orders>
 
     @GET("orders/{id}")
     suspend fun getOrderDetail(
-        @Header("Authentication") token: String,
+        @Header("Authorization") token: String,
         @Path("id") id: Int
     ): ResMamMates<OrderDetail>
 
     @PUT("orders/{id}")
     suspend fun changeOrderStatus(
-        @Header("Authentication") token: String,
+        @Header("Authorization") token: String,
         @Path("id") id: Int,
         @Body reqStatusChange: ReqStatusChange
     ): ResMamMates<String>
@@ -69,32 +69,31 @@ interface MamMatesApi {
     // Foods
     @GET("foods")
     suspend fun getAllFoods(
-        @Header("Authentication") token: String,
+        @Header("Authorization") token: String,
     ): ResMamMates<Foods>
 
     @Multipart
     @POST("foods")
     suspend fun addFood(
-        @Header("Authentication") token: String,
+        @Header("Authorization") token: String,
         @Part image: MultipartBody.Part,
         @Part("name") name: String,
         @Part("price") price: Int,
         @Part("category") category: String,
         @Part mamImage: MultipartBody.Part,
         @Part("mam_rates") mamRates: Int,
-        @Query("ignoreCache") ignoreCache: Int = 1,
     ): ResMamMates<String>
 
     @GET("foods/{id}")
     suspend fun getFoodDetail(
-        @Header("Authentication") token: String,
+        @Header("Authorization") token: String,
         @Path("id") id: Int
     ): ResMamMates<FoodDetail>
 
     @Multipart
     @PUT("foods/{id}")
     suspend fun updateFood(
-        @Header("Authentication") token: String,
+        @Header("Authorization") token: String,
         @Path("id") id: Int,
         @Part image: MultipartBody.Part,
         @Part("name") name: String,
@@ -102,29 +101,28 @@ interface MamMatesApi {
         @Part("category") category: String,
         @Part mamImage: MultipartBody.Part,
         @Part("mam_rates") mamRates: Int,
-        @Query("ignoreCache") ignoreCache: Int = 1,
     ): ResMamMates<String>
 
     @DELETE("foods/{id}")
     suspend fun deleteFood(
-        @Header("Authentication") token: String,
+        @Header("Authorization") token: String,
         @Path("id") id: Int,
     ): ResMamMates<String>
 
     // Account
     @GET("accounts/store")
     suspend fun getStore(
-        @Header("Authentication") token: String,
+        @Header("Authorization") token: String,
     ): ResMamMates<Store>
 
     @GET("accounts/seller")
     suspend fun getAccount(
-        @Header("Authentication") token: String,
+        @Header("Authorization") token: String,
     ): ResMamMates<AccountSeller>
 
     @PUT("accounts/seller")
     suspend fun updateAccount(
-        @Header("Authentication") token: String,
+        @Header("Authorization") token: String,
         @Body reqAccountSeller: ReqAccountSeller
     ): ResMamMates<String>
 
@@ -132,14 +130,13 @@ interface MamMatesApi {
     @Multipart
     @PATCH("accounts/seller")
     suspend fun updateProfilePicture(
-        @Header("Authentication") token: String,
+        @Header("Authorization") token: String,
         @Part image: MultipartBody.Part,
-        @Query("ignoreCache") ignoreCache: Int = 1,
     ): ResMamMates<String>
 
     @PUT("password")
     suspend fun changePassword(
-        @Header("Authentication") token: String,
+        @Header("Authorization") token: String,
         @Body reqPasswordChange: ReqPasswordChange
     ): ResMamMates<String>
 
@@ -147,15 +144,14 @@ interface MamMatesApi {
     @Multipart
     @POST("mam_mates")
     suspend fun getMamRates(
-        @Header("Authentication") token: String,
+        @Header("Authorization") token: String,
         @Part image: MultipartBody.Part,
-        @Query("ignoreCache") ignoreCache: Int = 1,
     ): ResMamMates<MamRates>
 
     @Multipart
     @POST("reports")
     suspend fun reportMamRates(
-        @Header("Authentication") token: String,
+        @Header("Authorization") token: String,
         @Part("name") name: String,
         @Part("price") price: Int,
         @Part("rating") rating: Int,

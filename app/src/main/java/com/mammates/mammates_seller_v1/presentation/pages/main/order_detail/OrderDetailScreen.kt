@@ -49,7 +49,7 @@ fun OrderDetailScreen(
 ) {
 
     val scrollState = rememberScrollState()
-    val pullRefreshState = rememberPullRefreshState(refreshing = state.isLoading, onRefresh = {
+    val pullRefreshState = rememberPullRefreshState(refreshing = state.isRefresh, onRefresh = {
         onEvent(OrderDetailEvent.OnRefreshPage)
     })
 
@@ -321,7 +321,7 @@ fun OrderDetailScreen(
         }
         PullRefreshIndicator(
             modifier = Modifier.align(Alignment.TopCenter),
-            refreshing = state.isLoading,
+            refreshing = state.isRefresh,
             state = pullRefreshState
         )
     }

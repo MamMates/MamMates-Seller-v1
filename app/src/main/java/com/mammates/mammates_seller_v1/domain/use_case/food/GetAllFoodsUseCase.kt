@@ -5,6 +5,7 @@ import com.mammates.mammates_seller_v1.domain.model.FoodItem
 import com.mammates.mammates_seller_v1.domain.repository.FoodRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.HttpException
 import java.io.IOException
@@ -25,15 +26,19 @@ class GetAllFoodsUseCase @Inject constructor(
         } catch (e: HttpException) {
             val errorMessage = e.response()?.errorBody()
             errorMessage?.let {
-                val jsonObject = JSONObject(it.charStream().readText())
-                if (jsonObject.getInt("code") == 401) {
-                    emit(Resource.Error("401"))
-                } else {
-                    emit(
-                        Resource.Error(
-                            jsonObject.getString("message") ?: "An unexpected error occurred",
+                try {
+                    val jsonObject = JSONObject(it.charStream().readText())
+                    if (jsonObject.getInt("code") == 401) {
+                        emit(Resource.Error("401"))
+                    } else {
+                        emit(
+                            Resource.Error(
+                                jsonObject.getString("message") ?: "An unexpected error occurred",
+                            )
                         )
-                    )
+                    }
+                } catch (e: JSONException) {
+                    emit(Resource.Error("An unexpected error occurred"))
                 }
             }
         } catch (e: IOException) {

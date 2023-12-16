@@ -18,5 +18,6 @@ data class OrderDetailState(
     val isConfirmDialogOpen: Boolean = false,
     val isConfirmCanceledDialogOpen: Boolean = false,
     val isNotAuthorizeDialogOpen: Boolean = false,
+    val isRefresh: Boolean = false
 
-    )
+)

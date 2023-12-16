@@ -12,5 +12,7 @@ data class StoreState(
     val errorMessage: String? = null,
     val isLoading: Boolean = false,
     val isNotAuthorizeDialogOpen: Boolean = false,
+    val isRefresh: Boolean = false
 
-    )
+
+)

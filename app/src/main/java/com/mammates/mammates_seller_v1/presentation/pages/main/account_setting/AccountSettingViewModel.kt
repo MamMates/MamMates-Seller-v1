@@ -102,6 +102,20 @@ class AccountSettingViewModel @Inject constructor(
                 }
 
                 saveChangeAccount()
+
+                if (!_state.value.errorMessage.isNullOrEmpty() &&
+                    !_state.value.successMessage.isNullOrEmpty()
+                ) {
+                    _state.value = _state.value.copy(
+                        successMessage = null,
+                        isConfirmDialogOpen = false,
+                    )
+                    return
+                }
+
+                _state.value = _state.value.copy(
+                    isConfirmDialogOpen = false
+                )
             }
 
         }
@@ -192,7 +206,7 @@ class AccountSettingViewModel @Inject constructor(
         val multipartBody = MultipartBody.Part.createFormData(
             "image",
             imgFile.name,
-            imgFile.asRequestBody("*/*".toMediaType())
+            imgFile.asRequestBody("image/jpeg".toMediaType())
         )
 
         accountUseCases.updateProfilePictureUseCase(

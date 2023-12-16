@@ -26,7 +26,7 @@ class HomeViewModel @Inject constructor(
 
     init {
 
-        getTokenValue()
+        getInitialValue()
 
 
     }
@@ -41,7 +41,7 @@ class HomeViewModel @Inject constructor(
             }
 
             HomeEvent.OnRefreshPage -> {
-                getTokenValue()
+                getInitialValue()
                 getRecentOrder()
             }
 
@@ -56,7 +56,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun getTokenValue() {
+    private fun getInitialValue() {
         _state.value = _state.value.copy(
             isOnBoarding = introUseCases.getIntroIsDoneUseCase(),
             token = tokenUseCases.getTokenUseCase()

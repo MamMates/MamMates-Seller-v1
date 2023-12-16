@@ -10,9 +10,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.AlertDialog
@@ -44,14 +47,13 @@ import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRo
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AccountScreen(
-    navController: NavController,
-    state: AccountState,
-    onEvent: (AccountEvent) -> Unit
+    navController: NavController, state: AccountState, onEvent: (AccountEvent) -> Unit
 ) {
 
-    val pullRefreshState = rememberPullRefreshState(refreshing = state.isLoading, onRefresh = {
+    val pullRefreshState = rememberPullRefreshState(refreshing = state.isRefresh, onRefresh = {
         onEvent(AccountEvent.OnRefreshPage)
     })
+    val scrollState = rememberScrollState()
 
     val lifecycleOwner = LocalLifecycleOwner.current
     val lifecycleState by lifecycleOwner.lifecycle.currentStateAsState()
@@ -84,60 +86,46 @@ fun AccountScreen(
     }
 
     if (!state.errorMessage.isNullOrEmpty()) {
-        AlertDialog(
-            title = {
-                Text(text = "Error !")
-            },
-            text = {
+        AlertDialog(title = {
+            Text(text = "Error !")
+        }, text = {
 
-                Text(
-                    text = state.errorMessage,
-                    textAlign = TextAlign.Center
-                )
-            },
-            onDismissRequest = {
-                state.errorMessage.isEmpty()
-            },
-            icon = {
-                Icon(Icons.Default.Info, contentDescription = "Error Dialog")
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    onEvent(AccountEvent.OnDismissDialog)
-                }) {
-                    Text(text = "Okay")
+            Text(
+                text = state.errorMessage, textAlign = TextAlign.Center
+            )
+        }, onDismissRequest = {
+            state.errorMessage.isEmpty()
+        }, icon = {
+            Icon(Icons.Default.Info, contentDescription = "Error Dialog")
+        }, confirmButton = {
+            TextButton(onClick = {
+                onEvent(AccountEvent.OnDismissDialog)
+            }) {
+                Text(text = "Okay")
 
-                }
             }
-        )
+        })
     }
     if (state.isNotAuthorizeDialogOpen) {
-        AlertDialog(
-            title = {
-                Text(text = "Please Login")
-            },
-            text = {
-                Text(
-                    text = "You must login to continue !",
-                    textAlign = TextAlign.Center
-                )
+        AlertDialog(title = {
+            Text(text = "Please Login")
+        }, text = {
+            Text(
+                text = "You must login to continue !", textAlign = TextAlign.Center
+            )
 
-            },
-            onDismissRequest = {
-                state.isNotAuthorizeDialogOpen
-            },
-            icon = {
-                Icon(Icons.Default.Info, contentDescription = "Alert Dialog")
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    onEvent(AccountEvent.OnLogout)
-                }) {
-                    Text(text = "Login")
+        }, onDismissRequest = {
+            state.isNotAuthorizeDialogOpen
+        }, icon = {
+            Icon(Icons.Default.Info, contentDescription = "Alert Dialog")
+        }, confirmButton = {
+            TextButton(onClick = {
+                onEvent(AccountEvent.OnLogout)
+            }) {
+                Text(text = "Login")
 
-                }
             }
-        )
+        })
     }
 
     Box(
@@ -145,8 +133,7 @@ fun AccountScreen(
     ) {
         if (state.isLoading) {
             Column(
-                modifier = Modifier
-                    .fillMaxSize(),
+                modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -156,7 +143,8 @@ fun AccountScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 35.dp),
+                    .padding(horizontal = 35.dp)
+                    .verticalScroll(scrollState),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -180,8 +168,7 @@ fun AccountScreen(
                     )
                     Spacer(modifier = Modifier.width(20.dp))
                     Text(
-                        text = state.storeName,
-                        style = MaterialTheme.typography.headlineSmall
+                        text = state.storeName, style = MaterialTheme.typography.headlineSmall
                     )
                 }
                 Spacer(modifier = Modifier.height(30.dp))
@@ -199,27 +186,25 @@ fun AccountScreen(
                     },
                 )
                 Spacer(modifier = Modifier.height(30.dp))
-                Button(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = {
-                        onEvent(AccountEvent.OnLogout)
-                    }
-                ) {
+                Button(modifier = Modifier.fillMaxWidth(), onClick = {
+                    onEvent(AccountEvent.OnLogout)
+                }) {
                     Text(text = "Logout")
                 }
             }
         }
+        PullRefreshIndicator(
+            modifier = Modifier.align(Alignment.TopCenter),
+            refreshing = state.isRefresh,
+            state = pullRefreshState
+        )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun AccountScreenPreview() {
-    AccountScreen(
-        navController = rememberNavController(),
-        state = AccountState(
-            storeName = "Pecel Lele Bro Waw Murah Meriah"
-        ),
-        onEvent = {}
-    )
+    AccountScreen(navController = rememberNavController(), state = AccountState(
+        storeName = "Pecel Lele Bro Waw Murah Meriah"
+    ), onEvent = {})
 }

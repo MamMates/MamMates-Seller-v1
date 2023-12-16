@@ -59,6 +59,14 @@ class AccountViewModel @Inject constructor(
         accountUseCases.getStoreUseCase(_state.value.token).onEach { result ->
             when (result) {
                 is Resource.Error -> {
+                    if (result.message.equals("401")) {
+                        _state.value = _state.value.copy(
+                            isNotAuthorizeDialogOpen = true,
+                            isLoading = false,
+                        )
+                        return@onEach
+                    }
+
                     _state.value = _state.value.copy(
                         errorMessage = result.message,
                         isLoading = false,
