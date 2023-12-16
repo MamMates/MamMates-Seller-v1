@@ -24,7 +24,6 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -50,7 +49,7 @@ import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRo
 import com.mammates.mammates_seller_v1.util.Rating
 
 @OptIn(
-    ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class,
+    ExperimentalMaterialApi::class,
     ExperimentalFoundationApi::class
 )
 @Composable

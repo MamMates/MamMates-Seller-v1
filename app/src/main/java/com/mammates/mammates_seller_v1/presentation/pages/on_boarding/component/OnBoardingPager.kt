@@ -29,7 +29,7 @@ fun OnBoardingPager(
     ) {
         Image(
             painter = illustration,
-            contentDescription = "Pager Ilustration",
+            contentDescription = "Pager Illustration",
         )
         Spacer(
             modifier = Modifier.height(60.dp)

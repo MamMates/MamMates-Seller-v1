@@ -7,17 +7,17 @@ import androidx.datastore.preferences.preferencesDataStore
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 fun Context.createImageFile(): File {
-    val timeStamp = SimpleDateFormat("yyyy_MM_dd_HH:mm:ss").format(Date())
+    val timeStamp = SimpleDateFormat("yyyy_MM_dd_HH:mm:ss", Locale("id", "ID")).format(Date())
     val imageFileName = "JPEG_" + timeStamp + "_"
-    val image = File.createTempFile(
+
+    return File.createTempFile(
         imageFileName,
         ".jpg",
         externalCacheDir
     )
-
-    return image
 }

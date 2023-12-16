@@ -32,7 +32,7 @@ class GetOrderDetailUseCase @Inject constructor(
                 } else {
                     emit(
                         Resource.Error(
-                            jsonObject.getString("message") ?: "An unexpected error occured",
+                            jsonObject.getString("message") ?: "An unexpected error occurred",
                         )
                     )
                 }

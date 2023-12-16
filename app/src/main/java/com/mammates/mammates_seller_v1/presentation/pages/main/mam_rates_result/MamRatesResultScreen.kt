@@ -202,7 +202,7 @@ fun MamRatesResultScreen(
             )
             Spacer(modifier = Modifier.height(25.dp))
             TextLabelValue(
-                label = "PriceSugestion:",
+                label = "PriceSuggestion:",
                 value = if (state.price == -69) {
                     "No Price Provides"
                 } else {

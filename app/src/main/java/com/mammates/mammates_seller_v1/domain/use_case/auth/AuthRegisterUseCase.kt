@@ -1,6 +1,5 @@
 package com.mammates.mammates_seller_v1.domain.use_case.auth
 
-import android.util.Log
 import com.mammates.mammates_seller_v1.common.Resource
 import com.mammates.mammates_seller_v1.domain.repository.AuthRepository
 import kotlinx.coroutines.flow.Flow
@@ -32,7 +31,6 @@ class AuthRegisterUseCase @Inject constructor(
                 password,
                 passwordConfirm
             ).message
-            Log.i("AuthRegisterUsecase", "On Try")
             emit(Resource.Success(message))
         } catch (e: HttpException) {
             val errorMessage = e.response()?.errorBody()
@@ -40,7 +38,7 @@ class AuthRegisterUseCase @Inject constructor(
                 val jsonObject = JSONObject(it.charStream().readText())
                 emit(
                     Resource.Error(
-                        jsonObject.getString("message") ?: "An unexpected error occured"
+                        jsonObject.getString("message") ?: "An unexpected error occurred"
                     )
                 )
             }

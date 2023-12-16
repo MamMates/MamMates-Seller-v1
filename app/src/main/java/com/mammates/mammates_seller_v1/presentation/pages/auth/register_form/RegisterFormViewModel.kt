@@ -114,13 +114,13 @@ class RegisterFormViewModel @Inject constructor(
 
             }
 
-            RegisterFormEvent.OnDismisDialogError -> {
+            RegisterFormEvent.OnDismissDialogError -> {
                 _state.value = _state.value.copy(
                     errorMessage = null
                 )
             }
 
-            RegisterFormEvent.OnDismisDialogSuccess -> {
+            RegisterFormEvent.OnDismissDialogSuccess -> {
                 _state.value = _state.value.copy(
                     isSuccessDialogShow = false
                 )

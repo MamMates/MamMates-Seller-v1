@@ -153,7 +153,7 @@ fun ReportMamRatesScreen(
             Spacer(modifier = Modifier.height(20.dp))
             FormImageTextField(
                 label = "Food Display",
-                description = "blablala",
+                description = "Please submit a photo of your food in the report section for validation purposes. Your cooperation is vital in ensuring the accuracy and quality of our platform.",
                 onImageCapture = {
                     onEvent(ReportMamRatesEvent.OnChangeFoodImageUri(it))
                 },

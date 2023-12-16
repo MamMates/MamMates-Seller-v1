@@ -11,6 +11,6 @@ sealed class RegisterFormEvent {
     data object OnTogglePasswordConfirmVisibility : RegisterFormEvent()
     data object OnRegister : RegisterFormEvent()
 
-    data object OnDismisDialogError : RegisterFormEvent()
-    data object OnDismisDialogSuccess : RegisterFormEvent()
+    data object OnDismissDialogError : RegisterFormEvent()
+    data object OnDismissDialogSuccess : RegisterFormEvent()
 }

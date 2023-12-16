@@ -78,7 +78,7 @@ fun CardNavigation(
         }
         Image(
             painter = painterResource(id = illustration),
-            contentDescription = "Ilusstration Navigation"
+            contentDescription = "Illustration Navigation"
         )
 
     }

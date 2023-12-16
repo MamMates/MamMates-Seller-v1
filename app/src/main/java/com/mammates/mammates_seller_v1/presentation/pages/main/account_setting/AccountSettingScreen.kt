@@ -192,7 +192,7 @@ fun AccountSettingScreen(
                 },
                 errorResult = state.storeNameValidation,
                 label = "Store Name",
-                description = "blablabla"
+                description = "Update your account seamlessly by providing your store's name in the designated section."
             )
             Spacer(modifier = Modifier.height(20.dp))
             FormTextField(
@@ -203,7 +203,8 @@ fun AccountSettingScreen(
                 },
                 errorResult = state.storeAddressValidation,
                 label = "Store Address",
-                description = "blablabla"
+                description = "\n" +
+                        "Effortlessly update your account by entering your store's address in the provided section."
             )
             Spacer(modifier = Modifier.height(20.dp))
             FormTextField(
@@ -214,7 +215,7 @@ fun AccountSettingScreen(
                 },
                 errorResult = state.nameValidation,
                 label = "Full Name",
-                description = "blablabla"
+                description = "Update your account effortlessly by entering your name in the designated section."
             )
             Spacer(modifier = Modifier.height(20.dp))
             FormTextField(
@@ -225,7 +226,7 @@ fun AccountSettingScreen(
                 },
                 errorResult = state.emailValidation,
                 label = "Email",
-                description = "blablabla"
+                description = "Seamlessly update your account by entering your email in the provided section."
             )
             Spacer(modifier = Modifier.height(20.dp))
             Button(

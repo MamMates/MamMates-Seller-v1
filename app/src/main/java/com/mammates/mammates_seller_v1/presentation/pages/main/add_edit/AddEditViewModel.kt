@@ -311,7 +311,7 @@ class AddEditViewModel @Inject constructor(
         ) {
             return MultipartBody.Part.createFormData(
                 name = "image",
-                value = "nill",
+                value = "nil",
             )
         } else if (!url.isNullOrEmpty()) {
             return MultipartBody.Part.createFormData(

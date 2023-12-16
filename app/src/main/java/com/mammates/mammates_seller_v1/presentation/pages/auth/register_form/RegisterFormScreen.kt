@@ -60,7 +60,7 @@ fun RegisterFormScreen(
             },
             confirmButton = {
                 TextButton(onClick = {
-                    onEvent(RegisterFormEvent.OnDismisDialogError)
+                    onEvent(RegisterFormEvent.OnDismissDialogError)
                 }) {
                     Text(text = "Okay")
 
@@ -89,7 +89,7 @@ fun RegisterFormScreen(
             },
             confirmButton = {
                 TextButton(onClick = {
-                    onEvent(RegisterFormEvent.OnDismisDialogSuccess)
+                    onEvent(RegisterFormEvent.OnDismissDialogSuccess)
                     navController.popBackStack(
                         route = NavigationRoutes.Auth.Login.route,
                         inclusive = false

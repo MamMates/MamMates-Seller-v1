@@ -26,7 +26,7 @@ fun CardOrderFood(
     foodName: String,
     quantity: Int,
     image: String?,
-    price: Int // TODO : Currency type
+    price: Int
 ) {
 
     val context = LocalContext.current

@@ -14,7 +14,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -36,7 +35,6 @@ import com.mammates.mammates_seller_v1.presentation.pages.auth.login.component.L
 import com.mammates.mammates_seller_v1.presentation.util.loading.LoadingAnimation
 import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     navController: NavController,
@@ -152,7 +150,6 @@ fun LoginScreen(
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
-                    // TODO Submit Button Login
                     onEvent(LoginEvent.OnLogin)
                 }
             ) {
