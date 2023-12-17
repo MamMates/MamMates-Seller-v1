@@ -16,7 +16,7 @@ import com.mammates.mammates_seller_v1.domain.model.OrdersRecent
 import com.mammates.mammates_seller_v1.domain.model.Store
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -33,9 +33,9 @@ interface MamMatesApi {
 
     // Auth
     @POST("auth/login")
-    fun authLogin(
+    suspend fun authLogin(
         @Body reqLogin: ReqLogin
-    ): Call<ResMamMates<String>>
+    ): Response<ResMamMates<String>>
 
     @POST("auth/register/seller")
     suspend fun authRegister(
