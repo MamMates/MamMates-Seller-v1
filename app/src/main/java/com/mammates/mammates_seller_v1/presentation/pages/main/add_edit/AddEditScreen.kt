@@ -39,6 +39,7 @@ import com.mammates.mammates_seller_v1.presentation.component.text_field.FormIma
 import com.mammates.mammates_seller_v1.presentation.component.text_field.FormTextField
 import com.mammates.mammates_seller_v1.presentation.util.loading.LoadingAnimation
 import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
+import com.mammates.mammates_seller_v1.util.Category
 
 @Composable
 fun AddEditScreen(
@@ -297,8 +298,23 @@ fun AddEditScreen(
             Spacer(modifier = Modifier.height(10.dp))
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = if (!state.foodCategory.isNullOrEmpty()) {
-                    "Category : ${state.foodCategory}"
+                text = if (state.foodCategory != null) {
+                    "Category : ${
+                        when (state.foodCategory) {
+                            0 -> Category.Bika_Ambon.name.replace("_", " ")
+                            1 -> Category.Dadar_Gulung.name.replace("_", " ")
+                            2 -> Category.Donat.name.replace("_", " ")
+                            3 -> Category.Kue_Cubit.name.replace("_", " ")
+                            4 -> Category.Kue_Klepon.name.replace("_", " ")
+                            5 -> Category.Kue_Lapis.name.replace("_", " ")
+                            6 -> Category.Kue_Lumpur.name.replace("_", " ")
+                            7 -> Category.Kue_Risoles.name.replace("_", " ")
+                            8 -> Category.Putu_Ayu.name.replace("_", " ")
+                            9 -> Category.Roti.name.replace("_", " ")
+                            else -> Category.Undefine.name.replace("_", " ")
+
+                        }
+                    }"
                 } else {
                     "Please generate your Rating !"
                 },

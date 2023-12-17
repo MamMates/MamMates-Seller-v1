@@ -20,7 +20,7 @@ class UpdateFoodUseCase @Inject constructor(
         image: MultipartBody.Part,
         name: String,
         price: Int,
-        category: String,
+        category: Int,
         mamImage: MultipartBody.Part,
         mamRates: Int
     ): Flow<Resource<String>> = flow {

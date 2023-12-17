@@ -2,6 +2,7 @@ package com.mammates.mammates_seller_v1.presentation.pages.main.add_edit
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -107,7 +108,7 @@ class AddEditViewModel @Inject constructor(
                 validateAllFieldValue()
 
                 if (_state.value.rating == Rating.Undefine ||
-                    _state.value.foodCategory == Category.Undefine.name ||
+                    _state.value.foodCategory == Category.Undefine.value ||
                     _state.value.foodPriceSuggestion == -69
                 ) {
                     _state.value = _state.value.copy(
@@ -117,8 +118,8 @@ class AddEditViewModel @Inject constructor(
                 }
 
                 if (
-                    !_state.value.foodNameValidation.isNullOrEmpty() &&
-                    !_state.value.foodPriceValidation.isNullOrEmpty() &&
+                    !_state.value.foodNameValidation.isNullOrEmpty() ||
+                    !_state.value.foodPriceValidation.isNullOrEmpty() ||
                     !_state.value.foodMamRatesImageValidation.isNullOrEmpty()
 
                 ) {
@@ -188,7 +189,8 @@ class AddEditViewModel @Inject constructor(
 
                     is Resource.Loading -> {
                         _state.value = _state.value.copy(
-                            isLoading = true
+                            isLoading = true,
+                            isConfirmDeleteDialogOpen = false
                         )
                     }
 
@@ -204,19 +206,28 @@ class AddEditViewModel @Inject constructor(
     }
 
     private fun editFood(context: Context) {
+
+        if (_state.value.foodMamRatesImage != Uri.EMPTY) {
+            _state.value = _state.value.copy(
+                foodMamRatesUrlImage = null
+            )
+        }
+
         foodUseCases.updateFoodUseCase(
             id = _state.value.id,
             token = _state.value.token,
             image = imageMultiPartData(
                 context,
+                "image",
                 _state.value.foodDisplayImage,
                 _state.value.foodDisplayUrlImage
             ),
             name = _state.value.foodName,
             price = _state.value.foodPrice,
-            category = _state.value.foodCategory ?: Category.Undefine.name,
+            category = _state.value.foodCategory ?: Category.Undefine.value,
             mamImage = imageMultiPartData(
                 context,
+                "mam_image",
                 _state.value.foodMamRatesImage,
                 _state.value.foodMamRatesUrlImage
             ),
@@ -258,14 +269,16 @@ class AddEditViewModel @Inject constructor(
             token = _state.value.token,
             image = imageMultiPartData(
                 context,
+                "image",
                 _state.value.foodDisplayImage,
                 _state.value.foodDisplayUrlImage
             ),
             name = _state.value.foodName,
             price = _state.value.foodPrice,
-            category = _state.value.foodCategory ?: Category.Undefine.name,
+            category = _state.value.foodCategory ?: Category.Undefine.value,
             mamImage = imageMultiPartData(
                 context,
+                "mam_image",
                 _state.value.foodMamRatesImage,
                 _state.value.foodMamRatesUrlImage
             ),
@@ -304,28 +317,35 @@ class AddEditViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    private fun imageMultiPartData(context: Context, uri: Uri, url: String?): MultipartBody.Part {
+    private fun imageMultiPartData(
+        context: Context,
+        name: String,
+        uri: Uri,
+        url: String?
+    ): MultipartBody.Part {
         if (
             uri == Uri.EMPTY &&
             url.isNullOrEmpty()
         ) {
+            Log.i("AddEditViewModel", "Here Kosong")
             return MultipartBody.Part.createFormData(
-                name = "image",
+                name = name,
                 value = "nil",
             )
         } else if (!url.isNullOrEmpty()) {
+            Log.i("AddEditViewModel", "Here url dah ada")
             return MultipartBody.Part.createFormData(
-                name = "image",
+                name = name,
                 value = url,
             )
         } else {
             val imgFile =
                 ImageUtils.uriToFile(uri, context)
-
+            Log.i("AddEditViewModel", "Here buat file")
             return MultipartBody.Part.createFormData(
-                name = "image",
+                name = name,
                 filename = imgFile.name,
-                body = imgFile.asRequestBody("*/*".toMediaType())
+                body = imgFile.asRequestBody("image/jpeg".toMediaType())
 
 
             )
@@ -336,7 +356,7 @@ class AddEditViewModel @Inject constructor(
         _state.value = _state.value.copy(
             foodNameValidation = emptyValidation(_state.value.foodName, "Food Name"),
             foodMamRatesImageValidation = if (
-                _state.value.foodMamRatesImage == Uri.EMPTY &&
+                _state.value.foodMamRatesImage == Uri.EMPTY ||
                 _state.value.foodMamRatesUrlImage.isNullOrEmpty()
             ) {
                 "Please input your food image !!"
@@ -393,17 +413,17 @@ class AddEditViewModel @Inject constructor(
                                 else -> Rating.Undefine
                             },
                             foodCategory = when (data.category) {
-                                0 -> Category.Bika_Ambon.name.replace("_", " ")
-                                1 -> Category.Dadar_Gulung.name.replace("_", " ")
-                                2 -> Category.Donat.name.replace("_", " ")
-                                3 -> Category.Kue_Cubit.name.replace("_", " ")
-                                4 -> Category.Kue_Klepon.name.replace("_", " ")
-                                5 -> Category.Kue_Lapis.name.replace("_", " ")
-                                6 -> Category.Kue_Lumpur.name.replace("_", " ")
-                                7 -> Category.Kue_Risoles.name.replace("_", " ")
-                                8 -> Category.Putu_Ayu.name.replace("_", " ")
-                                9 -> Category.Roti.name.replace("_", " ")
-                                else -> Category.Undefine.name.replace("_", " ")
+                                0 -> Category.Bika_Ambon.value
+                                1 -> Category.Dadar_Gulung.value
+                                2 -> Category.Donat.value
+                                3 -> Category.Kue_Cubit.value
+                                4 -> Category.Kue_Klepon.value
+                                5 -> Category.Kue_Lapis.value
+                                6 -> Category.Kue_Lumpur.value
+                                7 -> Category.Kue_Risoles.value
+                                8 -> Category.Putu_Ayu.value
+                                9 -> Category.Roti.value
+                                else -> Category.Undefine.value
                             },
                             isLoading = false
                         )
@@ -419,7 +439,7 @@ class AddEditViewModel @Inject constructor(
         val multipartBody = MultipartBody.Part.createFormData(
             "image",
             imgFile.name,
-            imgFile.asRequestBody("*/*".toMediaType())
+            imgFile.asRequestBody("image/jpeg".toMediaType())
         )
 
         mamRatesUseCases.getMamRatesUseCase(
@@ -460,18 +480,17 @@ class AddEditViewModel @Inject constructor(
                                 else -> Rating.Undefine
                             },
                             foodCategory = when (data.category) {
-                                0 -> Category.Bika_Ambon.name.replace("_", " ")
-                                1 -> Category.Dadar_Gulung.name.replace("_", " ")
-                                2 -> Category.Donat.name.replace("_", " ")
-                                3 -> Category.Kue_Cubit.name.replace("_", " ")
-                                4 -> Category.Kue_Klepon.name.replace("_", " ")
-                                5 -> Category.Kue_Lapis.name.replace("_", " ")
-                                6 -> Category.Kue_Lumpur.name.replace("_", " ")
-                                7 -> Category.Kue_Risoles.name.replace("_", " ")
-                                8 -> Category.Putu_Ayu.name.replace("_", " ")
-                                9 -> Category.Roti.name.replace("_", " ")
-                                else -> Category.Undefine.name.replace("_", " ")
-
+                                0 -> Category.Bika_Ambon.value
+                                1 -> Category.Dadar_Gulung.value
+                                2 -> Category.Donat.value
+                                3 -> Category.Kue_Cubit.value
+                                4 -> Category.Kue_Klepon.value
+                                5 -> Category.Kue_Lapis.value
+                                6 -> Category.Kue_Lumpur.value
+                                7 -> Category.Kue_Risoles.value
+                                8 -> Category.Putu_Ayu.value
+                                9 -> Category.Roti.value
+                                else -> Category.Undefine.value
                             },
                             foodPriceSuggestion = data.price ?: -69,
                             isLoading = false

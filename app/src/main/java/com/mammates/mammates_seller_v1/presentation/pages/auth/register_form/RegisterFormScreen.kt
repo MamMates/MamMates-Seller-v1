@@ -69,7 +69,7 @@ fun RegisterFormScreen(
         )
     }
 
-    if (state.isSuccessDialogShow) {
+    if (!state.successMessage.isNullOrEmpty()) {
         AlertDialog(
             title = {
                 Text(text = "Register Success")
@@ -82,7 +82,7 @@ fun RegisterFormScreen(
 
             },
             onDismissRequest = {
-                state.isSuccessDialogShow
+                state.successMessage.isEmpty()
             },
             icon = {
                 Icon(Icons.Default.CheckCircle, contentDescription = "Alert Success")

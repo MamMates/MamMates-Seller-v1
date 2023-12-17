@@ -15,6 +15,7 @@ import com.mammates.mammates_seller_v1.domain.model.Orders
 import com.mammates.mammates_seller_v1.domain.model.OrdersRecent
 import com.mammates.mammates_seller_v1.domain.model.Store
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -77,9 +78,9 @@ interface MamMatesApi {
     suspend fun addFood(
         @Header("Authorization") token: String,
         @Part image: MultipartBody.Part,
-        @Part("name") name: String,
+        @Part("name") name: RequestBody,
         @Part("price") price: Int,
-        @Part("category") category: String,
+        @Part("category") category: Int,
         @Part mamImage: MultipartBody.Part,
         @Part("mam_rates") mamRates: Int,
     ): ResMamMates<String>
@@ -96,9 +97,9 @@ interface MamMatesApi {
         @Header("Authorization") token: String,
         @Path("id") id: Int,
         @Part image: MultipartBody.Part,
-        @Part("name") name: String,
+        @Part("name") name: RequestBody,
         @Part("price") price: Int,
-        @Part("category") category: String,
+        @Part("category") category: Int,
         @Part mamImage: MultipartBody.Part,
         @Part("mam_rates") mamRates: Int,
     ): ResMamMates<String>
@@ -152,10 +153,9 @@ interface MamMatesApi {
     @POST("reports")
     suspend fun reportMamRates(
         @Header("Authorization") token: String,
-        @Part("name") name: String,
+        @Part("name") name: RequestBody,
         @Part("price") price: Int,
         @Part("rating") rating: Int,
         @Part image: MultipartBody.Part,
-        @Query("ignoreCache") ignoreCache: Int = 1,
     ): ResMamMates<String>
 }

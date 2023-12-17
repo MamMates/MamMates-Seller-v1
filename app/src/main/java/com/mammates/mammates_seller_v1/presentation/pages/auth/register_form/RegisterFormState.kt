@@ -25,5 +25,5 @@ data class RegisterFormState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
 
-    val isSuccessDialogShow: Boolean = false
+    val successMessage: String? = null
 )

@@ -131,7 +131,7 @@ class ReportMamRatesViewModel @Inject constructor(
         val multipartBody = MultipartBody.Part.createFormData(
             "image",
             imgFile.name,
-            imgFile.asRequestBody("*/*".toMediaType())
+            imgFile.asRequestBody("image/jpeg".toMediaType())
         )
 
         mamRatesUseCases.reportMamRatesUseCase(

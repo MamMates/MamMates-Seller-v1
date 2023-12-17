@@ -19,7 +19,7 @@ data class AddEditState(
     val foodPriceValidation: String? = null,
     val foodPriceSuggestion: Int? = null,
 
-    val foodCategory: String? = null,
+    val foodCategory: Int? = null,
     val suggestion: String = "Consider making your dish more enticing with creative presentation or exciting flavors to boost its MamRates appeal.",
 
     val rating: Rating = Rating.Undefine,

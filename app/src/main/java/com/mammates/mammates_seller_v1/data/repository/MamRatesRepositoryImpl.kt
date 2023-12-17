@@ -4,6 +4,7 @@ import com.mammates.mammates_seller_v1.data.source.remote.MamMatesApi
 import com.mammates.mammates_seller_v1.data.source.remote.dto.ResMamMates
 import com.mammates.mammates_seller_v1.domain.model.MamRates
 import com.mammates.mammates_seller_v1.domain.repository.MamRatesRepository
+import com.mammates.mammates_seller_v1.util.createPartFromString
 import okhttp3.MultipartBody
 import javax.inject.Inject
 
@@ -25,7 +26,7 @@ class MamRatesRepositoryImpl @Inject constructor(
         image: MultipartBody.Part
     ): ResMamMates<String> {
         return api.reportMamRates(
-            token, name, price, rating, image
+            token, createPartFromString(name), price, rating, image
         )
     }
 }

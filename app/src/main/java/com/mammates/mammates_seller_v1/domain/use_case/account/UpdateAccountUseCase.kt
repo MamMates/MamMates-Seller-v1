@@ -35,7 +35,8 @@ class UpdateAccountUseCase @Inject constructor(
                     } else {
                         emit(
                             Resource.Error(
-                                jsonObject.getString("message") ?: "An unexpected error occurred",
+                                jsonObject.getJSONObject("data").getString("error")
+                                    ?: "An unexpected error occurred",
                             )
                         )
                     }

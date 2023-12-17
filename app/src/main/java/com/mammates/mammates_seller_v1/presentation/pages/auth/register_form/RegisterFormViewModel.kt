@@ -122,7 +122,7 @@ class RegisterFormViewModel @Inject constructor(
 
             RegisterFormEvent.OnDismissDialogSuccess -> {
                 _state.value = _state.value.copy(
-                    isSuccessDialogShow = false
+                    successMessage = null
                 )
             }
         }
@@ -181,7 +181,7 @@ class RegisterFormViewModel @Inject constructor(
 
                 is Resource.Success -> {
                     _state.value = _state.value.copy(
-                        isSuccessDialogShow = true,
+                        successMessage = result.data,
                         isLoading = false
                     )
                 }

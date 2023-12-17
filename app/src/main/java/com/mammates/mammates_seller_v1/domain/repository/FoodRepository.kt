@@ -15,7 +15,7 @@ interface FoodRepository {
         image: MultipartBody.Part,
         name: String,
         price: Int,
-        category: String,
+        category: Int,
         mamImage: MultipartBody.Part,
         mamRates: Int,
     ): ResMamMates<String>
@@ -31,7 +31,7 @@ interface FoodRepository {
         image: MultipartBody.Part,
         name: String,
         price: Int,
-        category: String,
+        category: Int,
         mamImage: MultipartBody.Part,
         mamRates: Int,
     ): ResMamMates<String>

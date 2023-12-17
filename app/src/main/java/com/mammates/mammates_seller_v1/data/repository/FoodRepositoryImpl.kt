@@ -1,10 +1,12 @@
 package com.mammates.mammates_seller_v1.data.repository
 
+import android.util.Log
 import com.mammates.mammates_seller_v1.data.source.remote.MamMatesApi
 import com.mammates.mammates_seller_v1.data.source.remote.dto.ResMamMates
 import com.mammates.mammates_seller_v1.domain.model.FoodDetail
 import com.mammates.mammates_seller_v1.domain.model.Foods
 import com.mammates.mammates_seller_v1.domain.repository.FoodRepository
+import com.mammates.mammates_seller_v1.util.createPartFromString
 import okhttp3.MultipartBody
 import javax.inject.Inject
 
@@ -20,12 +22,13 @@ class FoodRepositoryImpl @Inject constructor(
         image: MultipartBody.Part,
         name: String,
         price: Int,
-        category: String,
+        category: Int,
         mamImage: MultipartBody.Part,
         mamRates: Int
     ): ResMamMates<String> {
+        Log.i("FoodRepository", name)
         return api.addFood(
-            token, image, name, price, category, mamImage, mamRates
+            token, image, createPartFromString(name), price, category, mamImage, mamRates
         )
     }
 
@@ -39,11 +42,20 @@ class FoodRepositoryImpl @Inject constructor(
         image: MultipartBody.Part,
         name: String,
         price: Int,
-        category: String,
+        category: Int,
         mamImage: MultipartBody.Part,
         mamRates: Int
     ): ResMamMates<String> {
-        return api.updateFood(token, id, image, name, price, category, mamImage, mamRates)
+        return api.updateFood(
+            token,
+            id,
+            image,
+            createPartFromString(name),
+            price,
+            category,
+            mamImage,
+            mamRates
+        )
     }
 
     override suspend fun deleteFood(token: String, id: Int): ResMamMates<String> {
