@@ -16,13 +16,13 @@ class MamRatesViewModel @Inject constructor(
     val state = _state.asStateFlow()
 
     init {
+        getTokenValue()
+    }
+
+    private fun getTokenValue() {
         _state.value = _state.value.copy(
             token = tokenUseCases.getTokenUseCase()
         )
-    }
-
-    fun onEvent(event: MamRatesEvent) {
-
     }
 
 }

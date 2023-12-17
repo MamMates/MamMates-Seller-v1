@@ -13,17 +13,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -31,7 +26,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
@@ -40,9 +34,12 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.mammates.mammates_seller_v1.common.Constants
+import com.mammates.mammates_seller_v1.presentation.component.dialog.ConfirmDialog
+import com.mammates.mammates_seller_v1.presentation.component.dialog.ErrorDialog
+import com.mammates.mammates_seller_v1.presentation.component.loading.LoadingScreen
 import com.mammates.mammates_seller_v1.presentation.pages.main.account.component.CardAccount
-import com.mammates.mammates_seller_v1.presentation.util.loading.LoadingAnimation
 import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
+import com.mammates.mammates_seller_v1.util.HttpError
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -54,24 +51,16 @@ fun AccountScreen(
         onEvent(AccountEvent.OnRefreshPage)
     })
     val scrollState = rememberScrollState()
-
     val lifecycleOwner = LocalLifecycleOwner.current
     val lifecycleState by lifecycleOwner.lifecycle.currentStateAsState()
 
     LaunchedEffect(lifecycleState) {
         when (lifecycleState) {
-            Lifecycle.State.DESTROYED -> {}
-            Lifecycle.State.INITIALIZED -> {}
-            Lifecycle.State.CREATED -> {
-            }
-
             Lifecycle.State.STARTED -> {
                 onEvent(AccountEvent.OnRefreshPage)
             }
 
-            Lifecycle.State.RESUMED -> {
-
-            }
+            else -> {}
         }
     }
 
@@ -86,59 +75,41 @@ fun AccountScreen(
     }
 
     if (!state.errorMessage.isNullOrEmpty()) {
-        AlertDialog(title = {
-            Text(text = "Error !")
-        }, text = {
-
-            Text(
-                text = state.errorMessage, textAlign = TextAlign.Center
-            )
-        }, onDismissRequest = {
-            state.errorMessage.isEmpty()
-        }, icon = {
-            Icon(Icons.Default.Info, contentDescription = "Error Dialog")
-        }, confirmButton = {
-            TextButton(onClick = {
+        ErrorDialog(
+            message = state.errorMessage,
+            onConfirm = {
                 onEvent(AccountEvent.OnDismissDialog)
-            }) {
-                Text(text = "Okay")
-
             }
-        })
+        )
     }
     if (state.isNotAuthorizeDialogOpen) {
-        AlertDialog(title = {
-            Text(text = "Please Login")
-        }, text = {
-            Text(
-                text = "You must login to continue !", textAlign = TextAlign.Center
-            )
-
-        }, onDismissRequest = {
-            state.isNotAuthorizeDialogOpen
-        }, icon = {
-            Icon(Icons.Default.Info, contentDescription = "Alert Dialog")
-        }, confirmButton = {
-            TextButton(onClick = {
-                onEvent(AccountEvent.OnLogout)
-            }) {
-                Text(text = "Login")
-
+        ErrorDialog(
+            message = HttpError.UNAUTHORIZED.message,
+            onConfirm = {
+                onEvent(AccountEvent.ClearToken)
             }
-        })
+        )
+    }
+
+    if (state.isConfirmLogoutOpen) {
+        ConfirmDialog(
+            title = "Logout",
+            message = "Are you sure wanna logout ?",
+            onConfirm = {
+                onEvent(AccountEvent.OnDismissDialog)
+                onEvent(AccountEvent.ClearToken)
+            },
+            onDismiss = {
+                onEvent(AccountEvent.OnDismissDialog)
+            }
+        )
     }
 
     Box(
         modifier = Modifier.pullRefresh(pullRefreshState)
     ) {
         if (state.isLoading) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                LoadingAnimation()
-            }
+            LoadingScreen()
         } else {
             Column(
                 modifier = Modifier
@@ -187,7 +158,7 @@ fun AccountScreen(
                 )
                 Spacer(modifier = Modifier.height(30.dp))
                 Button(modifier = Modifier.fillMaxWidth(), onClick = {
-                    onEvent(AccountEvent.OnLogout)
+                    onEvent(AccountEvent.OnOpenConfirmDialogLogout)
                 }) {
                     Text(text = "Logout")
                 }

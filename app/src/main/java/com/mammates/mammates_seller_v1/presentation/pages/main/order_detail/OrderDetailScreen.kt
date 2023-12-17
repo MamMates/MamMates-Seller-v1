@@ -12,32 +12,34 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.currentStateAsState
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.mammates.mammates_seller_v1.presentation.component.dialog.ConfirmDialog
+import com.mammates.mammates_seller_v1.presentation.component.dialog.ErrorDialog
+import com.mammates.mammates_seller_v1.presentation.component.dialog.SuccesDialog
+import com.mammates.mammates_seller_v1.presentation.component.loading.LoadingScreen
 import com.mammates.mammates_seller_v1.presentation.component.text.TextLabelValue
 import com.mammates.mammates_seller_v1.presentation.pages.main.order.component.CardOrderFood
-import com.mammates.mammates_seller_v1.presentation.util.loading.LoadingAnimation
 import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
+import com.mammates.mammates_seller_v1.util.HttpError
 import com.mammates.mammates_seller_v1.util.StatusOrder
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -52,6 +54,18 @@ fun OrderDetailScreen(
     val pullRefreshState = rememberPullRefreshState(refreshing = state.isRefresh, onRefresh = {
         onEvent(OrderDetailEvent.OnRefreshPage)
     })
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val lifecycleState by lifecycleOwner.lifecycle.currentStateAsState()
+
+    LaunchedEffect(lifecycleState) {
+        when (lifecycleState) {
+            Lifecycle.State.STARTED -> {
+                onEvent(OrderDetailEvent.OnRefreshPage)
+            }
+
+            else -> {}
+        }
+    }
 
     LaunchedEffect(key1 = state.token) {
         if (state.token.isEmpty()) {
@@ -64,148 +78,49 @@ fun OrderDetailScreen(
     }
 
     if (state.isNotAuthorizeDialogOpen) {
-        AlertDialog(
-            title = {
-                Text(text = "Please Login")
+        ErrorDialog(
+            message = HttpError.UNAUTHORIZED.message,
+            onConfirm = {
+                onEvent(OrderDetailEvent.ClearToken)
             },
-            text = {
-                Text(
-                    text = "You must login to continue !",
-                    textAlign = TextAlign.Center
-                )
-
-            },
-            onDismissRequest = {
-                state.isNotAuthorizeDialogOpen
-            },
-            icon = {
-                Icon(Icons.Default.Info, contentDescription = "Alert Dialog")
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    onEvent(OrderDetailEvent.OnDismissNotAuthorize)
-                }) {
-                    Text(text = "Login")
-
-                }
-            }
+            title = "Unauthorized User !"
         )
     }
 
     if (!state.errorMessage.isNullOrEmpty()) {
-        AlertDialog(
-            title = {
-                Text(text = "Error !")
-            },
-            text = {
-                Text(
-                    text = state.errorMessage,
-                    textAlign = TextAlign.Center
-                )
-
-            },
-            onDismissRequest = {
-                state.errorMessage.isEmpty()
-            },
-            icon = {
-                Icon(Icons.Default.Info, contentDescription = "Error Dialog")
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    onEvent(OrderDetailEvent.OnDismissDialog)
-                }) {
-                    Text(text = "Okay")
-
-                }
-            }
-        )
+        ErrorDialog(message = state.errorMessage, onConfirm = {
+            onEvent(OrderDetailEvent.OnDismissDialog)
+        })
     }
     if (!state.successMessage.isNullOrEmpty()) {
-        AlertDialog(
-            title = {
-                Text(text = "Success !")
-            },
-            text = {
-                Text(
-                    text = state.successMessage,
-                    textAlign = TextAlign.Center
-                )
-
-            },
-            onDismissRequest = {
-                state.successMessage.isEmpty()
-            },
-            icon = {
-                Icon(Icons.Default.CheckCircle, contentDescription = "Success Dialog")
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    onEvent(OrderDetailEvent.OnDismissDialog)
-                }) {
-                    Text(text = "Okay")
-
-                }
+        SuccesDialog(
+            message = state.successMessage,
+            onConfirm = {
+                onEvent(OrderDetailEvent.OnDismissDialog)
+                onEvent(OrderDetailEvent.OnRefreshPage)
             }
         )
     }
 
     if (state.isConfirmDialogOpen) {
-        AlertDialog(
-            title = {
-                Text(text = "Confirm the action")
+        ConfirmDialog(
+            message = "Are you sure wanna change this order status ?",
+            onConfirm = {
+                onEvent(OrderDetailEvent.OnChangeStatusOrder())
             },
-            text = {
-                Text(text = "Are you sure wanna change this order status ?")
-            },
-            onDismissRequest = {
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        onEvent(OrderDetailEvent.OnChangeStatusOrder())
-                    }
-                ) {
-                    Text("Confirm")
-                }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        onEvent(OrderDetailEvent.OnDismissDialog)
-                    }
-                ) {
-                    Text("Dismiss")
-                }
+            onDismiss = {
+                onEvent(OrderDetailEvent.OnDismissDialog)
             }
         )
     }
     if (state.isConfirmCanceledDialogOpen) {
-        AlertDialog(
-            title = {
-                Text(text = "Confirm the action")
+        ConfirmDialog(
+            message = "Are you sure wanna cancel this order ?",
+            onConfirm = {
+                onEvent(OrderDetailEvent.OnChangeStatusOrder(isCanceled = true))
             },
-            text = {
-                Text(text = "Are you sure wanna cancel this order ?")
-            },
-            onDismissRequest = {
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        onEvent(OrderDetailEvent.OnChangeStatusOrder(isCanceled = true))
-                    }
-                ) {
-                    Text("Confirm")
-                }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        onEvent(OrderDetailEvent.OnDismissDialog)
-                    }
-                ) {
-                    Text("Dismiss")
-                }
+            onDismiss = {
+                onEvent(OrderDetailEvent.OnDismissDialog)
             }
         )
     }
@@ -215,14 +130,7 @@ fun OrderDetailScreen(
         modifier = Modifier.pullRefresh(pullRefreshState)
     ) {
         if (state.isLoading) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                LoadingAnimation()
-            }
+            LoadingScreen()
         } else {
             Box(
                 modifier = Modifier

@@ -12,13 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -34,12 +29,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.mammates.mammates_seller_v1.presentation.component.dialog.ConfirmDialog
+import com.mammates.mammates_seller_v1.presentation.component.dialog.ErrorDialog
+import com.mammates.mammates_seller_v1.presentation.component.dialog.SuccesDialog
+import com.mammates.mammates_seller_v1.presentation.component.loading.LoadingScreen
 import com.mammates.mammates_seller_v1.presentation.component.rating.RatingDisplay
 import com.mammates.mammates_seller_v1.presentation.component.text_field.FormImageTextField
 import com.mammates.mammates_seller_v1.presentation.component.text_field.FormTextField
-import com.mammates.mammates_seller_v1.presentation.util.loading.LoadingAnimation
 import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
 import com.mammates.mammates_seller_v1.util.Category
+import com.mammates.mammates_seller_v1.util.HttpError
 
 @Composable
 fun AddEditScreen(
@@ -51,129 +50,6 @@ fun AddEditScreen(
     val scrollState = rememberScrollState()
     val context = LocalContext.current
 
-    if (state.isNotAuthorizeDialogOpen) {
-        AlertDialog(
-            title = {
-                Text(text = "Please Login")
-            },
-            text = {
-                Text(
-                    text = "You must login to continue !",
-                    textAlign = TextAlign.Center
-                )
-
-            },
-            onDismissRequest = {
-                state.isNotAuthorizeDialogOpen
-            },
-            icon = {
-                Icon(Icons.Default.Info, contentDescription = "Alert Dialog")
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    onEvent(AddEditEvent.OnDismissNotAuthorize)
-                }) {
-                    Text(text = "Login")
-
-                }
-            }
-        )
-    }
-
-    if (!state.errorMessage.isNullOrEmpty()) {
-        AlertDialog(
-            title = {
-                Text(text = "Error !")
-            },
-            text = {
-
-                Text(
-                    text = state.errorMessage,
-                    textAlign = TextAlign.Center
-                )
-            },
-            onDismissRequest = {
-                state.errorMessage.isEmpty()
-            },
-            icon = {
-                Icon(Icons.Default.Info, contentDescription = "Error Dialog")
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    onEvent(AddEditEvent.OnDismissDialog)
-                }) {
-                    Text(text = "Okay")
-
-                }
-            }
-        )
-    }
-    if (!state.successMessage.isNullOrEmpty()) {
-        AlertDialog(
-            title = {
-                Text(text = "Success !")
-            },
-            text = {
-                Text(
-                    text = state.successMessage,
-                    textAlign = TextAlign.Center
-                )
-            },
-            onDismissRequest = {
-                state.successMessage.isEmpty()
-            },
-            icon = {
-                Icon(Icons.Default.CheckCircle, contentDescription = "Success Dialog")
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    onEvent(AddEditEvent.OnDismissDialog)
-                    navController.navigate(NavigationRoutes.Main.Store.route) {
-                        popUpTo(NavigationRoutes.Main.Add.route) {
-                            inclusive = true
-                        }
-                        launchSingleTop
-                    }
-                }) {
-                    Text(text = "Okay")
-
-                }
-            }
-        )
-    }
-
-    if (state.isConfirmDeleteDialogOpen) {
-        AlertDialog(
-            title = {
-                Text(text = "Confirm the action")
-            },
-            text = {
-                Text(text = "Are you sure wanna delete this food ?")
-            },
-            onDismissRequest = {
-                !state.isConfirmDeleteDialogOpen
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        onEvent(AddEditEvent.OnDeleteFood)
-                    }
-                ) {
-                    Text("Confirm")
-                }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        onEvent(AddEditEvent.OnDismissDialog)
-                    }
-                ) {
-                    Text("Dismiss")
-                }
-            }
-        )
-    }
-
     LaunchedEffect(key1 = state.token) {
         if (state.token.isEmpty()) {
             navController.navigate(route = NavigationRoutes.Auth.route) {
@@ -184,17 +60,53 @@ fun AddEditScreen(
         }
     }
 
-    if (state.isLoading) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            LoadingAnimation()
-        }
-    } else {
+    if (state.isNotAuthorizeDialogOpen) {
+        ErrorDialog(
+            message = HttpError.UNAUTHORIZED.message,
+            onConfirm = {
+                onEvent(AddEditEvent.ClearToken)
+            }
+        )
+    }
 
+    if (!state.errorMessage.isNullOrEmpty()) {
+        ErrorDialog(
+            message = state.errorMessage,
+            onConfirm = {
+                onEvent(AddEditEvent.OnDismissDialog)
+            }
+        )
+    }
+    if (!state.successMessage.isNullOrEmpty()) {
+        SuccesDialog(
+            message = state.successMessage,
+            onConfirm = {
+                onEvent(AddEditEvent.OnDismissDialog)
+                navController.navigate(NavigationRoutes.Main.Store.route) {
+                    popUpTo(NavigationRoutes.Main.Add.route) {
+                        inclusive = true
+                    }
+                    launchSingleTop
+                }
+            }
+        )
+    }
+
+    if (state.isConfirmDeleteDialogOpen) {
+        ConfirmDialog(
+            message = "Are you sure wanna delete this food ?",
+            onConfirm = {
+                onEvent(AddEditEvent.OnDeleteFood)
+            },
+            onDismiss = {
+                onEvent(AddEditEvent.OnDismissDialog)
+            }
+        )
+    }
+
+    if (state.isLoading) {
+        LoadingScreen()
+    } else {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -235,7 +147,7 @@ fun AddEditScreen(
             )
             Spacer(modifier = Modifier.height(20.dp))
             FormTextField(
-                value = if (state.foodPrice == 0) {
+                value = if (state.foodPrice == -69) {
                     ""
                 } else {
                     "${state.foodPrice}"

@@ -5,6 +5,8 @@ import com.mammates.mammates_seller_v1.data.source.remote.dto.ReqLogin
 import com.mammates.mammates_seller_v1.data.source.remote.dto.ReqRegister
 import com.mammates.mammates_seller_v1.data.source.remote.dto.ResMamMates
 import com.mammates.mammates_seller_v1.domain.repository.AuthRepository
+import com.mammates.mammates_seller_v1.util.ErrorMessage
+import com.mammates.mammates_seller_v1.util.HttpError
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -45,17 +47,88 @@ class AuthRepositoryImpl @Inject constructor(
 
                         response.errorBody()?.let {
                             val jsonObject = JSONObject(it.charStream().readText())
-                            continuation.resume(
-                                ResMamMates(
-                                    jsonObject.getString("status"),
-                                    jsonObject.getInt("code"),
-                                    jsonObject.getString("message"),
-                                    data = null
-                                )
-                            )
+                            when (jsonObject.getInt("code")) {
+                                400 -> {
+                                    continuation.resume(
+                                        ResMamMates(
+                                            jsonObject.getString("status"),
+                                            jsonObject.getInt("code"),
+                                            jsonObject.getJSONObject("data")
+                                                .getString("error")
+                                                .takeIf { it.isNotEmpty() }
+                                                ?: HttpError.BAD_REQUEST.message,
+                                            data = null
+                                        )
+                                    )
+                                }
+
+                                401 -> {
+                                    continuation.resume(
+                                        ResMamMates(
+                                            jsonObject.getString("status"),
+                                            jsonObject.getInt("code"),
+                                            HttpError.UNAUTHORIZED.message,
+                                            data = null
+                                        )
+                                    )
+                                }
+
+                                403 -> {
+                                    continuation.resume(
+                                        ResMamMates(
+                                            jsonObject.getString("status"),
+                                            jsonObject.getInt("code"),
+                                            HttpError.FORBIDDEN.message,
+                                            data = null
+                                        )
+                                    )
+                                }
+
+                                404 -> {
+                                    continuation.resume(
+                                        ResMamMates(
+                                            jsonObject.getString("status"),
+                                            jsonObject.getInt("code"),
+                                            HttpError.NOT_FOUND.message,
+                                            data = null
+                                        )
+                                    )
+                                }
+
+                                409 -> {
+                                    continuation.resume(
+                                        ResMamMates(
+                                            jsonObject.getString("status"),
+                                            jsonObject.getInt("code"),
+                                            HttpError.CONFLICT.message,
+                                            data = null
+                                        )
+                                    )
+                                }
+
+                                500 -> {
+                                    continuation.resume(
+                                        ResMamMates(
+                                            jsonObject.getString("status"),
+                                            jsonObject.getInt("code"),
+                                            HttpError.INTERNAL_SERVER_ERROR.message,
+                                            data = null
+                                        )
+                                    )
+                                }
+
+                                else -> {
+                                    continuation.resume(
+                                        ResMamMates(
+                                            jsonObject.getString("status"),
+                                            jsonObject.getInt("code"),
+                                            ErrorMessage.UNEXPECTED.message,
+                                            data = null
+                                        )
+                                    )
+                                }
+                            }
                         }
-
-
                     }
 
                     override fun onFailure(call: Call<ResMamMates<String>>, t: Throwable) {
@@ -64,7 +137,7 @@ class AuthRepositoryImpl @Inject constructor(
                                 ResMamMates(
                                     status = "",
                                     code = 0,
-                                    message = "Couldn't reach server. Check your internet connection.",
+                                    message = ErrorMessage.NO_INTERNET.message,
                                     data = null,
                                 )
                             )

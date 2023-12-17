@@ -8,6 +8,7 @@ import com.mammates.mammates_seller_v1.common.Resource
 import com.mammates.mammates_seller_v1.domain.use_case.mam_rates.MamRatesUseCases
 import com.mammates.mammates_seller_v1.domain.use_case.token.TokenUseCases
 import com.mammates.mammates_seller_v1.presentation.util.validation.emptyValidation
+import com.mammates.mammates_seller_v1.util.HttpError
 import com.mammates.mammates_seller_v1.util.ImageUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -91,7 +92,7 @@ class ReportMamRatesViewModel @Inject constructor(
                 )
             }
 
-            ReportMamRatesEvent.OnDismissNotAuthorize -> {
+            ReportMamRatesEvent.ClearToken -> {
                 viewModelScope.launch {
                     tokenUseCases.clearTokenUseCase()
                 }
@@ -143,7 +144,7 @@ class ReportMamRatesViewModel @Inject constructor(
         ).onEach { result ->
             when (result) {
                 is Resource.Error -> {
-                    if (result.message.equals("401")) {
+                    if (result.message.equals(HttpError.UNAUTHORIZED.message)) {
                         _state.value = _state.value.copy(
                             isNotAuthorizeDialogOpen = true,
                             isLoading = false,

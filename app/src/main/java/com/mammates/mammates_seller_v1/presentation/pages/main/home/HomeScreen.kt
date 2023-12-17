@@ -14,16 +14,11 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -38,14 +33,16 @@ import androidx.lifecycle.compose.currentStateAsState
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.mammates.mammates_seller_v1.domain.model.OrderRecentItems
+import com.mammates.mammates_seller_v1.presentation.component.dialog.ErrorDialog
+import com.mammates.mammates_seller_v1.presentation.component.loading.LoadingAnimation
 import com.mammates.mammates_seller_v1.presentation.component.pager.PagerIndicator
 import com.mammates.mammates_seller_v1.presentation.pages.main.home.component.CardArticle
 import com.mammates.mammates_seller_v1.presentation.pages.main.home.component.CardNavigation
 import com.mammates.mammates_seller_v1.presentation.pages.main.home.component.CardRecentOrder
 import com.mammates.mammates_seller_v1.presentation.pages.main.home.component.cardArticleItems
 import com.mammates.mammates_seller_v1.presentation.pages.main.home.component.cardNavigationItems
-import com.mammates.mammates_seller_v1.presentation.util.loading.LoadingAnimation
 import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
+import com.mammates.mammates_seller_v1.util.HttpError
 import com.mammates.mammates_seller_v1.util.StatusOrder
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
@@ -64,24 +61,16 @@ fun HomeScreen(
     val pullRefreshState = rememberPullRefreshState(refreshing = state.isRefresh, onRefresh = {
         onEvent(HomeEvent.OnRefreshPage)
     })
-
     val lifecycleOwner = LocalLifecycleOwner.current
     val lifecycleState by lifecycleOwner.lifecycle.currentStateAsState()
 
     LaunchedEffect(lifecycleState) {
         when (lifecycleState) {
-            Lifecycle.State.DESTROYED -> {}
-            Lifecycle.State.INITIALIZED -> {}
-            Lifecycle.State.CREATED -> {
-            }
-
             Lifecycle.State.STARTED -> {
                 onEvent(HomeEvent.OnRefreshPage)
             }
 
-            Lifecycle.State.RESUMED -> {
-
-            }
+            else -> {}
         }
     }
 
@@ -106,60 +95,21 @@ fun HomeScreen(
     }
 
     if (!state.errorMessage.isNullOrEmpty()) {
-        AlertDialog(
-            title = {
-                Text(text = "Error Message")
-            },
-            text = {
-                Text(
-                    text = state.errorMessage,
-                    textAlign = TextAlign.Center
-                )
-
-            },
-            onDismissRequest = {
-                state.errorMessage.isEmpty()
-            },
-            icon = {
-                Icon(Icons.Default.Info, contentDescription = "Alert Dialog")
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    onEvent(HomeEvent.OnDismissErrorDialog)
-                }) {
-                    Text(text = "Okay")
-
-                }
+        ErrorDialog(
+            message = state.errorMessage,
+            onConfirm = {
+                onEvent(HomeEvent.OnDismissErrorDialog)
             }
         )
     }
 
     if (state.isNotAuthorizeDialogOpen) {
-        AlertDialog(
-            title = {
-                Text(text = "Please Login")
+        ErrorDialog(
+            message = HttpError.UNAUTHORIZED.message,
+            onConfirm = {
+                onEvent(HomeEvent.ClearToken)
             },
-            text = {
-                Text(
-                    text = "You must login to continue !",
-                    textAlign = TextAlign.Center
-                )
-
-            },
-            onDismissRequest = {
-                state.isNotAuthorizeDialogOpen
-            },
-            icon = {
-                Icon(Icons.Default.Info, contentDescription = "Alert Dialog")
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    onEvent(HomeEvent.OnDismissNotAuthorize)
-                }) {
-                    Text(text = "Login")
-
-                }
-            }
+            title = "Unauthorized User !"
         )
     }
 

@@ -15,7 +15,7 @@ data class AddEditState(
     val foodName: String = "",
     val foodNameValidation: String? = null,
 
-    val foodPrice: Int = 0,
+    val foodPrice: Int = -69,
     val foodPriceValidation: String? = null,
     val foodPriceSuggestion: Int? = null,
 

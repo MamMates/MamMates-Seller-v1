@@ -6,6 +6,7 @@ import com.mammates.mammates_seller_v1.common.Resource
 import com.mammates.mammates_seller_v1.domain.use_case.intro.IntroUseCases
 import com.mammates.mammates_seller_v1.domain.use_case.order.OrderUseCases
 import com.mammates.mammates_seller_v1.domain.use_case.token.TokenUseCases
+import com.mammates.mammates_seller_v1.util.HttpError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -45,7 +46,7 @@ class HomeViewModel @Inject constructor(
                 getRecentOrder()
             }
 
-            HomeEvent.OnDismissNotAuthorize -> {
+            HomeEvent.ClearToken -> {
                 viewModelScope.launch {
                     tokenUseCases.clearTokenUseCase()
                 }
@@ -69,7 +70,7 @@ class HomeViewModel @Inject constructor(
         ).onEach { result ->
             when (result) {
                 is Resource.Error -> {
-                    if (result.message.equals("401")) {
+                    if (result.message.equals(HttpError.UNAUTHORIZED.message)) {
                         _state.value = _state.value.copy(
                             isNotAuthorizeDialogOpen = true,
                             isLoading = false,

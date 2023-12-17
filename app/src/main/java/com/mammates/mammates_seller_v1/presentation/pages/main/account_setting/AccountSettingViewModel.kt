@@ -9,12 +9,14 @@ import com.mammates.mammates_seller_v1.domain.use_case.account.AccountUseCases
 import com.mammates.mammates_seller_v1.domain.use_case.token.TokenUseCases
 import com.mammates.mammates_seller_v1.presentation.util.validation.emailValidation
 import com.mammates.mammates_seller_v1.presentation.util.validation.emptyValidation
+import com.mammates.mammates_seller_v1.util.HttpError
 import com.mammates.mammates_seller_v1.util.ImageUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -118,6 +120,14 @@ class AccountSettingViewModel @Inject constructor(
                 )
             }
 
+            AccountSettingEvent.ClearToken -> {
+                viewModelScope.launch {
+                    tokenUseCases.clearTokenUseCase()
+                }
+                _state.value = _state.value.copy(
+                    token = ""
+                )
+            }
         }
     }
 
@@ -140,6 +150,15 @@ class AccountSettingViewModel @Inject constructor(
         accountUseCases.getAccountUseCase(_state.value.token).onEach { result ->
             when (result) {
                 is Resource.Error -> {
+
+                    if (result.message.equals(HttpError.UNAUTHORIZED.message)) {
+                        _state.value = _state.value.copy(
+                            isNotAuthorizeDialogOpen = true,
+                            isLoading = false,
+                        )
+                        return@onEach
+                    }
+
                     _state.value = _state.value.copy(
                         errorMessage = result.message,
                         isLoading = false

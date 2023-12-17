@@ -18,34 +18,32 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.currentStateAsState
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.mammates.mammates_seller_v1.presentation.component.dialog.ErrorDialog
+import com.mammates.mammates_seller_v1.presentation.component.loading.LoadingScreen
 import com.mammates.mammates_seller_v1.presentation.pages.main.store.component.CardFood
-import com.mammates.mammates_seller_v1.presentation.util.loading.LoadingAnimation
 import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
+import com.mammates.mammates_seller_v1.util.HttpError
 import com.mammates.mammates_seller_v1.util.Rating
 
 @OptIn(
@@ -63,18 +61,11 @@ fun StoreScreen(
 
     LaunchedEffect(lifecycleState) {
         when (lifecycleState) {
-            Lifecycle.State.DESTROYED -> {}
-            Lifecycle.State.INITIALIZED -> {}
-            Lifecycle.State.CREATED -> {
-            }
-
             Lifecycle.State.STARTED -> {
                 onEvent(StoreEvent.OnRefreshPage)
             }
 
-            Lifecycle.State.RESUMED -> {
-
-            }
+            else -> {}
         }
     }
 
@@ -93,59 +84,19 @@ fun StoreScreen(
     }
 
     if (state.isNotAuthorizeDialogOpen) {
-        AlertDialog(
-            title = {
-                Text(text = "Please Login")
-            },
-            text = {
-                Text(
-                    text = "You must login to continue !",
-                    textAlign = TextAlign.Center
-                )
-
-            },
-            onDismissRequest = {
-                state.isNotAuthorizeDialogOpen
-            },
-            icon = {
-                Icon(Icons.Default.Info, contentDescription = "Alert Dialog")
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    onEvent(StoreEvent.OnDismissNotAuthorize)
-                }) {
-                    Text(text = "Login")
-
-                }
+        ErrorDialog(
+            message = HttpError.UNAUTHORIZED.message,
+            onConfirm = {
+                onEvent(StoreEvent.ClearToken)
             }
         )
     }
 
     if (!state.errorMessage.isNullOrEmpty()) {
-        AlertDialog(
-            title = {
-                Text(text = "Error !")
-            },
-            text = {
-                Text(
-                    text = state.errorMessage,
-                    textAlign = TextAlign.Center
-                )
-
-            },
-            onDismissRequest = {
-                state.errorMessage.isEmpty()
-            },
-            icon = {
-                Icon(Icons.Default.Info, contentDescription = "Error Dialog")
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    onEvent(StoreEvent.OnDismissDialog)
-                }) {
-                    Text(text = "Okay")
-
-                }
+        ErrorDialog(
+            message = state.errorMessage,
+            onConfirm = {
+                onEvent(StoreEvent.OnDismissDialog)
             }
         )
     }
@@ -154,14 +105,7 @@ fun StoreScreen(
         modifier = Modifier.pullRefresh(pullRefreshState)
     ) {
         if (state.isLoading) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                LoadingAnimation()
-            }
+            LoadingScreen()
         } else {
             Scaffold(
                 floatingActionButton = {

@@ -13,5 +13,5 @@ sealed class AddEditEvent {
     data object OnDismissDialog : AddEditEvent()
     data object OnDeleteFood : AddEditEvent()
     data object OnOpenDeleteDialog : AddEditEvent()
-    data object OnDismissNotAuthorize : AddEditEvent()
+    data object ClearToken : AddEditEvent()
 }

@@ -102,7 +102,6 @@ fun NavGraphBuilder.mainGraph(navController: NavController) {
             MamRatesScreen(
                 navController = navController,
                 state = state,
-                onEvent = viewModel::onEvent
             )
         }
         composable(route = NavigationRoutes.Main.Account.route) {

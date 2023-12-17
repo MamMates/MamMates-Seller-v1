@@ -23,6 +23,7 @@ data class AccountSettingState(
     val errorMessage: String? = null,
     val successMessage: String? = null,
 
-    val isConfirmDialogOpen: Boolean = false
+    val isConfirmDialogOpen: Boolean = false,
+    val isNotAuthorizeDialogOpen: Boolean = false,
 
-)
+    )

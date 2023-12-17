@@ -5,7 +5,7 @@ import android.net.Uri
 
 sealed class ReportMamRatesEvent {
     data object OnDismissDialog : ReportMamRatesEvent()
-    data object OnDismissNotAuthorize : ReportMamRatesEvent()
+    data object ClearToken : ReportMamRatesEvent()
     data class OnChangeFoodName(val foodName: String) : ReportMamRatesEvent()
     data class OnChangeFoodPrice(val foodPrice: String) : ReportMamRatesEvent()
     data class OnChangeRating(val rating: String) : ReportMamRatesEvent()

@@ -9,29 +9,26 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.mammates.mammates_seller_v1.presentation.component.dialog.ConfirmDialog
+import com.mammates.mammates_seller_v1.presentation.component.dialog.ErrorDialog
+import com.mammates.mammates_seller_v1.presentation.component.dialog.SuccesDialog
+import com.mammates.mammates_seller_v1.presentation.component.loading.LoadingAnimation
 import com.mammates.mammates_seller_v1.presentation.component.text_field.FormImageTextField
 import com.mammates.mammates_seller_v1.presentation.component.text_field.FormTextField
-import com.mammates.mammates_seller_v1.presentation.util.loading.LoadingAnimation
 import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
+import com.mammates.mammates_seller_v1.util.HttpError
 
 @Composable
 fun AccountSettingScreen(
@@ -44,98 +41,47 @@ fun AccountSettingScreen(
     val scrollState = rememberScrollState()
 
 
+    if (state.isNotAuthorizeDialogOpen) {
+        ErrorDialog(
+            message = HttpError.UNAUTHORIZED.message,
+            onConfirm = {
+                onEvent(AccountSettingEvent.ClearToken)
+            }
+        )
+    }
 
     if (!state.successMessage.isNullOrEmpty()) {
-        AlertDialog(
-            title = {
-                Text(text = "Success !")
-            },
-            text = {
-                Text(
-                    text = state.successMessage,
-                    textAlign = TextAlign.Center
-                )
-            },
-            onDismissRequest = {
-                state.successMessage.isEmpty()
-            },
-            icon = {
-                Icon(Icons.Default.CheckCircle, contentDescription = "Success Dialog")
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    onEvent(AccountSettingEvent.OnDismissDialog)
-                    navController.navigate(NavigationRoutes.Main.Account.route) {
-                        popUpTo(NavigationRoutes.Main.AccountSetting.route) {
-                            inclusive = true
-                        }
-                        launchSingleTop = true
+        SuccesDialog(
+            message = state.successMessage,
+            onConfirm = {
+                onEvent(AccountSettingEvent.OnDismissDialog)
+                navController.navigate(NavigationRoutes.Main.Account.route) {
+                    popUpTo(NavigationRoutes.Main.AccountSetting.route) {
+                        inclusive = true
                     }
-                }) {
-                    Text(text = "Okay")
-
+                    launchSingleTop = true
                 }
             }
         )
     }
 
     if (!state.errorMessage.isNullOrEmpty()) {
-        AlertDialog(
-            title = {
-                Text(text = "Error !")
-            },
-            text = {
-
-                Text(
-                    text = state.errorMessage,
-                    textAlign = TextAlign.Center
-                )
-            },
-            onDismissRequest = {
-                state.errorMessage.isEmpty()
-            },
-            icon = {
-                Icon(Icons.Default.Info, contentDescription = "Error Dialog")
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    onEvent(AccountSettingEvent.OnDismissDialog)
-                }) {
-                    Text(text = "Okay")
-
-                }
+        ErrorDialog(
+            message = state.errorMessage,
+            onConfirm = {
+                onEvent(AccountSettingEvent.OnDismissDialog)
             }
         )
     }
 
     if (state.isConfirmDialogOpen) {
-        AlertDialog(
-            title = {
-                Text(text = "Confirm the action")
+        ConfirmDialog(
+            message = "Are you sure wanna save this changes ?",
+            onConfirm = {
+                onEvent(AccountSettingEvent.OnConfirmChangesAccount(context))
             },
-            text = {
-                Text(text = "Are you sure wanna save this changes ?")
-            },
-            onDismissRequest = {
-                !state.isConfirmDialogOpen
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        onEvent(AccountSettingEvent.OnConfirmChangesAccount(context))
-                    }
-                ) {
-                    Text("Confirm")
-                }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        onEvent(AccountSettingEvent.OnDismissDialog)
-                    }
-                ) {
-                    Text("Dismiss")
-                }
+            onDismiss = {
+                onEvent(AccountSettingEvent.OnDismissDialog)
             }
         )
     }
@@ -160,8 +106,6 @@ fun AccountSettingScreen(
             LoadingAnimation()
         }
     } else {
-
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -205,8 +149,7 @@ fun AccountSettingScreen(
                 },
                 errorResult = state.storeAddressValidation,
                 label = "Store Address",
-                description = "\n" +
-                        "Effortlessly update your account by entering your store's address in the provided section."
+                description = "Effortlessly update your account by entering your store's address in the provided section."
             )
             Spacer(modifier = Modifier.height(20.dp))
             FormTextField(

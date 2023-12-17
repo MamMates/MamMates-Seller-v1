@@ -12,5 +12,6 @@ sealed class AccountSettingEvent {
     data object OnDismissDialog : AccountSettingEvent()
     data object OnOpenConfirmDialog : AccountSettingEvent()
     data class OnConfirmChangesAccount(val context: Context) : AccountSettingEvent()
+    data object ClearToken : AccountSettingEvent()
 
 }

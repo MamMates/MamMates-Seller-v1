@@ -10,11 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -23,16 +19,16 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.mammates.mammates_seller_v1.R
+import com.mammates.mammates_seller_v1.presentation.component.dialog.ErrorDialog
+import com.mammates.mammates_seller_v1.presentation.component.loading.LoadingScreen
 import com.mammates.mammates_seller_v1.presentation.component.text_field.PasswordTextField
 import com.mammates.mammates_seller_v1.presentation.component.text_field.PrimaryTextField
 import com.mammates.mammates_seller_v1.presentation.pages.auth.login.component.LoginTitle
-import com.mammates.mammates_seller_v1.presentation.util.loading.LoadingAnimation
 import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
 
 @Composable
@@ -53,44 +49,18 @@ fun LoginScreen(
     }
 
     if (!state.errorMessage.isNullOrEmpty()) {
-        AlertDialog(
-            title = {
-                Text(text = "Register Failed")
+        ErrorDialog(
+            message = state.errorMessage,
+            onConfirm = {
+                onEvent(LoginEvent.OnDismissErrorDialog)
             },
-            text = {
-                Text(
-                    text = state.errorMessage,
-                    textAlign = TextAlign.Center
-                )
-
-            },
-            onDismissRequest = {
-                state.errorMessage.isEmpty()
-            },
-            icon = {
-                Icon(Icons.Default.Info, contentDescription = "Alert Dialog")
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    onEvent(LoginEvent.OnDismissErrorDialog)
-                }) {
-                    Text(text = "Okay")
-
-                }
-            }
+            title = "Login Failed!"
         )
     }
 
 
     if (state.isLoading) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            LoadingAnimation()
-        }
+        LoadingScreen()
     } else {
         Column(
             modifier = Modifier

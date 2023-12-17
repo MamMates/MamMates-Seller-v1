@@ -1,6 +1,5 @@
 package com.mammates.mammates_seller_v1.presentation.pages.auth.register_form
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,26 +8,20 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.mammates.mammates_seller_v1.presentation.component.dialog.ErrorDialog
+import com.mammates.mammates_seller_v1.presentation.component.dialog.SuccesDialog
+import com.mammates.mammates_seller_v1.presentation.component.loading.LoadingScreen
 import com.mammates.mammates_seller_v1.presentation.component.text_field.FormTextField
 import com.mammates.mammates_seller_v1.presentation.pages.auth.register_form.component.RegisterFormPasswordTextField
-import com.mammates.mammates_seller_v1.presentation.util.loading.LoadingAnimation
 import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
 
 @Composable
@@ -41,77 +34,31 @@ fun RegisterFormScreen(
     val scrollState = rememberScrollState()
 
     if (!state.errorMessage.isNullOrEmpty()) {
-        AlertDialog(
-            title = {
-                Text(text = "Register Failed")
+        ErrorDialog(
+            message = state.errorMessage,
+            onConfirm = {
+                onEvent(RegisterFormEvent.OnDismissDialogError)
             },
-            text = {
-                Text(
-                    text = state.errorMessage,
-                    textAlign = TextAlign.Center
-                )
-
-            },
-            onDismissRequest = {
-                state.errorMessage.isEmpty()
-            },
-            icon = {
-                Icon(Icons.Default.Info, contentDescription = "Alert Dialog")
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    onEvent(RegisterFormEvent.OnDismissDialogError)
-                }) {
-                    Text(text = "Okay")
-
-                }
-            }
+            title = "Register Failed"
         )
     }
 
     if (!state.successMessage.isNullOrEmpty()) {
-        AlertDialog(
-            title = {
-                Text(text = "Register Success")
-            },
-            text = {
-                Text(
-                    text = "",
-                    textAlign = TextAlign.Center
+        SuccesDialog(
+            message = state.successMessage,
+            onConfirm = {
+                onEvent(RegisterFormEvent.OnDismissDialogSuccess)
+                navController.popBackStack(
+                    route = NavigationRoutes.Auth.Login.route,
+                    inclusive = false
                 )
-
             },
-            onDismissRequest = {
-                state.successMessage.isEmpty()
-            },
-            icon = {
-                Icon(Icons.Default.CheckCircle, contentDescription = "Alert Success")
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    onEvent(RegisterFormEvent.OnDismissDialogSuccess)
-                    navController.popBackStack(
-                        route = NavigationRoutes.Auth.Login.route,
-                        inclusive = false
-                    )
-                }) {
-                    Text(text = "Okay")
-
-                }
-            }
+            title = "Register Success!"
         )
-
     }
 
     if (state.isLoading) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            LoadingAnimation()
-        }
+        LoadingScreen()
     } else {
         Column(
             modifier = Modifier

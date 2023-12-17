@@ -30,7 +30,6 @@ import com.mammates.mammates_seller_v1.util.Rating
 fun MamRatesScreen(
     navController: NavController,
     state: MamRatesState,
-    onEvent: (MamRatesEvent) -> Unit
 ) {
 
     LaunchedEffect(key1 = state.token) {
@@ -42,6 +41,8 @@ fun MamRatesScreen(
             }
         }
     }
+
+
 
     Column(
         modifier = Modifier
@@ -99,6 +100,5 @@ fun MamRatesScreenPreview() {
     MamRatesScreen(
         navController = rememberNavController(),
         state = MamRatesState(),
-        onEvent = {}
     )
 }

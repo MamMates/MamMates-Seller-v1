@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.mammates.mammates_seller_v1.common.Resource
 import com.mammates.mammates_seller_v1.domain.use_case.order.OrderUseCases
 import com.mammates.mammates_seller_v1.domain.use_case.token.TokenUseCases
+import com.mammates.mammates_seller_v1.util.HttpError
 import com.mammates.mammates_seller_v1.util.StatusOrder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,9 +33,6 @@ class OrderDetailViewModel @Inject constructor(
             _state.value = _state.value.copy(
                 id = id
             )
-            if (id != -69) {
-                getOrderDetail()
-            }
         }
     }
 
@@ -74,7 +72,7 @@ class OrderDetailViewModel @Inject constructor(
 
             }
 
-            OrderDetailEvent.OnDismissNotAuthorize -> {
+            OrderDetailEvent.ClearToken -> {
                 viewModelScope.launch {
                     tokenUseCases.clearTokenUseCase()
                 }
@@ -103,7 +101,7 @@ class OrderDetailViewModel @Inject constructor(
             when (result) {
                 is Resource.Error -> {
 
-                    if (result.message.equals("401")) {
+                    if (result.message.equals(HttpError.UNAUTHORIZED.message)) {
                         _state.value = _state.value.copy(
                             isNotAuthorizeDialogOpen = true,
                             isLoading = false,
@@ -159,7 +157,7 @@ class OrderDetailViewModel @Inject constructor(
         ).onEach { result ->
             when (result) {
                 is Resource.Error -> {
-                    if (result.message.equals("401")) {
+                    if (result.message.equals(HttpError.UNAUTHORIZED.message)) {
                         _state.value = _state.value.copy(
                             isNotAuthorizeDialogOpen = true,
                             isLoading = false,

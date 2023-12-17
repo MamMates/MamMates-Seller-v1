@@ -1,4 +1,4 @@
-package com.mammates.mammates_seller_v1.presentation.util.loading
+package com.mammates.mammates_seller_v1.presentation.component.loading
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearOutSlowInEasing

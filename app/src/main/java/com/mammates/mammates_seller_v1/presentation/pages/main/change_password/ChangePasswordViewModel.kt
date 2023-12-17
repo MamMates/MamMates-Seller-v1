@@ -6,6 +6,7 @@ import com.mammates.mammates_seller_v1.common.Resource
 import com.mammates.mammates_seller_v1.domain.use_case.account.AccountUseCases
 import com.mammates.mammates_seller_v1.domain.use_case.token.TokenUseCases
 import com.mammates.mammates_seller_v1.presentation.util.validation.passwordValidation
+import com.mammates.mammates_seller_v1.util.HttpError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -138,7 +139,7 @@ class ChangePasswordViewModel @Inject constructor(
         ).onEach { result ->
             when (result) {
                 is Resource.Error -> {
-                    if (result.message.equals("401")) {
+                    if (result.message.equals(HttpError.UNAUTHORIZED.message)) {
                         _state.value = _state.value.copy(
                             isNotAuthorizeDialogOpen = true,
                             isLoading = false,

@@ -10,15 +10,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -29,11 +23,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.mammates.mammates_seller_v1.presentation.component.dialog.ErrorDialog
+import com.mammates.mammates_seller_v1.presentation.component.dialog.SuccesDialog
+import com.mammates.mammates_seller_v1.presentation.component.loading.LoadingScreen
 import com.mammates.mammates_seller_v1.presentation.component.rating.RatingDisplay
 import com.mammates.mammates_seller_v1.presentation.component.text.TextLabelValue
 import com.mammates.mammates_seller_v1.presentation.component.text_field.FormImageTextField
-import com.mammates.mammates_seller_v1.presentation.util.loading.LoadingAnimation
 import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
+import com.mammates.mammates_seller_v1.util.HttpError
 import com.mammates.mammates_seller_v1.util.Rating
 
 @Composable
@@ -57,101 +54,34 @@ fun MamRatesResultScreen(
     }
 
     if (state.isNotAuthorizeDialogOpen) {
-        AlertDialog(
-            title = {
-                Text(text = "Please Login")
-            },
-            text = {
-                Text(
-                    text = "You must login to continue !",
-                    textAlign = TextAlign.Center
-                )
-
-            },
-            onDismissRequest = {
-                state.isNotAuthorizeDialogOpen
-            },
-            icon = {
-                Icon(Icons.Default.Info, contentDescription = "Alert Dialog")
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    onEvent(MamRatesResultEvent.OnDismissNotAuthorize)
-                }) {
-                    Text(text = "Login")
-
-                }
+        ErrorDialog(
+            message = HttpError.UNAUTHORIZED.message,
+            onConfirm = {
+                onEvent(MamRatesResultEvent.OnDismissNotAuthorize)
             }
         )
     }
 
     if (!state.errorMessage.isNullOrEmpty()) {
-        AlertDialog(
-            title = {
-                Text(text = "Error !")
-            },
-            text = {
-                Text(
-                    text = state.errorMessage,
-                    textAlign = TextAlign.Center
-                )
-
-            },
-            onDismissRequest = {
-                state.errorMessage.isEmpty()
-            },
-            icon = {
-                Icon(Icons.Default.Info, contentDescription = "Error Dialog")
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    onEvent(MamRatesResultEvent.OnDismissDialog)
-                }) {
-                    Text(text = "Okay")
-
-                }
+        ErrorDialog(
+            message = state.errorMessage,
+            onConfirm = {
+                onEvent(MamRatesResultEvent.OnDismissDialog)
             }
         )
     }
     if (!state.successMessage.isNullOrEmpty()) {
-        AlertDialog(
-            title = {
-                Text(text = "Success !")
-            },
-            text = {
-                Text(
-                    text = state.successMessage,
-                    textAlign = TextAlign.Center
-                )
-
-            },
-            onDismissRequest = {
-                state.successMessage.isEmpty()
-            },
-            icon = {
-                Icon(Icons.Default.CheckCircle, contentDescription = "Success Dialog")
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    onEvent(MamRatesResultEvent.OnDismissDialog)
-                }) {
-                    Text(text = "Okay")
-
-                }
+        SuccesDialog(
+            message = state.successMessage,
+            onConfirm = {
+                onEvent(MamRatesResultEvent.OnDismissDialog)
             }
         )
     }
 
 
     if (state.isLoading) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            LoadingAnimation()
-        }
+        LoadingScreen()
     } else {
         Column(
             modifier = Modifier

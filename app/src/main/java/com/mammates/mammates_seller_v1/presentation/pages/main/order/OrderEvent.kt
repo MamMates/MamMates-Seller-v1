@@ -9,5 +9,5 @@ sealed class OrderEvent {
     data object OnDismissChangeStatusDialog : OrderEvent()
     data object OnConfirmChangeStatus : OrderEvent()
     data object OnRefreshPage : OrderEvent()
-    data object OnDismissNotAuthorize : OrderEvent()
+    data object ClearToken : OrderEvent()
 }
