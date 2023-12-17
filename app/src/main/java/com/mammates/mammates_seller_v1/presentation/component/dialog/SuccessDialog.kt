@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.style.TextAlign
 
 @Composable
-fun SuccesDialog(
+fun SuccessDialog(
     message: String,
     onConfirm: () -> Unit,
     title: String = "Success!"

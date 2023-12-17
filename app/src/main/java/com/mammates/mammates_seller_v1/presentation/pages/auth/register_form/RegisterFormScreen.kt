@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.mammates.mammates_seller_v1.presentation.component.dialog.ErrorDialog
-import com.mammates.mammates_seller_v1.presentation.component.dialog.SuccesDialog
+import com.mammates.mammates_seller_v1.presentation.component.dialog.SuccessDialog
 import com.mammates.mammates_seller_v1.presentation.component.loading.LoadingScreen
 import com.mammates.mammates_seller_v1.presentation.component.text_field.FormTextField
 import com.mammates.mammates_seller_v1.presentation.pages.auth.register_form.component.RegisterFormPasswordTextField
@@ -44,7 +44,7 @@ fun RegisterFormScreen(
     }
 
     if (!state.successMessage.isNullOrEmpty()) {
-        SuccesDialog(
+        SuccessDialog(
             message = state.successMessage,
             onConfirm = {
                 onEvent(RegisterFormEvent.OnDismissDialogSuccess)

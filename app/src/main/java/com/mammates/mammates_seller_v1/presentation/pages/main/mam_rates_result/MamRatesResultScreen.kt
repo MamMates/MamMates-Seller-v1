@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.mammates.mammates_seller_v1.presentation.component.dialog.ErrorDialog
-import com.mammates.mammates_seller_v1.presentation.component.dialog.SuccesDialog
+import com.mammates.mammates_seller_v1.presentation.component.dialog.SuccessDialog
 import com.mammates.mammates_seller_v1.presentation.component.loading.LoadingScreen
 import com.mammates.mammates_seller_v1.presentation.component.rating.RatingDisplay
 import com.mammates.mammates_seller_v1.presentation.component.text.TextLabelValue
@@ -71,7 +71,7 @@ fun MamRatesResultScreen(
         )
     }
     if (!state.successMessage.isNullOrEmpty()) {
-        SuccesDialog(
+        SuccessDialog(
             message = state.successMessage,
             onConfirm = {
                 onEvent(MamRatesResultEvent.OnDismissDialog)

@@ -36,7 +36,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.mammates.mammates_seller_v1.presentation.component.dialog.ConfirmDialog
 import com.mammates.mammates_seller_v1.presentation.component.dialog.ErrorDialog
-import com.mammates.mammates_seller_v1.presentation.component.dialog.SuccesDialog
+import com.mammates.mammates_seller_v1.presentation.component.dialog.SuccessDialog
 import com.mammates.mammates_seller_v1.presentation.component.loading.LoadingScreen
 import com.mammates.mammates_seller_v1.presentation.pages.main.order.component.CardOrder
 import com.mammates.mammates_seller_v1.presentation.pages.main.order.component.NoOrderLabel
@@ -122,7 +122,7 @@ fun OrderScreen(
     }
 
     if (!state.successMessage.isNullOrEmpty()) {
-        SuccesDialog(
+        SuccessDialog(
             message = state.successMessage,
             onConfirm = {
                 onEvent(OrderEvent.OnDismissErrorDialog)
