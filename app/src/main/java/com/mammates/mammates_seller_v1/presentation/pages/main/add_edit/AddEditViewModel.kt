@@ -14,6 +14,7 @@ import com.mammates.mammates_seller_v1.presentation.util.validation.emptyValidat
 import com.mammates.mammates_seller_v1.util.Category
 import com.mammates.mammates_seller_v1.util.HttpError
 import com.mammates.mammates_seller_v1.util.ImageUtils
+import com.mammates.mammates_seller_v1.util.ImageUtils.Companion.reduceFileImage
 import com.mammates.mammates_seller_v1.util.Rating
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -341,7 +342,7 @@ class AddEditViewModel @Inject constructor(
             )
         } else {
             val imgFile =
-                ImageUtils.uriToFile(uri, context)
+                ImageUtils.uriToFile(uri, context).reduceFileImage()
             Log.i("AddEditViewModel", "Here buat file")
             return MultipartBody.Part.createFormData(
                 name = name,
@@ -357,10 +358,12 @@ class AddEditViewModel @Inject constructor(
         _state.value = _state.value.copy(
             foodNameValidation = emptyValidation(_state.value.foodName, "Food Name"),
             foodMamRatesImageValidation = if (
-                _state.value.foodMamRatesImage == Uri.EMPTY ||
+                _state.value.foodMamRatesImage == Uri.EMPTY &&
                 _state.value.foodMamRatesUrlImage.isNullOrEmpty()
             ) {
-                "Please input your food image !!"
+                "Please input your food image!!"
+            } else if (_state.value.foodMamRatesImage == Uri.EMPTY) {
+                "Please update your mamRates!!"
             } else {
                 null
             },
@@ -435,7 +438,7 @@ class AddEditViewModel @Inject constructor(
     }
 
     private fun getMamRates(context: Context) {
-        val imgFile = ImageUtils.uriToFile(_state.value.foodMamRatesImage, context)
+        val imgFile = ImageUtils.uriToFile(_state.value.foodMamRatesImage, context).reduceFileImage()
 
         val multipartBody = MultipartBody.Part.createFormData(
             "image",

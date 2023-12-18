@@ -147,6 +147,7 @@ fun ReportMamRatesScreen(
             ) {
                 Text(text = "Report")
             }
+            Spacer(modifier = Modifier.height(20.dp))
         }
     }
 }

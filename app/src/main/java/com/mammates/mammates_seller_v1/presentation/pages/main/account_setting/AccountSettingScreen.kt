@@ -181,6 +181,7 @@ fun AccountSettingScreen(
                 }) {
                 Text(text = "Save Update")
             }
+            Spacer(modifier = Modifier.height(20.dp))
         }
     }
 }

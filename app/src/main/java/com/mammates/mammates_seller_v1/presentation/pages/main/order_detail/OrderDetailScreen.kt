@@ -224,6 +224,7 @@ fun OrderDetailScreen(
                     ) {
                         Text(text = "Cancel Order")
                     }
+                    Spacer(modifier = Modifier.height(20.dp))
                 }
             }
         }

@@ -162,6 +162,7 @@ fun AccountScreen(
                 }) {
                     Text(text = "Logout")
                 }
+                Spacer(modifier = Modifier.height(20.dp))
             }
         }
         PullRefreshIndicator(

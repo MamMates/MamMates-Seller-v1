@@ -28,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
@@ -146,7 +147,10 @@ fun OrderScreen(
                             onEvent(OrderEvent.OnChangeTab(index))
                         }, text = {
                             Text(
-                                text = tab, style = MaterialTheme.typography.titleSmall
+                                text = tab,
+                                style = MaterialTheme.typography.titleSmall,
+                                overflow = TextOverflow.Ellipsis,
+                                maxLines = 1
                             )
                         })
                     }

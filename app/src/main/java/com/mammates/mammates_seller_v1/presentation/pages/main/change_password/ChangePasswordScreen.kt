@@ -151,6 +151,7 @@ fun ChangePasswordScreen(
             ) {
                 Text(text = "Change")
             }
+            Spacer(modifier = Modifier.height(20.dp))
         }
     }
 }

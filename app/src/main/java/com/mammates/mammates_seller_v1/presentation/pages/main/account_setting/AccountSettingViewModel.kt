@@ -11,6 +11,7 @@ import com.mammates.mammates_seller_v1.presentation.util.validation.emailValidat
 import com.mammates.mammates_seller_v1.presentation.util.validation.emptyValidation
 import com.mammates.mammates_seller_v1.util.HttpError
 import com.mammates.mammates_seller_v1.util.ImageUtils
+import com.mammates.mammates_seller_v1.util.ImageUtils.Companion.reduceFileImage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -220,7 +221,7 @@ class AccountSettingViewModel @Inject constructor(
     }
 
     private fun patchImageProfile(context: Context) {
-        val imgFile = ImageUtils.uriToFile(_state.value.profileImageUri, context)
+        val imgFile = ImageUtils.uriToFile(_state.value.profileImageUri, context).reduceFileImage()
 
         val multipartBody = MultipartBody.Part.createFormData(
             "image",

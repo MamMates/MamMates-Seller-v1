@@ -195,7 +195,7 @@ fun StoreScreen(
                                         navController.navigate(NavigationRoutes.Main.Add.route + "?food_id=${item.id}")
                                     }
                                 )
-                                Spacer(modifier = Modifier.height(15.dp))
+                                Spacer(modifier = Modifier.height(20.dp))
                             }
                         }
                     }

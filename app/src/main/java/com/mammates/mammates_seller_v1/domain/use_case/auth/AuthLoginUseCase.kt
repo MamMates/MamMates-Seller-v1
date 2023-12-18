@@ -22,8 +22,12 @@ class AuthLoginUseCase @Inject constructor(
         try {
             emit(Resource.Loading())
             val response = authRepository.authLogin(email, password)
-            val token = response.headers()["Authorization"].toString()
-            emit(Resource.Success(token))
+            if (response.isSuccessful) {
+                val token = response.headers()["Authorization"].toString()
+                emit(Resource.Success(token))
+            }else{
+                throw HttpException(response)
+            }
         } catch (e: HttpException) {
             val errorMessage = e.response()?.errorBody()
             errorMessage?.let {

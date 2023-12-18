@@ -164,6 +164,7 @@ fun MamRatesResultScreen(
             ) {
                 Text(text = "See Your MamRates")
             }
+            Spacer(modifier = Modifier.height(20.dp))
         }
     }
 }

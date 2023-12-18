@@ -10,6 +10,7 @@ import com.mammates.mammates_seller_v1.domain.use_case.token.TokenUseCases
 import com.mammates.mammates_seller_v1.util.Category
 import com.mammates.mammates_seller_v1.util.HttpError
 import com.mammates.mammates_seller_v1.util.ImageUtils
+import com.mammates.mammates_seller_v1.util.ImageUtils.Companion.reduceFileImage
 import com.mammates.mammates_seller_v1.util.Rating
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -80,7 +81,7 @@ class MamRatesResultViewModel @Inject constructor(
     }
 
     private fun getMamRates(context: Context) {
-        val imgFile = ImageUtils.uriToFile(_state.value.imageUri, context)
+        val imgFile = ImageUtils.uriToFile(_state.value.imageUri, context).reduceFileImage()
 
         val multipartBody = MultipartBody.Part.createFormData(
             "image",

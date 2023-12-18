@@ -1,5 +1,6 @@
 package com.mammates.mammates_seller_v1.presentation.pages.auth.login
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mammates.mammates_seller_v1.common.Resource
@@ -95,6 +96,7 @@ class LoginViewModel @Inject constructor(
                     is Resource.Success -> {
                         result.data?.let {
                             tokenUseCases.setTokenUseCase(it)
+                            Log.i("Token", it)
                             _state.value = _state.value.copy(
                                 isAuth = true,
                                 isLoading = false

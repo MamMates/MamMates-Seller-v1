@@ -199,7 +199,7 @@ fun HomeScreen(
                         description = items.description,
                         url = items.url
                     )
-                    Spacer(modifier = Modifier.height(15.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
                 }
             }
         }

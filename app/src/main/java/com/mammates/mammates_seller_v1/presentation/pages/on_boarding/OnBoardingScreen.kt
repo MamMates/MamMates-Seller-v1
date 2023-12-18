@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,6 +37,8 @@ fun OnBoardingScreen(
     onEvent: (OnBoardingEvent) -> Unit
 ) {
 
+    val scrollState = rememberScrollState()
+
     val pagerState = rememberPagerState(
         pageCount = {
             3
@@ -45,9 +49,10 @@ fun OnBoardingScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 35.dp, vertical = 60.dp),
+            .verticalScroll(scrollState)
+            .padding(start = 35.dp, end = 35.dp, top = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Bottom
+        verticalArrangement = Arrangement.Center
     ) {
         HorizontalPager(
             state = pagerState
@@ -84,7 +89,7 @@ fun OnBoardingScreen(
         ) {
             Text(text = "Get Started")
         }
-
+        Spacer(modifier = Modifier.height(20.dp))
 
     }
 }

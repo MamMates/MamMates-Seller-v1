@@ -10,6 +10,7 @@ import com.mammates.mammates_seller_v1.domain.use_case.token.TokenUseCases
 import com.mammates.mammates_seller_v1.presentation.util.validation.emptyValidation
 import com.mammates.mammates_seller_v1.util.HttpError
 import com.mammates.mammates_seller_v1.util.ImageUtils
+import com.mammates.mammates_seller_v1.util.ImageUtils.Companion.reduceFileImage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -127,7 +128,7 @@ class ReportMamRatesViewModel @Inject constructor(
             return
         }
 
-        val imgFile = ImageUtils.uriToFile(_state.value.foodImage, context)
+        val imgFile = ImageUtils.uriToFile(_state.value.foodImage, context).reduceFileImage()
 
         val multipartBody = MultipartBody.Part.createFormData(
             "image",

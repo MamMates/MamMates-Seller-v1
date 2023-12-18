@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -32,6 +34,8 @@ fun MamRatesScreen(
     state: MamRatesState,
 ) {
 
+    val scrollState = rememberScrollState()
+
     LaunchedEffect(key1 = state.token) {
         if (state.token.isEmpty()) {
             navController.navigate(route = NavigationRoutes.Auth.route) {
@@ -42,12 +46,11 @@ fun MamRatesScreen(
         }
     }
 
-
-
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(35.dp),
+            .padding(35.dp)
+            .verticalScroll(scrollState),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {

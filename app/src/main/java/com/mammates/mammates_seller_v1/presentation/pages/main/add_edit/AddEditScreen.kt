@@ -287,6 +287,7 @@ fun AddEditScreen(
                     }
                 )
             }
+            Spacer(modifier = Modifier.height(20.dp))
         }
     }
 }
