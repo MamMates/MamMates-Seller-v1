@@ -38,7 +38,7 @@ class ImageUtils {
         }
 
         private fun Bitmap.getRotatedBitmap(file: File): Bitmap? {
-            val orientation = android.media.ExifInterface(file).getAttributeInt(
+            val orientation = ExifInterface(file).getAttributeInt(
                 ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED
             )
             return when (orientation) {
@@ -49,7 +49,8 @@ class ImageUtils {
                 else -> this
             }
         }
-        private fun rotateImage(source: Bitmap, angle: Float): Bitmap? {
+
+        private fun rotateImage(source: Bitmap, angle: Float): Bitmap {
             val matrix = Matrix()
             matrix.postRotate(angle)
             return Bitmap.createBitmap(
@@ -72,6 +73,7 @@ class ImageUtils {
             bitmap?.compress(Bitmap.CompressFormat.JPEG, compressQuality, FileOutputStream(file))
             return file
         }
+
         private fun createCustomTempFile(context: Context): File {
             val filesDir = context.externalCacheDir
             return File.createTempFile(timeStamp, ".jpg", filesDir)

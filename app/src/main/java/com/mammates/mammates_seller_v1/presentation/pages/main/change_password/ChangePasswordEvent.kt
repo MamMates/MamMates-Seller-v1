@@ -9,7 +9,6 @@ sealed class ChangePasswordEvent {
     data object OnToggleNewPasswordConfirmVisible : ChangePasswordEvent()
     data object OnDismissDialog : ChangePasswordEvent()
     data object OnOpenConfirmDialog : ChangePasswordEvent()
-    data object OnDismissNotAuthorize : ChangePasswordEvent()
-
+    data object ClearToken : ChangePasswordEvent()
     data object OnSubmitChangePassword : ChangePasswordEvent()
 }

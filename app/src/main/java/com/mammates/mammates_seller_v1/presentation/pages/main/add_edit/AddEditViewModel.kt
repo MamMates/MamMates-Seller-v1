@@ -438,7 +438,8 @@ class AddEditViewModel @Inject constructor(
     }
 
     private fun getMamRates(context: Context) {
-        val imgFile = ImageUtils.uriToFile(_state.value.foodMamRatesImage, context).reduceFileImage()
+        val imgFile =
+            ImageUtils.uriToFile(_state.value.foodMamRatesImage, context).reduceFileImage()
 
         val multipartBody = MultipartBody.Part.createFormData(
             "image",

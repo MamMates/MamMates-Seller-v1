@@ -101,7 +101,7 @@ class ChangePasswordViewModel @Inject constructor(
                 )
             }
 
-            ChangePasswordEvent.OnDismissNotAuthorize -> {
+            ChangePasswordEvent.ClearToken -> {
                 viewModelScope.launch {
                     tokenUseCases.clearTokenUseCase()
                 }
@@ -109,6 +109,8 @@ class ChangePasswordViewModel @Inject constructor(
                     token = ""
                 )
             }
+
+
         }
     }
 

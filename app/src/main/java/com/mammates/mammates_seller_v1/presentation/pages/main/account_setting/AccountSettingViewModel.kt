@@ -213,7 +213,7 @@ class AccountSettingViewModel @Inject constructor(
                 is Resource.Success -> {
                     _state.value = _state.value.copy(
                         successMessage = result.data,
-                        isLoading = false
+                        isLoading = false,
                     )
                 }
             }

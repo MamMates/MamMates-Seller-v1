@@ -52,15 +52,10 @@ fun AccountSettingScreen(
 
     if (!state.successMessage.isNullOrEmpty()) {
         SuccessDialog(
-            message = state.successMessage,
+            message = state.successMessage + ", please login again!",
             onConfirm = {
                 onEvent(AccountSettingEvent.OnDismissDialog)
-                navController.navigate(NavigationRoutes.Main.Account.route) {
-                    popUpTo(NavigationRoutes.Main.AccountSetting.route) {
-                        inclusive = true
-                    }
-                    launchSingleTop = true
-                }
+                onEvent(AccountSettingEvent.ClearToken)
             }
         )
     }

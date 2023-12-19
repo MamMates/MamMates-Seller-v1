@@ -1,9 +1,11 @@
 package com.mammates.mammates_seller_v1.domain.use_case.auth
 
+import android.util.Log
 import com.mammates.mammates_seller_v1.common.Resource
 import com.mammates.mammates_seller_v1.domain.repository.AuthRepository
 import com.mammates.mammates_seller_v1.util.ErrorMessage
 import com.mammates.mammates_seller_v1.util.HttpError
+import com.mammates.mammates_seller_v1.util.TokenUtils
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.json.JSONException
@@ -24,8 +26,20 @@ class AuthLoginUseCase @Inject constructor(
             val response = authRepository.authLogin(email, password)
             if (response.isSuccessful) {
                 val token = response.headers()["Authorization"].toString()
-                emit(Resource.Success(token))
-            }else{
+                try {
+                    val roles = JSONObject(TokenUtils.decodedToken(token)).getInt("role")
+                    Log.i("Auth UseCase", "Roles : $roles")
+                    if (roles == 1) {
+                        emit(Resource.Success(token))
+                    } else {
+                        emit(Resource.Error(ErrorMessage.DIFFERENT_ROLES.message))
+                    }
+                } catch (e: IllegalArgumentException) {
+                    emit(Resource.Error(ErrorMessage.TOKEN_INVALID.message))
+                } catch (e: JSONException) {
+                    emit(Resource.Error(ErrorMessage.JSON_PARSE.message))
+                }
+            } else {
                 throw HttpException(response)
             }
         } catch (e: HttpException) {

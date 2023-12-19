@@ -13,6 +13,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,6 +25,7 @@ import com.mammates.mammates_seller_v1.presentation.component.dialog.ErrorDialog
 import com.mammates.mammates_seller_v1.presentation.component.dialog.SuccessDialog
 import com.mammates.mammates_seller_v1.presentation.component.loading.LoadingScreen
 import com.mammates.mammates_seller_v1.presentation.component.text_field.PasswordTextField
+import com.mammates.mammates_seller_v1.presentation.util.navigation.NavigationRoutes
 import com.mammates.mammates_seller_v1.util.HttpError
 
 @Composable
@@ -35,11 +37,21 @@ fun ChangePasswordScreen(
 
     val scrollState = rememberScrollState()
 
+    LaunchedEffect(key1 = state.token) {
+        if (state.token.isEmpty()) {
+            navController.navigate(route = NavigationRoutes.Auth.route) {
+                popUpTo(route = NavigationRoutes.Main.route) {
+                    inclusive = true
+                }
+            }
+        }
+    }
+
     if (state.isNotAuthorizeDialogOpen) {
         ErrorDialog(
             message = HttpError.UNAUTHORIZED.message,
             onConfirm = {
-                onEvent(ChangePasswordEvent.OnDismissNotAuthorize)
+                onEvent(ChangePasswordEvent.ClearToken)
             }
         )
     }
@@ -70,7 +82,7 @@ fun ChangePasswordScreen(
             message = state.successMessage,
             onConfirm = {
                 onEvent(ChangePasswordEvent.OnDismissDialog)
-                navController.popBackStack()
+                onEvent(ChangePasswordEvent.ClearToken)
             }
         )
     }
