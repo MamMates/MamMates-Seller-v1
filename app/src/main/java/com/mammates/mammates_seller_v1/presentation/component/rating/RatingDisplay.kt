@@ -23,9 +23,9 @@ fun RatingDisplay(
             Icon(
                 modifier = modifier,
                 imageVector = if (
+                    rating == Rating.ZERO ||
                     rating == Rating.ONE ||
-                    rating == Rating.TWO ||
-                    rating == Rating.THREE
+                    rating == Rating.TWO
                 ) {
                     Icons.Default.Star
                 } else {
@@ -38,8 +38,8 @@ fun RatingDisplay(
             Icon(
                 modifier = modifier,
                 imageVector = if (
-                    rating == Rating.TWO ||
-                    rating == Rating.THREE
+                    rating == Rating.ONE ||
+                    rating == Rating.TWO
                 ) {
                     Icons.Default.Star
                 } else {
@@ -52,7 +52,7 @@ fun RatingDisplay(
             Icon(
                 modifier = modifier,
                 imageVector = if (
-                    rating == Rating.THREE
+                    rating == Rating.TWO
                 ) {
                     Icons.Default.Star
                 } else {
@@ -69,10 +69,19 @@ fun RatingDisplay(
     }
 }
 
+/**
+ * UP Rate Rating
+ *
+ * 0 -> one star
+ * 1 -> two star
+ * 2 -> three star
+ *
+ */
+
 @Preview(showBackground = true)
 @Composable
 fun RatingDisplayPreview() {
     RatingDisplay(
-        rating = Rating.THREE
+        rating = Rating.TWO
     )
 }
