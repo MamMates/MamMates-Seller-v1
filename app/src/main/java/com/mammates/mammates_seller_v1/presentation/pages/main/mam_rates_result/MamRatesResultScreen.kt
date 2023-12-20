@@ -86,7 +86,7 @@ fun MamRatesResultScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(35.dp)
+                .padding(horizontal = 35.dp)
                 .verticalScroll(scrollState),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
