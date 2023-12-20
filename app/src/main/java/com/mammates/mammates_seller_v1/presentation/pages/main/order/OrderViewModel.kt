@@ -49,7 +49,6 @@ class OrderViewModel @Inject constructor(
                 _state.value = _state.value.copy(
                     isConfirmDialogOpen = false,
                     isConfirmCanceledDialogOpen = false,
-                    orderId = -69
                 )
                 if (
                     _state.value.statusTarget.statusNumber <= 3 ||
@@ -58,6 +57,10 @@ class OrderViewModel @Inject constructor(
                     changeOrderStatus()
                 }
                 getOrderBasedOnTheirTab()
+
+                _state.value = _state.value.copy(
+                    orderId = -69
+                )
             }
 
             is OrderEvent.OnOpenChangeStatusDialog -> {

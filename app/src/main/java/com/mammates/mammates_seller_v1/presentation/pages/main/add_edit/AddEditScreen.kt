@@ -183,7 +183,8 @@ fun AddEditScreen(
                 },
                 imageUri = state.foodMamRatesImage,
                 validationText = state.foodMamRatesImageValidation,
-                imageUrl = state.foodMamRatesUrlImage
+                imageUrl = state.foodMamRatesUrlImage,
+                isOnlyCamera = true
             )
             Spacer(modifier = Modifier.height(25.dp))
             Row(

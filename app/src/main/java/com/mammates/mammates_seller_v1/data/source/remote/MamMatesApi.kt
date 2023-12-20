@@ -48,19 +48,19 @@ interface MamMatesApi {
         @Header("Authorization") token: String
     ): ResMamMates<OrdersRecent>
 
-    @GET("orders")
+    @GET("orders/seller")
     suspend fun getOrders(
         @Header("Authorization") token: String,
-        @Query("status") status: Int
+        @Query("s") status: Int
     ): ResMamMates<Orders>
 
-    @GET("orders/{id}")
+    @GET("orders/seller")
     suspend fun getOrderDetail(
         @Header("Authorization") token: String,
-        @Path("id") id: Int
+        @Query("id") id: Int
     ): ResMamMates<OrderDetail>
 
-    @PUT("orders/{id}")
+    @PUT("orders/seller/{id}")
     suspend fun changeOrderStatus(
         @Header("Authorization") token: String,
         @Path("id") id: Int,

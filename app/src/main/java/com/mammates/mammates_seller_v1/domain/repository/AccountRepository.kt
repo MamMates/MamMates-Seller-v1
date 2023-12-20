@@ -31,7 +31,7 @@ interface AccountRepository {
         token: String,
         oldPassword: String,
         newPassword: String,
-        confirmNewPassword: String,
+        newPasswordConfirm: String,
     ): ResMamMates<String>
 
 }

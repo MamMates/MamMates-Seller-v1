@@ -127,6 +127,7 @@ fun OrderScreen(
             message = state.successMessage,
             onConfirm = {
                 onEvent(OrderEvent.OnDismissErrorDialog)
+                onEvent(OrderEvent.OnRefreshPage)
             }
         )
     }

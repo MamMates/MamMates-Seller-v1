@@ -68,7 +68,12 @@ class RegisterFormViewModel @Inject constructor(
                     password = event.password,
                     passwordValidationResult = passwordValidation(
                         event.password
-                    )
+                    ),
+                    passwordConfirmValidationResult = if (_state.value.password != _state.value.passwordConfirm) {
+                        "Password doesn't match"
+                    } else {
+                        passwordValidation(_state.value.passwordConfirm)
+                    }
                 )
             }
 
