@@ -189,7 +189,13 @@ fun CardOrder(
                 horizontalArrangement = Arrangement.End
             ) {
                 Button(onClick = onConfirmOrder) {
-                    Text(text = "Confirm Order")
+                    Text(
+                        text = if (statusOrder == StatusOrder.Unconfirmed){
+                            "Confirm Order"
+                        }else{
+                            "Finish Order"
+                        }
+                    )
                 }
             }
         }
